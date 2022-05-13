@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="gui.Controller">
+   <children>
+      <Button layoutX="274.0" layoutY="175.0" mnemonicParsing="false" text="click on me" onAction="#sayHi" />
+      <Label fx:id="label" layoutX="221.0" layoutY="61.0" prefHeight="91.0" prefWidth="170.0">
+         <font>
+            <Font size="39.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
