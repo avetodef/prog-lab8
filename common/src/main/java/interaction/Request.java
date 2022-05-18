@@ -36,6 +36,10 @@ public class Request implements Serializable {
         return user;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         return "Request{" +

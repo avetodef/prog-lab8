@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright (c) 2015, 2019, Gluon and/or its affiliates.
+  All rights reserved. Use is subject to license terms.
+
+  This file is available and licensed under the following license:
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
+
+  - Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+  - Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the distribution.
+  - Neither the name of Oracle Corporation nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="400.0" prefWidth="640.0" stylesheets="@../style/theme.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.StartingStageController">
+  <children>
+    <AnchorPane maxHeight="400.0" maxWidth="646.0" minHeight="400.0" minWidth="500.0" prefHeight="400.0" prefWidth="646.0" VBox.vgrow="ALWAYS">
+         <children>
+            <GridPane layoutX="-3.0" layoutY="179.0" prefHeight="155.0" prefWidth="640.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints maxHeight="70.19998779296876" minHeight="10.0" prefHeight="70.19998779296876" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="73.4" minHeight="10.0" prefHeight="35.40003662109373" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="65.79996337890626" minHeight="10.0" prefHeight="65.79996337890626" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Button mnemonicParsing="false" onAction="#switchToRegistration" prefHeight="26.0" prefWidth="220.0" text="зарегистрироваться" textFill="#615c5c" GridPane.columnIndex="1" />
+                  <Button mnemonicParsing="false" onAction="#switchToIdAuth" prefHeight="26.0" prefWidth="220.0" text="войти по id" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Button mnemonicParsing="false" onAction="#switchToUnPassw" prefHeight="26.0" prefWidth="220.0" text="войти по имени и паролю" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+               </children>
+            </GridPane>
+            <GridPane alignment="CENTER" layoutX="-6.0" prefHeight="177.0" prefWidth="640.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="60.39996337890625" minWidth="10.0" prefWidth="23.79998779296875" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="92.4000244140625" minWidth="10.0" prefWidth="47.2" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="80.80002441406252" minWidth="10.0" prefWidth="80.80002441406252" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="116.60003662109375" minWidth="10.0" prefWidth="39.999975585937506" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="79.60000000000002" minWidth="10.0" prefWidth="79.60000000000002" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="76.20001220703125" minWidth="10.0" prefWidth="27.599999999999966" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="148.0" minWidth="10.0" prefWidth="148.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="87.20001220703125" minWidth="0.0" prefWidth="0.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="106.0" minWidth="10.0" prefWidth="83.19998779296878" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="84.39996337890625" minWidth="10.0" prefWidth="74.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints maxHeight="45.60001220703125" minHeight="10.0" prefHeight="28.4" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="44.6" minHeight="10.0" prefHeight="44.6" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="29.999981689453122" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="29.999981689453122" minHeight="8.799997711181646" prefHeight="29.999981689453122" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="24.799997711181646" minHeight="7.600018310546872" prefHeight="7.600018310546872" vgrow="SOMETIMES" />
+                  <RowConstraints />
+               </rowConstraints>
+               <children>
+                  <ChoiceBox fx:id="languageChoice" prefHeight="26.0" prefWidth="170.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowSpan="3" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="56.0" prefWidth="332.0" text="Для начала авторизируйся" GridPane.columnIndex="3" GridPane.columnSpan="4" GridPane.rowIndex="2" GridPane.rowSpan="3">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+            </GridPane>
+         </children>
+    </AnchorPane>
+  </children>
+</VBox>
