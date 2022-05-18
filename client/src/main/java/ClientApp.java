@@ -8,8 +8,10 @@ import exceptions.EmptyInputException;
 import exceptions.ExitException;
 import interaction.Request;
 import interaction.Response;
+import interaction.Status;
 import interaction.User;
 import json.JsonConverter;
+import json.PasswordHandler;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -19,10 +21,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class ClientApp implements Runnable {
@@ -34,6 +33,7 @@ public class ClientApp implements Runnable {
     private final Console console = new Console();
     private final ReaderSender readerSender = new ReaderSender();
     private User user;
+    private boolean isAuth = false;
     private final Authorization auth = new Authorization(sc, new DataBaseDAO());
 
     protected void mainClientLoop() {
@@ -44,14 +44,22 @@ public class ClientApp implements Runnable {
             int serverPort = 6666;
             socketChannel.connect(new InetSocketAddress("localhost", serverPort));
             socketChannel.register(selector, SelectionKey.OP_CONNECT);
-
-            if (!Authorization.isAuth) {
-                user = auth.askIfAuth(sc);
+//            if (!Authorization.isAuth) {
+//                user = auth.askIfAuth(sc);
+//            }
+//            if(!isAuth){
+//            }
+//            else {
+            if (!isAuth) {
+                authorize(selector, socketChannel);
             } else {
                 go(selector, socketChannel, user);
             }
+            //go(selector, socketChannel, user);
+            //}
 
         } catch (UnknownHostException e) {
+            //если язык == английский напечатать Unknow host
             o.printRed("неизвестный хост. порешай там в коде что нибудь ок?");
 
         } catch (IOException exception) {
@@ -76,6 +84,69 @@ public class ClientApp implements Runnable {
         }
     }
 
+    private User authorize(Selector selector, SocketChannel socketChannel) throws IOException {
+
+        Request userRequest = new Request();
+        List<String> args = new ArrayList<>(List.of("new user"));
+        userRequest.setArgs(args);
+
+        while (true) {
+            selector.select();
+            Iterator<SelectionKey> it = selector.selectedKeys().iterator();
+
+            while (it.hasNext()) {
+                SelectionKey selectionKey = it.next();
+                it.remove();
+                SocketChannel clientChannel = (SocketChannel) selectionKey.channel();
+                clientChannel.register(selector, SelectionKey.OP_CONNECT);
+
+                if (selectionKey.isConnectable()) {
+                    connect(clientChannel);
+                    clientChannel.register(selector, SelectionKey.OP_WRITE);
+                    continue;
+                }
+                if (selectionKey.isWritable()) {
+
+                    System.out.println("new here? y/n");
+                    args.add(sc.nextLine().trim());
+
+                    System.out.println("username");
+                    String username = sc.nextLine().trim();
+
+                    System.out.println("password");
+                    String password = sc.nextLine().trim();
+
+                    user = new User(username, PasswordHandler.encode(password));
+
+                    userRequest.setUser(user);
+                    readerSender.send(socketChannel, userRequest);
+
+                    clientChannel.register(selector, SelectionKey.OP_READ);
+                    continue;
+                }
+
+                if (selectionKey.isReadable()) {
+                    socketChannel.read(buffer);
+                    buffer.flip();
+
+                    String serverResponse = StandardCharsets.UTF_8.decode(buffer).toString().substring(2);
+
+                    Response response = JsonConverter.desResponse(serverResponse);
+                    printPrettyResponse(response);
+                    buffer.clear();
+
+                    if (!response.status.equals(Status.OK)) {
+                        go(selector, socketChannel, user);
+                        clientChannel.register(selector, SelectionKey.OP_WRITE);
+                    } else {
+                        isAuth = true;
+                        return user;
+                    }
+                }
+            }
+        }
+    }
+
     private void go(Selector selector, SocketChannel socketChannel, User user) throws IOException {
 
         while (true) {
@@ -84,28 +155,34 @@ public class ClientApp implements Runnable {
             Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
 
             while (iterator.hasNext()) {
+
                 SelectionKey key = iterator.next();
                 iterator.remove();
                 SocketChannel client = (SocketChannel) key.channel();
 
                 if (key.isConnectable()) {
-
+                    System.out.println("connect");
                     connect(client);
                     client.register(selector, SelectionKey.OP_WRITE);
                     continue;
+
                 }
                 if (key.isWritable()) {
                     try {
+
+                        System.out.println("write your command");
                         List<String> input = consoleReader.reader();
 
                         Request request = new Request(input, null, user);
 
-                        if(input.contains("exit")) Exit.execute();
+                        if (input.contains("exit")) Exit.execute();
 
                         if (input.contains("mega_rzhaka"))
                             new Thread(new VideoRzhaka()).start();
-                        if(input.contains("rzhaka"))
+
+                        if (input.contains("rzhaka"))
                             new Thread(new GifRzhaka()).start();
+
                         if (input.contains("execute_script")) {
                             readerSender.readAndSend(CommandChecker.ifExecuteScript(input), request, socketChannel, console);
                         } else {
@@ -181,6 +258,7 @@ public class ClientApp implements Runnable {
                 break;
             } catch (RuntimeException e) {
                 o.printRed("ошибка.....: " + e.getMessage());
+                e.printStackTrace();
             }
         }
 

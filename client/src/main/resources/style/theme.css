@@ -1,0 +1,26 @@
+.root{
+    -fx-background-color: #BBCED2;
+    -fx-text-fill:  #615c5c;
+}
+
+.button{
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-text-fill: #615c5c;
+    -fx-background-color: #EBE8E8;
+    -fx-border-color: #615C5C;
+}
+.choice-box{
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-background-color: #EBE8E8;
+    -fx-text-fill: #615c5c;
+    -fx-border-color: #615C5C;
+}
+.text-field{
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-background-color: #EBE8E8;
+    -fx-text-fill: #615c5c;
+    -fx-border-color: #615C5C;
+}

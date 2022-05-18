@@ -17,6 +17,20 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.googlecode</groupId>
+            <artifactId>google-api-translate-java</artifactId>
+            <version>0.92</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.github.pemistahl</groupId>
+            <artifactId>lingua</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
         <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-controls</artifactId>

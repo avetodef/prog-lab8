@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import interaction.Request;
 import interaction.Response;
+import interaction.User;
 
 import java.util.Scanner;
 
@@ -49,23 +50,13 @@ public class JsonConverter {
 
     public static Response desResponse(String s){
         Response output = null;
-
         try {
-
             output = new ObjectMapper().readValue(s, Response.class);
         } catch (JsonProcessingException e) {
             System.out.println("краказябра хи хи ха ха чин чань чунь (десер response) " + e.getMessage());
-
-            while (true){
-                Scanner sc = new Scanner(System.in);
-                String s1 = sc.nextLine();
-                while (s1!="admin"){
-
-                }
-            }
+            e.printStackTrace();
 
         }
-
         return output;
     }
 }

@@ -86,7 +86,9 @@ public class Authorization {
             o.printNormal("придумай юзернейм");
             String username = sc.nextLine().trim();
             if (!username.isEmpty()){
+
             if (!dao.checkUsername(username)) {
+
                 o.printNormal("теперь пароль");
                 String password = sc.nextLine().trim();
                 if (password.isEmpty()) o.printRed("пустой пароль...гениально");
@@ -133,6 +135,7 @@ public class Authorization {
         while (true) {
             o.printNormal("введи юзернейм");
             newUsername = sc.nextLine();
+
             if (dao.checkUsername(newUsername)) {
                 o.printNormal("теперь пароль");
                 newPassword = sc.nextLine();

@@ -40,5 +40,12 @@ public class ReaderSender {
             throw new NullPointerException("Введённой вами команды не существует. Попробуйте ввести другую команду.");
 
     }
+    protected void send(SocketChannel socketChannel, Request request){
+        try {
+            socketChannel.write(StandardCharsets.UTF_8.encode(JsonConverter.ser(request)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
