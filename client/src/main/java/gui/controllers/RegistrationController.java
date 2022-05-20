@@ -1,6 +1,5 @@
 package gui.controllers;
 
-import dao.DataBaseDAO;
 import interaction.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -8,7 +7,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import json.PasswordHandler;
 
 import java.io.IOException;
 
@@ -22,30 +20,37 @@ public class RegistrationController extends AbstractController{
     @FXML
     private Button submit;
     @FXML
-    private Text warning_text;
+    private Text warning_text = new Text();
 
-
-    public void newUser(ActionEvent actionEvent){
-
-        String name = username_field.getText().trim();
-        String pssw = password_field.getText().trim();
-
-        if (pssw.isEmpty()||name.isEmpty()){
-            warning_text.setText("имя или пароль не могут быть пустыми");
-        }
-        //TODO проверку с бд перенести на сервер
-        else {
-            try {
-                switchStages(actionEvent, "actionChoice.fxml");
-            } catch (IOException e) {
-                label.setText(e.getMessage());
-            }
-        }
+    @FXML
+    public String getTextFromUsernameField(){
+        return username_field.getText().trim();
     }
+
+    @FXML
+    public String getTextFromPasswordField(){
+        System.out.println(password_field.getText());
+        return password_field.getText().trim();
+    }
+
+    @FXML
+    public void displayWarning(String s){
+        warning_text.setText(s);
+    }
+
+
+    public User submitUser(){
+        return new User(username_field.getText().trim(), password_field.getText().trim());
+    }
+
+    public void goFurther(ActionEvent actionEvent) throws IOException {
+        switchStages(actionEvent, "actionChoice.fxml");
+    }
+
 
     public void goBack(ActionEvent actionEvent){
         try{
-            switchStages(actionEvent, "startingScene.fxml");
+            switchStages(actionEvent, "auth.fxml");
         }
         catch (IOException e){
             e.printStackTrace();

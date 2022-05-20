@@ -6,6 +6,7 @@ import console.ConsoleReader;
 import dao.DataBaseDAO;
 import exceptions.EmptyInputException;
 import exceptions.ExitException;
+import gui.controllers.RegistrationController;
 import interaction.Request;
 import interaction.Response;
 import interaction.Status;
@@ -35,6 +36,7 @@ public class ClientApp implements Runnable {
     private User user;
     private boolean isAuth = false;
     private final Authorization auth = new Authorization(sc, new DataBaseDAO());
+    private RegistrationController regContr = new RegistrationController();
 
     protected void mainClientLoop() {
         try {
@@ -106,17 +108,20 @@ public class ClientApp implements Runnable {
                     continue;
                 }
                 if (selectionKey.isWritable()) {
-
+                    regContr.displayWarning("qwewqeqwrweqfvdfv");
                     System.out.println("new here? y/n");
                     args.add(sc.nextLine().trim());
 
-                    System.out.println("username");
-                    String username = sc.nextLine().trim();
+                    //System.out.println("username");
+                    //String username = sc.nextLine().trim();
 
-                    System.out.println("password");
-                    String password = sc.nextLine().trim();
+                    //String username = regContr.getTextFromUsernameField(); хуйня
 
-                    user = new User(username, PasswordHandler.encode(password));
+                    //System.out.println("password");
+                    //String password = sc.nextLine().trim();
+                    //String password = regContr.getTextFromPasswordField(); тоже хуйня
+
+                    user = regContr.submitUser();
 
                     userRequest.setUser(user);
                     readerSender.send(socketChannel, userRequest);

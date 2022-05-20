@@ -26,16 +26,15 @@ public class RequestReader implements Callable<String> {
     private DataBaseDAO dataBaseDAO;
     private ExecutorService fixedThreadPool;
     private DataOutputStream dataOutputStream;
-    private Socket clientSocket;
 
-    public RequestReader(InputStream socketInputStream, ForkJoinPool forkJoinPool, RouteDAO routeDAO, DataBaseDAO dataBaseDAO, ExecutorService fixedThreadPool, DataOutputStream dataOutputStream, Socket clientSocket) {
+    public RequestReader(InputStream socketInputStream, ForkJoinPool forkJoinPool, RouteDAO routeDAO, DataBaseDAO dataBaseDAO, ExecutorService fixedThreadPool, DataOutputStream dataOutputStream) {
         this.socketInputStream = socketInputStream;
         this.forkJoinPool = forkJoinPool;
         this.routeDAO = routeDAO;
         this.dataBaseDAO = dataBaseDAO;
         this.fixedThreadPool = fixedThreadPool;
         this.dataOutputStream = dataOutputStream;
-        this.clientSocket = clientSocket;
+
     }
 
     /**
@@ -49,39 +48,27 @@ public class RequestReader implements Callable<String> {
     public String call() {
         User newUser;
         try {
-            String requestJson;
-            StringBuilder builder = new StringBuilder();
 
-            int byteRead;
-
-            while ((byteRead = socketInputStream.read()) != -1) {
-
-                if (byteRead == 0) break;
-
-                builder.append((char) byteRead);
-
-            }
-
-            requestJson = builder.toString();
+            String requestJson = read();
 
             if (JsonConverter.des(requestJson).getArgs().contains("new user")) {
                 if (JsonConverter.des(requestJson).getArgs().contains("y")) {
                     newUser = aNewUser(requestJson);
                     JsonConverter.des(requestJson).getUser().setId(dataBaseDAO.getUserID(newUser.getUsername()));
-                } else {
-                    newUser = notAFirstTime(dataBaseDAO, JsonConverter.des(requestJson), dataOutputStream);
-                    JsonConverter.des(requestJson).getUser().setId(dataBaseDAO.getUserID(newUser.getUsername()));
                 }
-
-            } else {
-
-                newUser = JsonConverter.des(requestJson).getUser();
-                newUser.setId(dataBaseDAO.getUserID(newUser.getUsername()));
-
-                this.forkJoinPool.invoke(new RequestProcessor(requestJson, routeDAO, dataBaseDAO, fixedThreadPool, dataOutputStream));
+                newUser = notAFirstTime(dataBaseDAO, JsonConverter.des(requestJson), dataOutputStream);
+                JsonConverter.des(requestJson).getUser().setId(dataBaseDAO.getUserID(newUser.getUsername()));
             }
+
+            newUser = JsonConverter.des(requestJson).getUser();
+            newUser.setId(dataBaseDAO.getUserID(newUser.getUsername()));
+
+            this.forkJoinPool.invoke(new RequestProcessor(requestJson, routeDAO, dataBaseDAO, fixedThreadPool, dataOutputStream));
+
             return "executed";
-        } catch (SocketException e) {
+        }
+
+        catch (SocketException e) {
             System.out.println("клиент лег поспать. жди.");
             while (true) {
             }
@@ -93,6 +80,7 @@ public class RequestReader implements Callable<String> {
             return ("stalo pusto v dushe i v request'e: " + e.getMessage());
         }
     }
+
 
     private User aNewUser(String requestJson) {
         try {
@@ -136,5 +124,26 @@ public class RequestReader implements Callable<String> {
 
         }
         return new User();
+    }
+
+    private String read() {
+        try {
+            StringBuilder builder = new StringBuilder();
+
+            int byteRead;
+
+            while ((byteRead = socketInputStream.read()) != -1) {
+
+                if (byteRead == 0) break;
+
+                builder.append((char) byteRead);
+
+            }
+
+            return builder.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

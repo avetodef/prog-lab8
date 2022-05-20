@@ -1,6 +1,7 @@
 .root{
     -fx-background-color: #BBCED2;
     -fx-text-fill:  #615c5c;
+    -fx-font-family: "Lucida Console";
 }
 
 .button{

@@ -24,13 +24,13 @@ public abstract class AbstractController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        languageChoice.setValue("выбор языка");
+        languageChoice.setValue("Choose your language");
         languageChoice.getItems().addAll(availableLanguages);
     }
 
     public void exit(ActionEvent actionEvent){
         try {
-            switchStages(actionEvent,"startingScene.fxml");
+            switchStages(actionEvent,"auth.fxml");
         } catch (IOException e) {
             e.printStackTrace();
         }

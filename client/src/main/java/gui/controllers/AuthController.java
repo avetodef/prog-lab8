@@ -4,20 +4,20 @@ import javafx.event.ActionEvent;
 
 import java.io.IOException;
 
-public class UsernamePasswordAuthController extends AbstractController{
+public class AuthController extends AbstractController{
 
-    public void goBack(ActionEvent actionEvent){
+    public void goFurther(ActionEvent actionEvent){
         try{
-            switchStages(actionEvent, "startingScene.fxml");
+            switchStages(actionEvent, "actionChoice.fxml");
         }
         catch (IOException e){
             e.printStackTrace();
         }
     }
 
-    public void goFurther(ActionEvent actionEvent){
+    public void signUp(ActionEvent actionEvent){
         try{
-            switchStages(actionEvent, "actionChoice.fxml");
+            switchStages(actionEvent, "registration.fxml");
         }
         catch (IOException e){
             e.printStackTrace();
