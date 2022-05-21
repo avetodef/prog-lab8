@@ -38,18 +38,21 @@
                   <RowConstraints />
               </rowConstraints>
                <children>
-                  <ChoiceBox fx:id="languageChoice" prefHeight="26.0" prefWidth="170.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowSpan="3" />
+                  <ChoiceBox fx:id="languageChoice" prefHeight="26.0" prefWidth="170.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowSpan="2" />
                   <Label fx:id="label" alignment="CENTER" contentDisplay="CENTER" prefHeight="70.0" prefWidth="282.0" text="Создать аккаунт" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.rowSpan="3">
                      <font>
                         <Font size="24.0" />
                      </font>
                   </Label>
+                  <Button fx:id="exitButton" alignment="CENTER" mnemonicParsing="false" onAction="#exit" prefHeight="30.0" prefWidth="60.0" text="выход" GridPane.columnIndex="9" GridPane.rowSpan="2" />
                </children>
             </GridPane>
-            <GridPane alignment="CENTER" prefHeight="266.0" prefWidth="641.0">
+            <GridPane alignment="CENTER" prefHeight="286.0" prefWidth="638.0">
                <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="291.20001220703125" minWidth="10.0" prefWidth="245.20001220703125" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="291.20001220703125" minWidth="10.0" prefWidth="37.19998779296873" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="291.20001220703125" minWidth="10.0" prefWidth="15.600006103515625" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="291.20001220703125" minWidth="10.0" prefWidth="164.39999389648438" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="291.20001220703125" minWidth="10.0" prefWidth="137.40001220703124" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="291.20001220703125" minWidth="10.0" prefWidth="39.5999755859375" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="408.0" minWidth="10.0" prefWidth="207.59999999999997" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="408.0" minWidth="10.0" prefWidth="130.99997558593748" />
                </columnConstraints>
@@ -62,60 +65,48 @@
                   <RowConstraints maxHeight="69.19998779296876" minHeight="10.0" prefHeight="37.79999389648438" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="69.19998779296876" minHeight="10.0" prefHeight="20.20000610351562" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="93.0" minHeight="10.0" prefHeight="40.79999999999998" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="93.0" minHeight="10.0" prefHeight="40.79999999999998" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="144.19998779296876" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <HBox alignment="CENTER" GridPane.rowIndex="1">
+                  <HBox alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="1">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name" textAlignment="RIGHT" wrappingWidth="203.35736083984375">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Имя пользователя" wrappingWidth="254.5572967529297">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Text>
                      </children>
                   </HBox>
-                  <TextField fx:id="username_field" prefHeight="30.0" prefWidth="150.0" promptText="user name" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <HBox alignment="CENTER" GridPane.rowIndex="3">
+                  <TextField fx:id="username_field" prefHeight="30.0" prefWidth="150.0" promptText="имя пользователя" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                  <HBox alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="3">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Password" textAlignment="RIGHT" wrappingWidth="212.53668212890625">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Пароль" wrappingWidth="253.336669921875">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Text>
                      </children>
                   </HBox>
-                  <Button fx:id="submit" mnemonicParsing="false" onAction="#submit" prefHeight="30.0" prefWidth="250.0" text="submit" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-                  <PasswordField fx:id="password_field" prefHeight="30.0" prefWidth="170.0" promptText="password" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                  <HBox alignment="CENTER_RIGHT" GridPane.rowIndex="5">
+                  <Button fx:id="submit" mnemonicParsing="false" onAction="#submit" prefHeight="30.0" prefWidth="250.0" text="зарегистрироваться" GridPane.columnIndex="4" GridPane.rowIndex="7" />
+                  <PasswordField fx:id="password_field" prefHeight="30.0" prefWidth="170.0" promptText="пароль" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                  <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="5">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Повторите пароль" textAlignment="RIGHT" wrappingWidth="212.53668212890625">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Повторите пароль" wrappingWidth="224.5366668701172">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Text>
                      </children>
                   </HBox>
-                  <PasswordField fx:id="repeat_password_field" prefHeight="30.0" prefWidth="170.0" promptText="password" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                  <Text fx:id="username_warning_text" fill="#8e0606" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="289.3367862701416" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                  <Text fx:id="password_warning_text" fill="#8e0606" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="274.1367130279541" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-               </children>
-            </GridPane>
-            <GridPane alignment="CENTER" prefHeight="122.0" prefWidth="573.0">
-               <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="149.0" minWidth="10.0" prefWidth="28.000006103515624" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="279.6000099182129" minWidth="10.0" prefWidth="144.79999389648438" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="267.99995117187495" minWidth="10.0" prefWidth="234.60001220703123" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="245.20002441406257" minWidth="10.0" prefWidth="169.79998779296875" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="192.00002441406247" minWidth="10.0" prefWidth="31.200024414062455" />
-               </columnConstraints>
-               <rowConstraints>
-                  <RowConstraints maxHeight="16.60001220703125" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="42.8" minHeight="10.0" prefHeight="42.8" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-               </rowConstraints>
-               <children>
-                  <Button fx:id="back" mnemonicParsing="false" onAction="#goBack" prefHeight="30.0" prefWidth="170.0" text="back" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-                  <Button fx:id="exitButton" alignment="CENTER" mnemonicParsing="false" onAction="#exit" prefHeight="30.0" prefWidth="170.0" text="log out" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                  <PasswordField fx:id="repeat_password_field" prefHeight="30.0" prefWidth="170.0" promptText="повторите пароль" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+                  <Text fx:id="username_warning_text" fill="#8e0606" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="289.3367862701416" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                  <Text fx:id="password_warning_text" fill="#8e0606" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="274.1367130279541" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+                  <HBox alignment="TOP_CENTER" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                     <children>
+                        <Button fx:id="back" mnemonicParsing="false" onAction="#goBack" prefHeight="30.0" prefWidth="152.0" text="назад" />
+                     </children>
+                  </HBox>
                </children>
             </GridPane>
          </children>
