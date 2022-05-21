@@ -7,14 +7,11 @@ import interaction.Status;
 import interaction.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import json.PasswordHandler;
 
-import java.io.IOException;
 import java.util.List;
 
 public class RegistrationController extends AbstractController {
@@ -34,8 +31,8 @@ public class RegistrationController extends AbstractController {
 
         String username = username_field.getText().trim();
         String password = password_field.getText().trim();
-        System.out.println("USER: " + new User (username, password)
-                + " IS_PASSWORD_EMPTY " + username_field.getText().isEmpty());
+//        System.out.println("USER: " + new User (username, password)
+//                + " IS_PASSWORD_EMPTY " + username_field.getText().isEmpty());
 
         return new User(username, PasswordHandler.encode(password) );
     }
@@ -57,6 +54,7 @@ public class RegistrationController extends AbstractController {
 
         if (response.status.equals(Status.OK)) {
             switchStages(actionEvent, "/client/actionChoice.fxml");
+            System.out.println("AUTHENTICATION WENT SUCCESSFULLY");
         } else {
             if (response.status.equals(Status.PASSWORD_ERROR)) {
                 password_warning_text.setText(response.msg);

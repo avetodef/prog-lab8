@@ -42,8 +42,8 @@ public class AuthController extends AbstractController implements Initializable 
 
         String username = username_field.getText().trim();
         String password = password_field.getText().trim();
-        System.out.println("USER: " + new User (username, password)
-                + " IS_PASSWORD_EMPTY " + username_field.getText().isEmpty());
+//        System.out.println("USER: " + new User (username, password)
+//                + " IS_PASSWORD_EMPTY " + username_field.getText().isEmpty());
 
         return new User(username, PasswordHandler.encode(password) );
     }
@@ -82,6 +82,7 @@ public class AuthController extends AbstractController implements Initializable 
 
         if (response.status.equals(Status.OK)) {
             switchStages(actionEvent, "/client/actionChoice.fxml");
+            System.out.println("AUTHENTICATION WENT SUCCESSFULLY");
         } else {
             if (response.status.equals(Status.PASSWORD_ERROR)) {
                 password_warning_text.setText(response.msg);
