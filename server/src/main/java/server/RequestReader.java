@@ -50,49 +50,57 @@ public class RequestReader implements Callable<String> {
         try {
 
             String requestJson = read();
+            Request request = JsonConverter.des(requestJson);
 
-            if (JsonConverter.des(requestJson).getArgs().contains("new user")) {
-                if (JsonConverter.des(requestJson).getArgs().contains("y")) {
-                    newUser = aNewUser(requestJson);
-                    JsonConverter.des(requestJson).getUser().setId(dataBaseDAO.getUserID(newUser.getUsername()));
-                }
-                newUser = notAFirstTime(dataBaseDAO, JsonConverter.des(requestJson), dataOutputStream);
-                JsonConverter.des(requestJson).getUser().setId(dataBaseDAO.getUserID(newUser.getUsername()));
+            if (request.getArgs().contains("authorization")) {
+                newUser = notAFirstTime(dataBaseDAO, request, dataOutputStream);
+                newUser.setId(dataBaseDAO.getUserID(newUser.getUsername()));
+                request.setUser(newUser);
+            }
+
+            if(request.getArgs().contains("registration")){
+                newUser = aNewUser(requestJson);
+                newUser.setId(dataBaseDAO.getUserID(newUser.getUsername()));
+                request.setUser(newUser);
             }
 
             newUser = JsonConverter.des(requestJson).getUser();
             newUser.setId(dataBaseDAO.getUserID(newUser.getUsername()));
+            request.setUser(newUser);
 
             this.forkJoinPool.invoke(new RequestProcessor(requestJson, routeDAO, dataBaseDAO, fixedThreadPool, dataOutputStream));
 
             return "executed";
         }
 
-        catch (SocketException e) {
-            System.out.println("клиент лег поспать. жди.");
-            while (true) {
-            }
+//        catch (SocketException e) {
+//            System.out.println("клиент лег поспать. жди.");
+//            while (true) {
+//            }
 
-        } catch (IOException e) {
-            return ("server razuchilsya chitat... wot pochemy: " + e.getMessage());
-
-        } catch (NullPointerException e) {
+        //}
+//        catch (IOException e) {
+//            return ("server razuchilsya chitat... wot pochemy: " + e.getMessage());
+//
+//        }
+        catch (NullPointerException e) {
             return ("stalo pusto v dushe i v request'e: " + e.getMessage());
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
+        return "executed";
     }
 
 
     private User aNewUser(String requestJson) {
         try {
             if (dataBaseDAO.checkUsername(JsonConverter.des(requestJson).getUser().getUsername())) {
-                Response authErrorResponse = new Response("username already in use", Status.USER_EBLAN_ERROR);
+                Response authErrorResponse = new Response("имя занято", Status.USERNAME_ERROR);
                 dataOutputStream.writeUTF(JsonConverter.serResponse(authErrorResponse));
-
             } else {
                 User user = JsonConverter.des(requestJson).getUser();
-
                 dataBaseDAO.insertUser(user);
-                Response successAuth = new Response("auth complete. your id: " + dataBaseDAO.getUserID(user.getUsername()), Status.OK);
+                Response successAuth = new Response("auth complete.", Status.OK);
                 dataOutputStream.writeUTF(JsonConverter.serResponse(successAuth));
                 return user;
 
@@ -108,7 +116,7 @@ public class RequestReader implements Callable<String> {
         if (dbDAO.checkUsername(request.getUser().getUsername())) {
 
             if (!dbDAO.checkPassword(request.getUser().getPassword())) {
-                Response error = new Response("password and username dont match", Status.USER_EBLAN_ERROR);
+                Response error = new Response("пароль неверный", Status.PASSWORD_ERROR);
                 dataOutputStream.writeUTF(JsonConverter.serResponse(error));
 
             } else {
@@ -118,8 +126,9 @@ public class RequestReader implements Callable<String> {
                 dataOutputStream.writeUTF(JsonConverter.serResponse(ok));
                 return user;
             }
-        } else {
-            Response error = new Response("no such username", Status.USER_EBLAN_ERROR);
+        }
+        else {
+            Response error = new Response("нет такого имени пользователя", Status.USERNAME_ERROR);
             dataOutputStream.writeUTF(JsonConverter.serResponse(error));
 
         }
@@ -142,7 +151,7 @@ public class RequestReader implements Callable<String> {
 
             return builder.toString();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("client die. server kill?");
         }
         return null;
     }

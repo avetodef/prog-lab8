@@ -55,7 +55,6 @@ public class JsonConverter {
         } catch (JsonProcessingException e) {
             System.out.println("краказябра хи хи ха ха чин чань чунь (десер response) " + e.getMessage());
             e.printStackTrace();
-
         }
         return output;
     }

@@ -1,3 +1,5 @@
+package client;
+
 import exceptions.ExitException;
 
 import java.util.NoSuchElementException;

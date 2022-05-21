@@ -37,8 +37,8 @@ public class RequestProcessor extends RecursiveTask<String>{
     protected String compute() {
 
         ACommands command = CommandSaver.getCommand(JsonConverter.des(msg).getArgs());
-        RouteInfo info = JsonConverter.des(msg).getInfo();
-        command.setInfo(info);
+//        RouteInfo info = JsonConverter.des(msg).getInfo();
+        //command.setInfo(info);
         command.setUser(JsonConverter.des(msg).getUser());
         //System.out.println("command " + command);
         this.fixedThreadPool.execute(new ResponseSender(dataOutputStream, command.execute(dao, dataBaseDAO)));
