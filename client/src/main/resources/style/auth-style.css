@@ -1,0 +1,14 @@
+VBox{
+    -fx-background-color: #B5BEC9;
+    -fx-text-fill: #C5D9E3;
+}
+HBox{
+    -fx-background-color:#698085;
+    -fx-text-fill:  #856E5B;
+}
+.button{
+    -fx-background-color: #D1C5BA;
+}
+.label{
+    -fx-text-fill: #856E5B;
+}

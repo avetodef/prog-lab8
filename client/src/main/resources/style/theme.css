@@ -10,6 +10,21 @@
     -fx-background-color: #EBE8E8;
     -fx-border-color: #615C5C;
 }
+.button:pressed{
+    -fx-background-color: #D1ADA5;
+}
+.button:hover{
+    -fx-border-color: #261B25;
+    -fx-background-color: #F5F7F7;
+}
+.choice-box:hover{
+    -fx-border-color: #261B25;
+    -fx-background-color: #F5F7F7;
+}
+.text-field:hover{
+    -fx-border-color: #261B25;
+    -fx-background-color: #F5F7F7;
+}
 .choice-box{
     -fx-background-radius: 4;
     -fx-border-radius: 4;

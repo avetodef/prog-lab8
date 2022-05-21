@@ -31,7 +31,6 @@ public abstract class ACommands {
 
     public static ACommands getCommand(Request request) {
         ACommands command = CommandSaver.getCommand(request.getArgs());
-        command.setInfo(request.getInfo());
         return command;
     }
 

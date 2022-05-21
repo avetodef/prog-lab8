@@ -1,5 +1,5 @@
-import commands.GifRzhaka;
-import commands.VideoRzhaka;
+package client;
+
 import console.Console;
 import console.ConsoleOutputer;
 import console.ConsoleReader;
@@ -10,8 +10,9 @@ import interaction.Request;
 import interaction.Response;
 import interaction.Status;
 import interaction.User;
+import javafx.application.Application;
+import javafx.stage.Stage;
 import json.JsonConverter;
-import json.PasswordHandler;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -24,42 +25,53 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 
-public class ClientApp implements Runnable {
+public class ClientApp extends Application implements Runnable {
 
     private final ConsoleReader consoleReader = new ConsoleReader();
     private final ConsoleOutputer o = new ConsoleOutputer();
     private final Scanner sc = new Scanner(System.in);
     private final ByteBuffer buffer = ByteBuffer.allocate(60_000);
     private final Console console = new Console();
-    private final ReaderSender readerSender = new ReaderSender();
+
     private User user;
     private boolean isAuth = false;
+
     private final Authorization auth = new Authorization(sc, new DataBaseDAO());
+
+    Selector selector;
+
+    {
+        try {
+            selector = Selector.open();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    SocketChannel socketChannel;
+    int serverPort = 6666;
+
+    {
+        try {
+            socketChannel = SocketChannel.open();
+            socketChannel.configureBlocking(false);
+            socketChannel.connect(new InetSocketAddress("localhost", serverPort));
+            socketChannel.register(selector, SelectionKey.OP_CONNECT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private final ReaderSender readerSender = new ReaderSender(socketChannel);
 
     protected void mainClientLoop() {
         try {
-            Selector selector = Selector.open();
-            SocketChannel socketChannel = SocketChannel.open();
-            socketChannel.configureBlocking(false);
-            int serverPort = 6666;
-            socketChannel.connect(new InetSocketAddress("localhost", serverPort));
-            socketChannel.register(selector, SelectionKey.OP_CONNECT);
-//            if (!Authorization.isAuth) {
-//                user = auth.askIfAuth(sc);
-//            }
-//            if(!isAuth){
-//            }
-//            else {
             if (!isAuth) {
                 authorize(selector, socketChannel);
             } else {
                 go(selector, socketChannel, user);
             }
-            //go(selector, socketChannel, user);
-            //}
-
         } catch (UnknownHostException e) {
-            //если язык == английский напечатать Unknow host
             o.printRed("неизвестный хост. порешай там в коде что нибудь ок?");
 
         } catch (IOException exception) {
@@ -107,20 +119,16 @@ public class ClientApp implements Runnable {
                 }
                 if (selectionKey.isWritable()) {
 
-                    System.out.println("new here? y/n");
-                    args.add(sc.nextLine().trim());
+                    //System.out.println("username");
+                    //String username = sc.nextLine().trim();
 
-                    System.out.println("username");
-                    String username = sc.nextLine().trim();
 
-                    System.out.println("password");
-                    String password = sc.nextLine().trim();
+                    //System.out.println("pass  word");
+                    //String password = sc.nextLine().trim();
 
-                    user = new User(username, PasswordHandler.encode(password));
 
-                    userRequest.setUser(user);
-                    readerSender.send(socketChannel, userRequest);
-
+//                    userRequest.setUser(user);
+//                    readerSender.send(socketChannel, userRequest);
                     clientChannel.register(selector, SelectionKey.OP_READ);
                     continue;
                 }
@@ -135,7 +143,7 @@ public class ClientApp implements Runnable {
                     printPrettyResponse(response);
                     buffer.clear();
 
-                    if (!response.status.equals(Status.OK)) {
+                    if (response.status.equals(Status.OK)) {
                         go(selector, socketChannel, user);
                         clientChannel.register(selector, SelectionKey.OP_WRITE);
                     } else {
@@ -161,78 +169,61 @@ public class ClientApp implements Runnable {
                 SocketChannel client = (SocketChannel) key.channel();
 
                 if (key.isConnectable()) {
-                    System.out.println("connect");
                     connect(client);
                     client.register(selector, SelectionKey.OP_WRITE);
                     continue;
 
                 }
+
                 if (key.isWritable()) {
-                    try {
-
-                        System.out.println("write your command");
-                        List<String> input = consoleReader.reader();
-
-                        Request request = new Request(input, null, user);
-
-                        if (input.contains("exit")) Exit.execute();
-
-                        if (input.contains("mega_rzhaka"))
-                            new Thread(new VideoRzhaka()).start();
-
-                        if (input.contains("rzhaka"))
-                            new Thread(new GifRzhaka()).start();
-
-                        if (input.contains("execute_script")) {
-                            readerSender.readAndSend(CommandChecker.ifExecuteScript(input), request, socketChannel, console);
-                        } else {
-                            readerSender.readAndSend(input, request, socketChannel, console);
-                        }
-
-                    } catch (NumberFormatException e) {
-                        o.printRed("int введи");
-                        continue;
-                    } catch (NullPointerException e) {
-                        o.printRed("Введённой вами команды не существует. Попробуйте ввести другую команду.");
-                        continue;
-                    } catch (EmptyInputException e) {
-                        o.printRed(e.getMessage());
-                        continue;
-                    } catch (IndexOutOfBoundsException e) {
-                        o.printRed("брат забыл айди ввести походу");
-                        continue;
-                    }
+                    //try {
+                    send();
+//                    }
+//                    catch (NumberFormatException e) {
+//                        o.printRed("int введи");
+//                        continue;
+//                    } catch (NullPointerException e) {
+//                        o.printRed("Введённой вами команды не существует. Попробуйте ввести другую команду.");
+//                        continue;
+//                    } catch (EmptyInputException e) {
+//                        o.printRed(e.getMessage());
+//                        continue;
+//                    } catch (IndexOutOfBoundsException e) {
+//                        o.printRed("брат забыл айди ввести походу");
+//                        continue;
+//                    }
                     client.register(selector, SelectionKey.OP_READ);
                     continue;
                 }
 
                 if (key.isReadable()) {
-
-                    read(socketChannel);
-
+                    read();
                     client.register(selector, SelectionKey.OP_WRITE);
                 }
 
             }
-
         }
     }
 
-    private void connect(SocketChannel client) {
+    public void connect(SocketChannel client) {
         if (client.isConnectionPending()) {
             try {
                 client.finishConnect();
-                o.printWhite("готов к работе с сервером");
+                o.printWhite("connection established");
             } catch (IOException e) {
-                System.out.println("connection refused");
+                System.out.println("no connection to server");
             }
         }
     }
 
+    public void send() {
+        List<String> input = consoleReader.reader();
+        Request request = new Request(input, user);
+        readerSender.readAndSend(input, request, socketChannel);
+    }
 
-    private void read(SocketChannel socketChannel) {
+    public Response read() {
         try {
-
             socketChannel.read(buffer);
             buffer.flip();
 
@@ -241,15 +232,15 @@ public class ClientApp implements Runnable {
             Response response = JsonConverter.desResponse(serverResponse);
             printPrettyResponse(response);
             buffer.clear();
+            return response;
 
         } catch (IOException e) {
             System.out.println("IO ");
         }
+        return null;
     }
 
-
-    protected void runClient() {
-
+    public void runClient() {
         while (true) {
             try {
                 mainClientLoop();
@@ -307,5 +298,10 @@ public class ClientApp implements Runnable {
     @Override
     public void run() {
         runClient();
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        run();
     }
 }

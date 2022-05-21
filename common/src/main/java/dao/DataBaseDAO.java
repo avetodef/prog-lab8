@@ -36,14 +36,20 @@ public class DataBaseDAO implements DAO {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(url, username, password);
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
+        catch (SQLException e) {
+            o.printRed("database sleep. wait");
 
-        if (conn != null)
-            o.printWhite("подключено к датабейс");
-        else
-            o.printRed("не удается подключиться к датабазе");
+            while(true){
+
+            }
+        }
+//        if (conn != null)
+//            o.printWhite("подключено к датабейс");
+//        else
+//            o.printRed("не удается подключиться к датабазе");
+        if(conn == null)
+            o.printRed("not connected to database");
 
         return conn;
     }
@@ -325,7 +331,7 @@ public class DataBaseDAO implements DAO {
         }
         return false;
     }
-
+    //TODO на пароль ему вообще похуй почему то
     public boolean checkPassword(String password) {
         String sql = "SELECT password FROM users WHERE password=?";
         try {
@@ -340,6 +346,8 @@ public class DataBaseDAO implements DAO {
             if (count > 0) {
                 return true;
             }
+            if(count == 0)
+                return false;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

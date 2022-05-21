@@ -1,3 +1,5 @@
+package client;
+
 import console.ConsoleOutputer;
 
 import java.awt.*;

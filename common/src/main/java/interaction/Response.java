@@ -40,4 +40,11 @@ public class Response  implements Serializable  {
     }
     public Response(){}
 
+    public String getMsg() {
+        return msg;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
 }

@@ -1,13 +1,18 @@
+package client;
+
+import client.gui.controllers.AbstractController;
 import console.ConsoleOutputer;
 import dao.DataBaseDAO;
 import exceptions.ExitException;
 import interaction.User;
 import json.PasswordHandler;
 
+import java.nio.channels.SelectionKey;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Authorization {
+
 
     private final ConsoleOutputer o = new ConsoleOutputer();
     public static boolean isAuth = false;

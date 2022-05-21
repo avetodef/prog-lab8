@@ -6,5 +6,7 @@ public enum Status {
     COLLECTION_ERROR, //yellow
     UNKNOWN_ERROR, //red
     USER_EBLAN_ERROR, //purple
-    SERVER_ERROR
+    SERVER_ERROR,
+    PASSWORD_ERROR,
+    USERNAME_ERROR
 }

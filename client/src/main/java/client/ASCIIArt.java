@@ -1,7 +1,6 @@
-import console.ConsoleOutputer;
+package client;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
+import console.ConsoleOutputer;
 
 public class ASCIIArt {
 

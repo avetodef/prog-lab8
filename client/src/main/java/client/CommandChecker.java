@@ -1,3 +1,5 @@
+package client;
+
 import commands.CommandSaver;
 import commands.ExecuteReader;
 import console.ConsoleOutputer;
