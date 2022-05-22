@@ -1,6 +1,5 @@
 package client.gui;
 
-import client.ClientApp;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -20,12 +19,6 @@ public class StartingStage extends Application implements Runnable {
             stage.setScene(scene);
             stage.show();
             stage.setOnCloseRequest(event -> Platform.exit());
-
-//            ClientApp client = new ClientApp();
-//            client.runClient();
-
-//            ClientApp client = new ClientApp();
-//            client.run();
         }
         catch (Exception e){
             e.printStackTrace();
@@ -34,8 +27,6 @@ public class StartingStage extends Application implements Runnable {
 
     public static void main(String[] args) {
         launch(args);
-//        ClientApp client = new ClientApp();
-//        client.runClient();
     }
 
     @Override

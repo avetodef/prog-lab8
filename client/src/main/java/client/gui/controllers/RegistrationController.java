@@ -42,7 +42,7 @@ public class RegistrationController extends AbstractController {
     public void sendDataToServer(User user) {
         try {
             List<String> arguments = List.of("registration");
-            Request userRequest = new Request(arguments, user);
+            Request userRequest = new Request(arguments,null, user);
             readerSender.sendToServer(userRequest);
         } catch (Exception e) {
             e.printStackTrace();
