@@ -34,7 +34,8 @@ public class AddElementController extends AbstractController {
     }
 
     @FXML
-    private void submit(ActionEvent actionEvent){
+    @Override
+    public void submit(ActionEvent actionEvent){
         if(send)
         sendDataToServer();
         else

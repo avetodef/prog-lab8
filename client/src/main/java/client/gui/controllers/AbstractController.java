@@ -12,7 +12,9 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import javax.lang.model.util.AbstractAnnotationValueVisitor6;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
@@ -32,61 +34,47 @@ public abstract class AbstractController {
 
     int serverPort = 6666;
 
-    protected void connect(SocketChannel client) {
-        if (client.isConnectionPending()) {
-            try {
-                client.finishConnect();
-                System.out.println("connection established");
-                client.register(selector, SelectionKey.OP_WRITE);
-            } catch (IOException e) {
-                System.out.println("no connection to server");
-            }
-        }
-    }
-
-    Selector selector;
-    {
-        try {
-            selector = Selector.open();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    protected void connect(SocketChannel client) {
+//        if (client.isConnectionPending()) {
+//            try {
+//                client.finishConnect();
+//                System.out.println("connection established");
+//            } catch (IOException e) {
+//                System.out.println("no connection to server");
+//            }
+//        }
+//    }
 
     {
         try {
             socketChannel = SocketChannel.open();
-            socketChannel.configureBlocking(false);
+            socketChannel.configureBlocking(true);
             socketChannel.connect(new InetSocketAddress("localhost", serverPort));
-            socketChannel.register(selector, SelectionKey.OP_CONNECT);
+            if (socketChannel.isConnected())
+                System.out.println("connection established");
             //connect(socketChannel);
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+//        catch (ConnectException e){
+//            try {
+//                FXMLLoader fxmlLoader = new FXMLLoader(StartingStage.class.getResource("/client/server_die.fxml"));
+//                Scene scene = new Scene(fxmlLoader.load());
+//                Stage stage = new Stage();
+//                stage.setScene(scene);
+//                stage.setResizable(false);
+//                stage.show();
+//
+//            }
+//            catch (IOException e1){
+//                System.out.println(e1.getMessage() );
+//            }
+//        }
+        catch (IOException e) {
+            //e.printStackTrace();
+            System.out.println("abstrc 72 " + e.getMessage());
         }
     }
-    public SelectionKey key;
-    public SocketChannel client;
-    {
-        try {
-            selector.select();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
-        key = iterator.next();
-        iterator.remove();
-        client = (SocketChannel) key.channel();
-        if (key.isConnectable()) {
-            connect(client);
-            try {
-                client.register(selector, SelectionKey.OP_WRITE);
-            } catch (ClosedChannelException e) {
-                e.printStackTrace();
-            }
-        }
 
-    }
-
+    public void submit(ActionEvent actionEvent){}
 
     ReaderSender readerSender = new ReaderSender(socketChannel);
 

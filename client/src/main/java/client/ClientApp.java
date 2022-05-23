@@ -233,7 +233,7 @@ public class ClientApp{
             return response;
 
         } catch (IOException e) {
-            System.out.println("IO ");
+            System.out.println("CLIENT APP " + e.getMessage());
         }
         return null;
     }

@@ -6,11 +6,16 @@ import interaction.Response;
 import interaction.Status;
 import interaction.User;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import json.PasswordHandler;
 
@@ -30,6 +35,8 @@ public class AuthController extends AbstractController implements Initializable 
     private Text username_warning_text;
     @FXML
     private Text password_warning_text;
+    @FXML
+    public Button submit_button;
 
     public void sign_up(ActionEvent actionEvent) {
         switchStages(actionEvent, "/client/registration.fxml");
@@ -45,53 +52,41 @@ public class AuthController extends AbstractController implements Initializable 
     ReaderSender readerSender = new ReaderSender(socketChannel);
 
     public void sendDataToServer(User user) {
+
         try {
-            client.register(selector, SelectionKey.OP_WRITE);
-        } catch (ClosedChannelException e) {
+            List<String> arguments = List.of("authorization");
+            Request userRequest = new Request(arguments, null, user);
+            readerSender.setUser(user);
+            readerSender.sendToServer(userRequest);
+            System.out.println("sending data to server... " + userRequest);
+
+        } catch (Exception e) {
             e.printStackTrace();
-        }
-        System.out.println(key.isWritable());
-        if (key.isWritable()) {
-            try {
-                List<String> arguments = List.of("authorization");
-                Request userRequest = new Request(arguments, null, user);
-                readerSender.setUser(user);
-                readerSender.sendToServer(userRequest);
-                System.out.println("sending data to server... " + userRequest);
-                client.register(selector, SelectionKey.OP_READ);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 
     private void processServerResponse(ActionEvent actionEvent) {
-        if (key.isReadable()) {
-            Response response = readerSender.read();
-            System.out.println(response.status + " [" + response.msg + "]");
 
-            if (response.status.equals(Status.OK)) {
+        Response response = readerSender.read();
+        System.out.println(response.status + " [" + response.msg + "]");
 
-                switchStages(actionEvent, "/client/actionChoice.fxml");
-            } else {
-                if (response.status.equals(Status.PASSWORD_ERROR)) {
-                    password_warning_text.setText(response.msg);
-                }
-                if (response.status.equals(Status.USERNAME_ERROR))
-                    username_warning_text.setText(response.msg);
+        if (response.status.equals(Status.OK)) {
+
+            switchStages(actionEvent, "/client/actionChoice.fxml");
+        } else {
+            if (response.status.equals(Status.PASSWORD_ERROR)) {
+                password_warning_text.setText(response.msg);
             }
-
-//            try {
-//                client.register(selector, SelectionKey.OP_);
-//            } catch (ClosedChannelException e) {
-//                e.printStackTrace();
-//            }
+            if (response.status.equals(Status.USERNAME_ERROR))
+                username_warning_text.setText(response.msg);
         }
+
     }
 
 
     @FXML
-    private void submit(ActionEvent actionEvent) {
+    public void submit(ActionEvent actionEvent) {
+
         username_warning_text.setText("");
         password_warning_text.setText("");
 
@@ -103,11 +98,6 @@ public class AuthController extends AbstractController implements Initializable 
             processServerResponse(actionEvent);
             System.out.println("setting user...");
             readerSender.setUser(user);
-            try {
-                client.register(selector, SelectionKey.OP_WRITE);
-            } catch (ClosedChannelException e) {
-                e.printStackTrace();
-            }
 
         } else {
             if (user.getUsername().isEmpty()) {
@@ -122,6 +112,8 @@ public class AuthController extends AbstractController implements Initializable 
     }
 
 
+
+
     @FXML
     protected ChoiceBox<String> languageChoice;
 
@@ -134,5 +126,10 @@ public class AuthController extends AbstractController implements Initializable 
         languageChoice.getItems().addAll(availableLanguages);
 
     }
+
+    public void enterPressed(){
+        System.out.println("DAFDDADF");
+    }
+
 
 }

@@ -65,7 +65,7 @@ public class RegistrationController extends AbstractController {
     }
 
     @FXML
-    private void submit(ActionEvent actionEvent) {
+    public void submit(ActionEvent actionEvent) {
         username_warning_text.setText("");
         password_warning_text.setText("");
 
