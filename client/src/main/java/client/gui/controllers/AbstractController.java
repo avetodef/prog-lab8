@@ -34,17 +34,17 @@ public abstract class AbstractController {
 
     int serverPort = 6666;
 
-//    protected void connect(SocketChannel client) {
-//        if (client.isConnectionPending()) {
-//            try {
-//                client.finishConnect();
-//                System.out.println("connection established");
-//            } catch (IOException e) {
-//                System.out.println("no connection to server");
-//            }
-//        }
-//    }
-
+    protected void connect(SocketChannel client) {
+        if (client.isConnectionPending()) {
+            try {
+                client.finishConnect();
+                System.out.println("connection established");
+            } catch (IOException e) {
+                System.out.println("no connection to server");
+            }
+        }
+    }
+//ReaderSender readerSender = new ReaderSender(socketChannel);
     {
         try {
             socketChannel = SocketChannel.open();
@@ -52,6 +52,7 @@ public abstract class AbstractController {
             socketChannel.connect(new InetSocketAddress("localhost", serverPort));
             if (socketChannel.isConnected())
                 System.out.println("connection established");
+
             //connect(socketChannel);
         }
 //        catch (ConnectException e){
@@ -70,7 +71,8 @@ public abstract class AbstractController {
 //        }
         catch (IOException e) {
             //e.printStackTrace();
-            System.out.println("abstrc 72 " + e.getMessage());
+            //System.out.println("abstrc 73 " + e.getMessage());
+            connect(socketChannel);
         }
     }
 

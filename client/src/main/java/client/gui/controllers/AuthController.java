@@ -67,18 +67,26 @@ public class AuthController extends AbstractController implements Initializable 
 
     private void processServerResponse(ActionEvent actionEvent) {
 
-        Response response = readerSender.read();
-        System.out.println(response.status + " [" + response.msg + "]");
+        try {
+            Response response = readerSender.read();
+            if (response != null) {
+                System.out.println(response.status + " [" + response.msg + "]");
 
-        if (response.status.equals(Status.OK)) {
 
-            switchStages(actionEvent, "/client/actionChoice.fxml");
-        } else {
-            if (response.status.equals(Status.PASSWORD_ERROR)) {
-                password_warning_text.setText(response.msg);
-            }
-            if (response.status.equals(Status.USERNAME_ERROR))
-                username_warning_text.setText(response.msg);
+                if (response.status.equals(Status.OK)) {
+
+                    switchStages(actionEvent, "/client/actionChoice.fxml");
+                } else {
+                    if (response.status.equals(Status.PASSWORD_ERROR)) {
+                        password_warning_text.setText(response.msg);
+                    }
+                    if (response.status.equals(Status.USERNAME_ERROR))
+                        username_warning_text.setText(response.msg);
+                }
+            } else
+                System.out.println("NULL SERVER RESPONSE ");
+        } catch (RuntimeException e) {
+            e.printStackTrace();
         }
 
     }
@@ -112,8 +120,6 @@ public class AuthController extends AbstractController implements Initializable 
     }
 
 
-
-
     @FXML
     protected ChoiceBox<String> languageChoice;
 
@@ -127,7 +133,7 @@ public class AuthController extends AbstractController implements Initializable 
 
     }
 
-    public void enterPressed(){
+    public void enterPressed() {
         System.out.println("DAFDDADF");
     }
 

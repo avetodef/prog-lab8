@@ -1,17 +1,12 @@
 package client;
 
-import console.Console;
 import console.ConsoleOutputer;
 import console.ConsoleReader;
-import dao.DataBaseDAO;
-import exceptions.EmptyInputException;
 import exceptions.ExitException;
 import interaction.Request;
 import interaction.Response;
 import interaction.Status;
 import interaction.User;
-import javafx.application.Application;
-import javafx.stage.Stage;
 import json.JsonConverter;
 
 import java.io.IOException;
@@ -217,7 +212,7 @@ public class ClientApp{
     public void send() {
         List<String> input = consoleReader.reader();
         Request request = new Request(input,null, user);
-        readerSender.readAndSend(input, request, socketChannel);
+//        readerSender.readAndSend(input, request, socketChannel);
     }
 
     public Response read() {
