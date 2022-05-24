@@ -37,7 +37,7 @@ public class RegistrationController extends AbstractController {
         return new User(username, PasswordHandler.encode(password) );
     }
 
-    ReaderSender readerSender = new ReaderSender(new AuthController().socketChannel);
+    //ReaderSender readerSender = new ReaderSender(new AuthController().socketChannel);
 
     public void sendDataToServer(User user) {
         try {

@@ -1,6 +1,5 @@
 package client.gui.controllers;
 
-import client.ReaderSender;
 import interaction.Request;
 import interaction.Response;
 import javafx.event.ActionEvent;
@@ -15,7 +14,7 @@ import java.util.List;
 
 public class AddElementController extends AbstractController {
 
-    ReaderSender readerSender = new ReaderSender(new AuthController().socketChannel);
+    //ReaderSender readerSender = new ReaderSender(new AuthController().socketChannel);
     boolean send = true;
     private void sendDataToServer() {
         Request request = new Request();
@@ -35,28 +34,30 @@ public class AddElementController extends AbstractController {
 
     @FXML
     @Override
-    public void submit(ActionEvent actionEvent){
-        if(send)
-        sendDataToServer();
-        else
+    public void submit(ActionEvent actionEvent) {
+        if (send) {
+            sendDataToServer();
+            processServerResponse();
+        } else
             label.setText("Неверный ввод. Попробуй снова");
 //        processServerResponse();
 
     }
 
     private RouteInfo info() {
-//        name_warning.setText(null);
-//        x_warning.setText(null);
-//        y_warning.setText(null);
-//        from_x_warning.setText(null);
-//        from_y_warning.setText(null);
-//        from_name_warning.setText(null);
-//        to_x_warning.setText(null);
-//        to_y_warning.setText(null);
-//        to_name_warning.setText(null);
-//        distance_warning.setText(null);
+        name_warning.setText("");
+        x_warning.setText("");
+        y_warning.setText("");
+        from_x_warning.setText("");
+        from_y_warning.setText("");
+        from_name_warning.setText("");
+        to_x_warning.setText("");
+        to_y_warning.setText("");
+        to_name_warning.setText("");
+        distance_warning.setText("");
 
         RouteInfo out = new RouteInfo();
+
         send = true;
         try {
             out.name = name_field.getText().trim();

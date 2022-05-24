@@ -44,7 +44,6 @@
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <Button fx:id="exitButton" alignment="CENTER" mnemonicParsing="false" onAction="#exit" prefHeight="30.0" prefWidth="60.0" text="выход" GridPane.columnIndex="9" GridPane.rowSpan="2" />
                </children>
             </GridPane>
             <GridPane alignment="CENTER" prefHeight="286.0" prefWidth="638.0">

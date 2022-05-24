@@ -40,15 +40,16 @@ public class RequestProcessor extends RecursiveTask<String> {
      */
     @Override
     protected String compute() {
-        User newUser;
-        User reserveUser = null;
+
+        //User reserveUser = null;
         Request request = JsonConverter.des(msg);
+        User newUser = request.getUser();
         try {
             if (request.getArgs().contains("authorization")) {
                 newUser = notAFirstTime(dataBaseDAO, request, dataOutputStream);
                 newUser.setId(dataBaseDAO.getUserID(newUser.getUsername()));
                 request.setUser(newUser);
-                reserveUser = newUser;
+                //reserveUser = newUser;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -58,14 +59,14 @@ public class RequestProcessor extends RecursiveTask<String> {
             newUser = aNewUser(msg);
             newUser.setId(dataBaseDAO.getUserID(newUser.getUsername()));
             request.setUser(newUser);
-            reserveUser = newUser;
+            //reserveUser = newUser;
         }
-        System.out.println("61");
+//        System.out.println("61");
         //newUser = JsonConverter.des(msg).getUser();
-        System.out.println("63 " + reserveUser);
-        reserveUser.setId(dataBaseDAO.getUserID(reserveUser.getUsername()));
-        System.out.println("65");
-        request.setUser(reserveUser);
+        System.out.println("63 " + newUser);
+        newUser.setId(dataBaseDAO.getUserID(newUser.getUsername()));
+//        System.out.println("65");
+        request.setUser(newUser);
 
         System.out.println("REQUEST PROCESSOR REQUEST: " + request);
         if (!request.getArgs().contains("registration") && !request.getArgs().contains("authorization")) {
@@ -75,6 +76,7 @@ public class RequestProcessor extends RecursiveTask<String> {
             //command.setInfo(info);
 
             command.setUser(request.getUser());
+            command.setInfo(request.getInfo());
             System.out.println("command " + command);
             this.fixedThreadPool.execute(new ResponseSender(dataOutputStream, command.execute(dao, dataBaseDAO)));
         }

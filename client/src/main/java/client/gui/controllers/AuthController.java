@@ -49,7 +49,7 @@ public class AuthController extends AbstractController implements Initializable 
         return new User(username, PasswordHandler.encode(password));
     }
 
-    ReaderSender readerSender = new ReaderSender(socketChannel);
+    //ReaderSender readerSender = new ReaderSender(socketChannel);
 
     public void sendDataToServer(User user) {
 

@@ -24,17 +24,17 @@ import java.util.Iterator;
 
 public abstract class AbstractController {
 
-    public void exit(ActionEvent actionEvent) {
+    public static void exit(ActionEvent actionEvent) {
         switchStages(actionEvent, "auth.fxml");
     }
 
 
-    public SocketChannel socketChannel;
+    public static SocketChannel socketChannel;
 
 
-    int serverPort = 6666;
+    static int serverPort = 6666;
 
-    protected void connect(SocketChannel client) {
+    protected static void connect(SocketChannel client) {
         if (client.isConnectionPending()) {
             try {
                 client.finishConnect();
@@ -44,8 +44,9 @@ public abstract class AbstractController {
             }
         }
     }
-//ReaderSender readerSender = new ReaderSender(socketChannel);
-    {
+
+    //ReaderSender readerSender = new ReaderSender(socketChannel);
+    static {
         try {
             socketChannel = SocketChannel.open();
             socketChannel.configureBlocking(true);
@@ -53,32 +54,14 @@ public abstract class AbstractController {
             if (socketChannel.isConnected())
                 System.out.println("connection established");
 
-            //connect(socketChannel);
-        }
-//        catch (ConnectException e){
-//            try {
-//                FXMLLoader fxmlLoader = new FXMLLoader(StartingStage.class.getResource("/client/server_die.fxml"));
-//                Scene scene = new Scene(fxmlLoader.load());
-//                Stage stage = new Stage();
-//                stage.setScene(scene);
-//                stage.setResizable(false);
-//                stage.show();
-//
-//            }
-//            catch (IOException e1){
-//                System.out.println(e1.getMessage() );
-//            }
-//        }
-        catch (IOException e) {
-            //e.printStackTrace();
-            //System.out.println("abstrc 73 " + e.getMessage());
+        } catch (IOException e) {
             connect(socketChannel);
         }
     }
 
     public void submit(ActionEvent actionEvent){}
 
-    ReaderSender readerSender = new ReaderSender(socketChannel);
+    static ReaderSender readerSender = new ReaderSender(socketChannel);
 
     public void popUpWindow(String path){
         try {
@@ -94,17 +77,17 @@ public abstract class AbstractController {
         }
 
     }
-    @FXML
-    private Stage stage;
+//    //@FXML
+//    private static Stage stage;
+//
+//    @FXML
+//    private Scene scene;
 
-    @FXML
-    private Scene scene;
-
-    void switchStages(javafx.event.ActionEvent actionEvent, String switchingPoint) {
+    public static void switchStages(javafx.event.ActionEvent actionEvent, String switchingPoint) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(StartingStage.class.getResource(switchingPoint));
-            stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            scene = new Scene(fxmlLoader.load());
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            Scene scene = new Scene(fxmlLoader.load());
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
