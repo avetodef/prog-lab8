@@ -36,23 +36,21 @@ public class AuthController extends AbstractController implements Initializable 
     @FXML
     private Text password_warning_text;
     @FXML
-    public Button submit_button;
+    private Button submit_button;
 
-    public void sign_up(ActionEvent actionEvent) {
+    @FXML
+    private void sign_up(ActionEvent actionEvent) {
         switchStages(actionEvent, "/client/registration.fxml");
     }
 
-
-    public User getUserFromAuthWindow() {
+    private User getUserFromAuthWindow() {
         String username = username_field.getText().trim();
         String password = password_field.getText().trim();
         return new User(username, PasswordHandler.encode(password));
     }
 
-    //ReaderSender readerSender = new ReaderSender(socketChannel);
 
-    public void sendDataToServer(User user) {
-
+    private void sendDataToServer(User user) {
         try {
             List<String> arguments = List.of("authorization");
             Request userRequest = new Request(arguments, null, user);
@@ -121,7 +119,7 @@ public class AuthController extends AbstractController implements Initializable 
 
 
     @FXML
-    protected ChoiceBox<String> languageChoice;
+    private ChoiceBox<String> languageChoice;
 
     private final String[] availableLanguages = {"Русский", "Slovenščina",
             "Український", "Español (República Dominicana)"};
@@ -132,10 +130,5 @@ public class AuthController extends AbstractController implements Initializable 
         languageChoice.getItems().addAll(availableLanguages);
 
     }
-
-    public void enterPressed() {
-        System.out.println("DAFDDADF");
-    }
-
 
 }

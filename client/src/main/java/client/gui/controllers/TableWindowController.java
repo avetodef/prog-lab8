@@ -33,6 +33,6 @@ public class TableWindowController extends AbstractController implements Initial
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        username.setText(readerSender.user.getUsername());
+        username.setText("ты зашел как " + readerSender.user.getUsername());
     }
 }

@@ -14,8 +14,8 @@ import java.util.List;
 
 public class AddElementController extends AbstractController {
 
-    //ReaderSender readerSender = new ReaderSender(new AuthController().socketChannel);
-    boolean send = true;
+    private boolean send = true;
+
     private void sendDataToServer() {
         Request request = new Request();
         request.setArgs(List.of("add"));
@@ -28,7 +28,6 @@ public class AddElementController extends AbstractController {
     private void processServerResponse() {
         Response response = readerSender.read();
         System.out.println(response.status + " [" + response.msg + "]");
-
         label.setText(response.msg);
     }
 
@@ -155,7 +154,8 @@ public class AddElementController extends AbstractController {
         return out;
     }
 
-    public void go_back(ActionEvent actionEvent) {
+    @FXML
+    private void go_back(ActionEvent actionEvent) {
         switchStages(actionEvent, "/client/actionChoice");
     }
 
