@@ -1,17 +1,12 @@
 package client;
 
-import console.Console;
 import console.ConsoleOutputer;
 import console.ConsoleReader;
-import dao.DataBaseDAO;
-import exceptions.EmptyInputException;
 import exceptions.ExitException;
 import interaction.Request;
 import interaction.Response;
 import interaction.Status;
 import interaction.User;
-import javafx.application.Application;
-import javafx.stage.Stage;
 import json.JsonConverter;
 
 import java.io.IOException;
@@ -25,18 +20,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 
-public class ClientApp extends Application implements Runnable {
+public class ClientApp{
 
     private final ConsoleReader consoleReader = new ConsoleReader();
     private final ConsoleOutputer o = new ConsoleOutputer();
     private final Scanner sc = new Scanner(System.in);
     private final ByteBuffer buffer = ByteBuffer.allocate(60_000);
-    private final Console console = new Console();
 
     private User user;
     private boolean isAuth = false;
 
-    private final Authorization auth = new Authorization(sc, new DataBaseDAO());
 
     Selector selector;
 
@@ -218,8 +211,8 @@ public class ClientApp extends Application implements Runnable {
 
     public void send() {
         List<String> input = consoleReader.reader();
-        Request request = new Request(input, user);
-        readerSender.readAndSend(input, request, socketChannel);
+        Request request = new Request(input,null, user);
+//        readerSender.readAndSend(input, request, socketChannel);
     }
 
     public Response read() {
@@ -235,7 +228,7 @@ public class ClientApp extends Application implements Runnable {
             return response;
 
         } catch (IOException e) {
-            System.out.println("IO ");
+            System.out.println("CLIENT APP " + e.getMessage());
         }
         return null;
     }
@@ -281,27 +274,5 @@ public class ClientApp extends Application implements Runnable {
                 o.printRed(r.msg);
             }
         }
-    }
-
-    /**
-     * When an object implementing interface {@code Runnable} is used
-     * to create a thread, starting the thread causes the object's
-     * {@code run} method to be called in that separately executing
-     * thread.
-     * <p>
-     * The general contract of the method {@code run} is that it may
-     * take any action whatsoever.
-     *
-     * @see Thread#run()
-     */
-
-    @Override
-    public void run() {
-        runClient();
-    }
-
-    @Override
-    public void start(Stage stage) throws Exception {
-        run();
     }
 }

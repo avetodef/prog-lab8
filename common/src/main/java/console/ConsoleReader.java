@@ -13,7 +13,6 @@ public class ConsoleReader {
         try {
             String command = sc.nextLine().trim();
 
-
         if (command.isEmpty()) {
             throw new EmptyInputException();
         }

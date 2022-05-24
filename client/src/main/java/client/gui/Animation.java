@@ -1,7 +1,6 @@
 package client.gui;
 
 import client.gui.controllers.AbstractController;
-import client.gui.controllers.AuthController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -12,11 +11,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
-public class StartingStage extends Application implements Runnable {
+public class Animation extends Application {
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws Exception {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(StartingStage.class.getResource("/client/auth.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(StartingStage.class.getResource("/client/animationWindow.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
 
             AbstractController controller = fxmlLoader.getController();
@@ -44,11 +43,4 @@ public class StartingStage extends Application implements Runnable {
     public static void main(String[] args) {
         launch(args);
     }
-
-    @Override
-    public void run() {
-        launch();
-    }
-
-
 }

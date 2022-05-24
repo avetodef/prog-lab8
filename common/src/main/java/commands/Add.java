@@ -13,38 +13,35 @@ import java.util.NoSuchElementException;
 /**
  * Класс команды ADD, предназначенный для добавления элемента в коллекцию
  */
-public class Add extends ACommands{
+public class Add extends ACommands {
     {
         isAsker = true;
     }
+
     public Response execute(RouteDAO routeDAO, DataBaseDAO dbDAO) {
-
         try {
-
             Route route = new Route(-1, info.name, info.x, info.y, info.fromX,
                     info.fromY, info.nameFrom, info.toX, info.toY, info.nameTo,
                     info.distance, user);
 
             route.setUser(user);
-
             int id = dbDAO.create(route);
             route.setId(id);
             routeDAO.create(route);
-            response.msg("элемент добавлен в коллекцию").status(Status.OK);
-        }
-        catch (NoSuchElementException e){throw new ExitException(e.getMessage());}
+            response.msg("успешно").status(Status.OK);
 
-        catch (NullPointerException e){
+        } catch (
+                NoSuchElementException e) {
+            throw new ExitException(e.getMessage());
+        } catch (
+                NullPointerException e) {
             response.msg("ошибка..." + e.getMessage()).status(Status.COLLECTION_ERROR);
             e.printStackTrace();
-        }
-
-        catch (RuntimeException e) {
+        } catch (
+                RuntimeException e) {
             response.msg("невозможно добавить элемент в коллекцию" + e.getMessage()).status(Status.COLLECTION_ERROR);
 
         }
-        //response.msg("я дебил даже не зашел в цикл").status(Status.SERVER_ERROR);
-        //:(
         return response;
     }
 
