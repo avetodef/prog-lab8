@@ -30,6 +30,6 @@ public class ActionChoiceController extends AbstractController implements Initia
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        username.setText(readerSender.user.getUsername());
+        username.setText("ты зашел как " + readerSender.user.getUsername());
     }
 }
