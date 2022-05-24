@@ -27,27 +27,22 @@ public class RegistrationController extends AbstractController {
     private PasswordField repeat_password_field;
 
 
-    public User getUserFromAuthWindow(ActionEvent actionEvent) {
-
+    private User getUserFromAuthWindow(ActionEvent actionEvent) {
         String username = username_field.getText().trim();
         String password = password_field.getText().trim();
-//        System.out.println("USER: " + new User (username, password)
-//                + " IS_PASSWORD_EMPTY " + username_field.getText().isEmpty());
-
-        return new User(username, PasswordHandler.encode(password) );
+        return new User(username, PasswordHandler.encode(password));
     }
 
-    //ReaderSender readerSender = new ReaderSender(new AuthController().socketChannel);
-
-    public void sendDataToServer(User user) {
+    private void sendDataToServer(User user) {
         try {
             List<String> arguments = List.of("registration");
-            Request userRequest = new Request(arguments,null, user);
+            Request userRequest = new Request(arguments, null, user);
             readerSender.sendToServer(userRequest);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     private void processServerResponse(ActionEvent actionEvent) {
         Response response = readerSender.read();
         System.out.println(response.status + " [" + response.msg + "]");
@@ -87,15 +82,15 @@ public class RegistrationController extends AbstractController {
                 System.out.println("PASSWORD IS EMPTY");
                 password_warning_text.setText("пустой пароль");
             }
-            if(!areTheSame){
+            if (!areTheSame) {
                 System.out.println("PASSWORD AND REPEAT PASSWORD DO NOT MATCH");
                 password_warning_text.setText("пароли не совпадают");
             }
         }
     }
 
-
-    public void goBack(ActionEvent actionEvent) {
+    @FXML
+    private void goBack(ActionEvent actionEvent) {
         switchStages(actionEvent, "/client/auth.fxml");
     }
 

@@ -2,39 +2,23 @@ package client.gui.controllers;
 
 import client.ReaderSender;
 import client.gui.StartingStage;
-import interaction.Request;
-import interaction.User;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import javax.lang.model.util.AbstractAnnotationValueVisitor6;
 import java.io.IOException;
-import java.net.ConnectException;
 import java.net.InetSocketAddress;
-import java.nio.channels.ClosedChannelException;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
-import java.util.Iterator;
 
 public abstract class AbstractController {
 
-    public static void exit(ActionEvent actionEvent) {
-        switchStages(actionEvent, "auth.fxml");
-    }
-
-
     public static SocketChannel socketChannel;
+    private final static int serverPort = 6666;
 
-
-    static int serverPort = 6666;
-
-    protected static void connect(SocketChannel client) {
+    private static void connect(SocketChannel client) {
         if (client.isConnectionPending()) {
             try {
                 client.finishConnect();
@@ -45,7 +29,6 @@ public abstract class AbstractController {
         }
     }
 
-    //ReaderSender readerSender = new ReaderSender(socketChannel);
     static {
         try {
             socketChannel = SocketChannel.open();
@@ -59,11 +42,12 @@ public abstract class AbstractController {
         }
     }
 
-    public void submit(ActionEvent actionEvent){}
+    public void submit(ActionEvent actionEvent) {
+    }
 
-    static ReaderSender readerSender = new ReaderSender(socketChannel);
+    public static ReaderSender readerSender = new ReaderSender(socketChannel);
 
-    public void popUpWindow(String path){
+    public void popUpWindow(String path) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(StartingStage.class.getResource(path));
             Scene popupScene = new Scene(fxmlLoader.load());
@@ -75,13 +59,7 @@ public abstract class AbstractController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-//    //@FXML
-//    private static Stage stage;
-//
-//    @FXML
-//    private Scene scene;
 
     public static void switchStages(javafx.event.ActionEvent actionEvent, String switchingPoint) {
         try {
