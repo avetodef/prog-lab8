@@ -2,17 +2,30 @@ package client.gui.controllers;
 
 import interaction.Request;
 import interaction.Response;
+import interaction.Status;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import utils.RouteInfo;
 
+import java.io.IOException;
 import java.util.List;
 
 
 public class AddElementController extends AbstractController {
+
+    @FXML
+    private void sendDataToDrawFloppa(double fromX, long fromY, int toX, float toY, Color color) throws IOException {
+        FXMLLoader loader = new FXMLLoader(AddElementController.class.getResource("/client/animationWindow.fxml"));
+        //Parent root = loader.load();
+        AnimationWindowController animation = loader.getController();
+        animation.drawFloppa(fromX, fromY, toX, toY, color);
+    }
 
     private boolean send = true;
 
@@ -25,10 +38,21 @@ public class AddElementController extends AbstractController {
         System.out.println("sending data to server... " + request);
     }
 
+    private final List<Color> availableColours = List.of(Color.RED,
+            Color.BLUE, Color.GREEN, Color.CHOCOLATE,
+            Color.HOTPINK, Color.CORAL, Color.LIME);
+
     private void processServerResponse() {
         Response response = readerSender.read();
         System.out.println(response.status + " [" + response.msg + "]");
         label.setText(response.msg);
+        if (response.status.equals(Status.OK)) {
+            try {
+                sendDataToDrawFloppa(info().fromX, info().fromY, info().toX, info().toY, Color.BLUE);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML
@@ -156,7 +180,7 @@ public class AddElementController extends AbstractController {
 
     @FXML
     private void go_back(ActionEvent actionEvent) {
-        switchStages(actionEvent, "/client/actionChoice");
+        switchStages(actionEvent, "/client/actionChoice.fxml");
     }
 
     @FXML

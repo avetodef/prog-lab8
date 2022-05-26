@@ -2,15 +2,15 @@ package client.gui.controllers;
 
 import javafx.animation.Animation;
 import javafx.animation.PathTransition;
-import javafx.animation.RotateTransition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
@@ -20,43 +20,44 @@ import java.util.ResourceBundle;
 
 
 public class AnimationWindowController extends AbstractController implements Initializable {
-    @FXML
-    private ImageView floppa;
+//    @FXML
+//    private ImageView floppa;
 
     @FXML
     private Canvas canvas;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        double fromX = 10;
-        long fromY = 20;
-        int toX = 300;
-        float toY = 40;
-        Path path = createPath(fromX, fromY, toX, toY);
-        Animation animation = createPathAnimation(path, Duration.seconds(10), Color.HOTPINK);
+    @FXML
+    private Button draw;
+
+    @FXML
+    public void draw_route(ActionEvent event) {
+        drawFloppa(0, 0, -100, 200, Color.RED); //TODO так рисует
+        drawFloppa(0, 0, -100, -200, Color.BLUE); //TODO так рисует
+
+    }
+
+
+    public void drawFloppa(double fromX, long fromY, int toX, float toY, Color color) {
+        // floppa = new ImageView("/images/floppa.jpg");
+        System.out.println("drawing a route...");
+        Path path = createPath(fromX + 579, -fromY + 300, toX + 579, -toY + 300);
+        Animation animation = createPathAnimation(path, Duration.seconds(10), color);
         animation.play();
 
-        moveFloppa(fromX, fromY - 5, toX, toY);
+        //moveFloppa(fromX, fromY , toX, toY);
     }
 
     private Path createPath(double fromX, long fromY, int toX, float toY) {
-
         Path path = new Path();
-
         path.setStroke(Color.RED);
         path.setStrokeWidth(10);
-
         path.getElements().addAll
-//                (new MoveTo(20, 20),
-//                        new LineTo(100,100));
-        (new MoveTo(fromX, fromX),
-                new LineTo(toX, toY));
-
+                (new MoveTo(fromX, fromY),
+                        new LineTo(toX, toY));
         return path;
     }
 
     private Animation createPathAnimation(Path path, Duration duration, Color color) {
-
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         // move a node along a path. we want its position
@@ -108,7 +109,7 @@ public class AnimationWindowController extends AbstractController implements Ini
 
     private void moveFloppa(double fromX, long fromY, int toX, float toY) {
         TranslateTransition translate = new TranslateTransition();
-        translate.setNode(floppa);
+        //translate.setNode(floppa);
         translate.setDuration(Duration.seconds(10));
         translate.setCycleCount(TranslateTransition.INDEFINITE);
         translate.setFromX(fromX);
@@ -120,33 +121,21 @@ public class AnimationWindowController extends AbstractController implements Ini
         translate.play();
     }
 
+    @FXML
+    public void go_back(ActionEvent event) {
+        switchStages(event, "/client/actionChoice.fxml");
+    }
 
-//    @Override
-//    public void initialize(URL url, ResourceBundle resourceBundle) {
-////        //translate (moving)
-//        TranslateTransition translate = new TranslateTransition();
-//        translate.setNode(floppa);
-//        translate.setDuration(Duration.seconds(1));
-//        translate.setCycleCount(TranslateTransition.INDEFINITE);
-//        translate.setByX(250);
-//        translate.setByY(200);
-//        translate.interpolatorProperty();
-//        translate.setAutoReverse(true);
-//        translate.play();
-////
-////        //rotate (moving)
-////        RotateTransition rotate = new RotateTransition();
-////        rotate.setNode(floppa);
-////        rotate.setDuration(Duration.seconds(2));
-////        rotate.setCycleCount(RotateTransition.INDEFINITE);
-////        rotate.interpolatorProperty();
-////        rotate.setByAngle(360);
-////        rotate.play();
-//
-////        Line line = new Line();
-////
-////        line.setStartX();
-//    }
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
+        graphicsContext.setFill(Color.WHITE);
+        graphicsContext.setStroke(Color.BLACK);
+        graphicsContext.setLineWidth(1);
+        graphicsContext.strokeLine(canvas.getWidth() / 2, 0, canvas.getWidth() / 2, canvas.getHeight());
+        graphicsContext.strokeLine(0, canvas.getHeight() / 2, canvas.getWidth(), canvas.getHeight() / 2);
 
+        //drawFloppa(0, 0, 100, 100, Color.BLUE);
+    }
 
 }
