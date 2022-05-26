@@ -1,20 +1,23 @@
 package client.gui.controllers;
 
-import client.ReaderSender;
 import interaction.Request;
 import interaction.Response;
 import interaction.Status;
 import interaction.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import json.PasswordHandler;
 
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 
-public class RegistrationController extends AbstractController {
+public class RegistrationController extends AbstractController implements Initializable {
     @FXML
     private TextField username_field;
     @FXML
@@ -27,7 +30,7 @@ public class RegistrationController extends AbstractController {
     private PasswordField repeat_password_field;
 
 
-    private User getUserFromAuthWindow(ActionEvent actionEvent) {
+    private User getUserFromAuthWindow() {
         String username = username_field.getText().trim();
         String password = password_field.getText().trim();
         return new User(username, PasswordHandler.encode(password));
@@ -64,7 +67,7 @@ public class RegistrationController extends AbstractController {
         username_warning_text.setText("");
         password_warning_text.setText("");
 
-        User user = getUserFromAuthWindow(actionEvent);
+        User user = getUserFromAuthWindow();
 
         boolean areTheSame = password_field.getText().trim().equals(repeat_password_field.getText().trim());
         if(areTheSame && !user.getUsername().isEmpty() && !user.getPassword().isEmpty()
@@ -94,4 +97,16 @@ public class RegistrationController extends AbstractController {
         switchStages(actionEvent, "/client/auth.fxml");
     }
 
+    @FXML
+    private ChoiceBox<String> languageChoice;
+
+    private final String[] availableLanguages = {"Русский", "Slovenščina",
+            "Український", "Español (República Dominicana)"};
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        languageChoice.setValue("Choose your language");
+        languageChoice.getItems().addAll(availableLanguages);
+
+    }
 }
