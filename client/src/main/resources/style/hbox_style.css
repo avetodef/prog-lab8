@@ -1,0 +1,11 @@
+.root {
+    -fx-background-color: #EBE8E8;
+}
+
+HBox {
+    -fx-background-color: #402E27;
+}
+
+VBox {
+    -fx-background-color: #402E27;
+}

@@ -3,6 +3,10 @@
     -fx-text-fill: #EBE8E8;
 }
 
+.HBox {
+    -fx-background-color: #EBE8E8;
+}
+
 .label {
     -fx-text-fill: #402E27;
 }
@@ -14,6 +18,7 @@
     -fx-background-color: #EBE8E8;
     -fx-border-color: #615C5C;
 }
+
 .button:pressed {
     -fx-background-color: #d1ada5;
 }
@@ -32,15 +37,17 @@
     -fx-border-color: #0D0D0D;
     -fx-background-color: #F5F7F7;
 }
+
 .text-field:hover {
     -fx-border-color: #0D0D0D;
     -fx-background-color: #F5F7F7;
 }
+
 .choice-box {
     -fx-background-radius: 4;
     -fx-border-radius: 4;
     -fx-background-color: #EBE8E8;
-    -fx-text-fill: #402E27;
+    -fx-text-fill: #0D0D0D;
     -fx-border-color: #615C5C;
 }
 

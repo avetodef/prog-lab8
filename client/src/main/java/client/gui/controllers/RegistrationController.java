@@ -40,6 +40,8 @@ public class RegistrationController extends AbstractController implements Initia
         try {
             List<String> arguments = List.of("registration");
             Request userRequest = new Request(arguments, null, user);
+            System.out.println("sending data to server... " + userRequest);
+            readerSender.setUser(user);
             readerSender.sendToServer(userRequest);
         } catch (Exception e) {
             e.printStackTrace();
@@ -72,7 +74,6 @@ public class RegistrationController extends AbstractController implements Initia
         boolean areTheSame = password_field.getText().trim().equals(repeat_password_field.getText().trim());
         if(areTheSame && !user.getUsername().isEmpty() && !user.getPassword().isEmpty()
                 && !user.getPassword().equals("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")) { //если что страшилка это то как кодирует пустое поле сша 256
-            System.out.println("sending data to server... " + user + user.getUsername().isEmpty() + " " + user.getPassword().isEmpty());
             sendDataToServer(user);
             processServerResponse(actionEvent);
         }

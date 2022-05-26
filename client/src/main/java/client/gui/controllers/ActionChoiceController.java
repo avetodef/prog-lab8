@@ -15,7 +15,7 @@ public class ActionChoiceController extends AbstractController implements Initia
 
     @FXML
     private void switchToAnimationWindow(ActionEvent actionEvent) {
-        switchStages(actionEvent, "/client/animationWindow.fxml");
+        switchStages(actionEvent, "/client/animation.fxml");
     }
 
     @FXML

@@ -22,6 +22,7 @@ import json.PasswordHandler;
 import java.net.URL;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -37,6 +38,7 @@ public class AuthController extends AbstractController implements Initializable 
     private Text password_warning_text;
     @FXML
     private Button submit_button;
+
 
     @FXML
     private void sign_up(ActionEvent actionEvent) {

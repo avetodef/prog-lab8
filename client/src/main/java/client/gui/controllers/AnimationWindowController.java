@@ -14,8 +14,13 @@ import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 
@@ -31,29 +36,31 @@ public class AnimationWindowController extends AbstractController implements Ini
 
     @FXML
     public void draw_route(ActionEvent event) {
-        drawFloppa(0, 0, -100, 200, Color.RED); //TODO так рисует
-        drawFloppa(0, 0, -100, -200, Color.BLUE); //TODO так рисует
+//        drawFloppa(0, 0, -100, 200, Color.RED); //TODO так рисует
+//        drawFloppa(0, 0, -100, -200, Color.BLUE); //TODO так рисует
 
     }
 
+    private List<Route> routes = new ArrayList<>();
 
-    public void drawFloppa(double fromX, long fromY, int toX, float toY, Color color) {
+
+    public void drawFloppa(Route route) {
         // floppa = new ImageView("/images/floppa.jpg");
         System.out.println("drawing a route...");
-        Path path = createPath(fromX + 579, -fromY + 300, toX + 579, -toY + 300);
-        Animation animation = createPathAnimation(path, Duration.seconds(10), color);
+        Path path = createPath(route);
+        Animation animation = createPathAnimation(path, Duration.seconds(10), route.getColor());
+        routes.add(route);
         animation.play();
-
         //moveFloppa(fromX, fromY , toX, toY);
     }
 
-    private Path createPath(double fromX, long fromY, int toX, float toY) {
+    private Path createPath(Route route) {
         Path path = new Path();
         path.setStroke(Color.RED);
         path.setStrokeWidth(10);
         path.getElements().addAll
-                (new MoveTo(fromX, fromY),
-                        new LineTo(toX, toY));
+                (new MoveTo(route.getFromX() + 579, -route.getFromY() + 300),
+                        new LineTo(route.toX + 579, -route.getToX() + 300));
         return path;
     }
 
@@ -67,7 +74,7 @@ public class AnimationWindowController extends AbstractController implements Ini
         PathTransition pathTransition = new PathTransition(duration, path, pen);
         pathTransition.currentTimeProperty().addListener(new ChangeListener<Duration>() {
 
-            Controller.Location oldLocation = null;
+            Location oldLocation = null;
 
             /**
              * Draw a line from the old location to the new location
@@ -85,7 +92,7 @@ public class AnimationWindowController extends AbstractController implements Ini
 
                 // initialize the location
                 if (oldLocation == null) {
-                    oldLocation = new Controller.Location();
+                    oldLocation = new Location();
                     oldLocation.x = x;
                     oldLocation.y = y;
                     return;
@@ -130,12 +137,55 @@ public class AnimationWindowController extends AbstractController implements Ini
     public void initialize(URL url, ResourceBundle resourceBundle) {
         GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
         graphicsContext.setFill(Color.WHITE);
+        graphicsContext.setFill(Color.WHITE);
         graphicsContext.setStroke(Color.BLACK);
         graphicsContext.setLineWidth(1);
         graphicsContext.strokeLine(canvas.getWidth() / 2, 0, canvas.getWidth() / 2, canvas.getHeight());
         graphicsContext.strokeLine(0, canvas.getHeight() / 2, canvas.getWidth(), canvas.getHeight() / 2);
 
+        for (Route route : routes) {
+            drawFloppa(route);
+        }
+
         //drawFloppa(0, 0, 100, 100, Color.BLUE);
+    }
+
+    @AllArgsConstructor
+    public static class Route {
+        @Getter
+        protected String author;
+        @Getter
+        protected double fromX;
+        @Getter
+        protected long fromY;
+        @Getter
+        protected int toX;
+        @Getter
+        protected float toY;
+        @Getter
+        protected Color color;
+
+//        public Route(String author, double fromX, long fromY, int toX, float toY) {
+//            this.author = author;
+//            this.fromX = fromX;
+//            this.fromY = fromY;
+//            this.toX = toX;
+//            this.toY = toY;
+//        }
+
+        public Route(double fromX, long fromY, int toX, float toY, Color color) {
+            this.fromX = fromX;
+            this.fromY = fromY;
+            this.toX = toX;
+            this.toY = toY;
+            this.color = color;
+        }
+
+    }
+
+    public static class Location {
+        double x;
+        double y;
     }
 
 }

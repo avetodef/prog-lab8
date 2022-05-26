@@ -331,7 +331,6 @@ public class DataBaseDAO implements DAO {
         }
         return false;
     }
-    //TODO на пароль ему вообще похуй почему то
     public boolean checkPassword(String password) {
         String sql = "SELECT password FROM users WHERE password=?";
         try {

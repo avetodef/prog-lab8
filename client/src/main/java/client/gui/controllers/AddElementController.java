@@ -6,7 +6,6 @@ import interaction.Status;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
@@ -19,12 +18,16 @@ import java.util.List;
 
 public class AddElementController extends AbstractController {
 
-    @FXML
     private void sendDataToDrawFloppa(double fromX, long fromY, int toX, float toY, Color color) throws IOException {
-        FXMLLoader loader = new FXMLLoader(AddElementController.class.getResource("/client/animationWindow.fxml"));
-        //Parent root = loader.load();
-        AnimationWindowController animation = loader.getController();
-        animation.drawFloppa(fromX, fromY, toX, toY, color);
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/animation.fxml"));
+        AnimationWindowController controller = loader.getController(); //TODO animation null
+        System.out.println(controller);
+        AnimationWindowController.Route route = new
+                client.gui.controllers.AnimationWindowController.Route(
+                fromX, fromY, toX, toY, color);
+
+        controller.drawFloppa(route);
     }
 
     private boolean send = true;
@@ -165,16 +168,6 @@ public class AddElementController extends AbstractController {
             distance_warning.setText("неправильный тип данных");
             send = false;
         }
-//        name_warning.setText(null);
-//        x_warning.setText(null);
-//        y_warning.setText(null);
-//        from_x_warning.setText(null);
-//        from_y_warning.setText(null);
-//        from_name_warning.setText(null);
-//        to_x_warning.setText(null);
-//        to_y_warning.setText(null);
-//        to_name_warning.setText(null);
-//        distance_warning.setText(null);
         return out;
     }
 

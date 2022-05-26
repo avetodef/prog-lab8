@@ -103,8 +103,9 @@ public class RequestReader implements Callable<String> {
             }
 
             return builder.toString();
+
         } catch (IOException e) { //TODO mb socket exception все так
-            System.err.println(e+" client die. server kill? {yes/no} " + e.getMessage());
+            System.err.println(" client die. server kill? {yes/no} ");
             Scanner sc = new Scanner(System.in);
             String answer;
 
