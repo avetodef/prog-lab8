@@ -1,10 +1,14 @@
 package interaction;
 
+import utils.animation.Route;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Response  implements Serializable  {
     public String msg;
     public Status status;
+    public ArrayList<Route> routeList;
 
     //            #1
     public void setMsg(String msg) {
@@ -26,11 +30,17 @@ public class Response  implements Serializable  {
         return this;
     }
 
+    public Response routeList(ArrayList<Route> routeList) {
+        this.routeList = routeList;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "Response{" +
                 "msg='" + msg + '\'' +
                 ", status=" + status +
+                ", routeList=" + routeList +
                 '}';
     }
 
@@ -38,7 +48,14 @@ public class Response  implements Serializable  {
         this.msg = msg;
         this.status = status;
     }
-    public Response(){}
+
+    public Response() {
+    }
+
+    public Response(Status status, ArrayList<Route> routeList) {
+        this.status = status;
+        this.routeList = routeList;
+    }
 
     public String getMsg() {
         return msg;
@@ -47,4 +64,5 @@ public class Response  implements Serializable  {
     public Status getStatus() {
         return status;
     }
+
 }

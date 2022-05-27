@@ -2,19 +2,11 @@ package server;
 
 import dao.DataBaseDAO;
 import dao.RouteDAO;
-import exceptions.ExitException;
-import interaction.Request;
-import interaction.Response;
-import interaction.Status;
 import interaction.User;
-import json.JsonConverter;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.Socket;
-import java.net.SocketException;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;

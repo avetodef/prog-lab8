@@ -1,6 +1,5 @@
 package client.gui;
 
-import client.gui.controllers.AbstractController;
 import client.gui.controllers.AnimationWindowController;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -13,8 +12,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 public class Animation extends Application {
-    @Override
 
+    @Override
     public void start(Stage stage) throws Exception {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(StartingStage.class.getResource("/client/animation.fxml"));
@@ -37,6 +36,8 @@ public class Animation extends Application {
             stage.setScene(scene);
             stage.show();
             stage.setOnCloseRequest(event -> Platform.exit());
+
+            System.out.println(controller.hashCode());
         } catch (Exception e) {
             e.printStackTrace();
         }

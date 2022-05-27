@@ -1,0 +1,55 @@
+.root {
+    -fx-background-color: #402E27;
+}
+
+.label {
+    -fx-text-fill: #B4D9CB;
+}
+
+button {
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-text-fill: #402E27;
+    -fx-background-color: #EBE8E8;
+    -fx-border-color: #615C5C;
+}
+
+.button:pressed {
+    -fx-background-color: #d1ada5;
+}
+
+.button:hover {
+    -fx-border-color: #0D0D0D;
+    -fx-background-color: #B4D9CB;
+    -fx-text-fill: #0D0D0D;
+}
+
+.button:pressed {
+    -fx-background-color: #D9BFC9;
+}
+
+.choice-box:hover {
+    -fx-border-color: #0D0D0D;
+    -fx-background-color: #F5F7F7;
+}
+
+.text-field:hover {
+    -fx-border-color: #0D0D0D;
+    -fx-background-color: #F5F7F7;
+}
+
+.choice-box {
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-background-color: #EBE8E8;
+    -fx-text-fill: #402E27;
+    -fx-border-color: #615C5C;
+}
+
+.text-field {
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-background-color: #EBE8E8;
+    -fx-text-fill: #615c5c;
+    -fx-border-color: #615C5C;
+}

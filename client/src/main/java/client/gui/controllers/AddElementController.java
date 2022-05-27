@@ -8,9 +8,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import json.ColorConverter;
 import utils.RouteInfo;
+import utils.animation.Route;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,15 +21,15 @@ import java.util.List;
 
 public class AddElementController extends AbstractController {
 
-    private void sendDataToDrawFloppa(double fromX, long fromY, int toX, float toY, Color color) throws IOException {
+    private void sendDataToDrawFloppa(double fromX, long fromY, int toX, float toY, String color) throws IOException {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/animation.fxml"));
-        AnimationWindowController controller = loader.getController(); //TODO animation null
-        System.out.println(controller);
-        AnimationWindowController.Route route = new
-                client.gui.controllers.AnimationWindowController.Route(
+        loader.load();
+        AnimationWindowController controller = loader.getController();
+        Route route = new
+                Route(
                 fromX, fromY, toX, toY, color);
-
+        //AnimationWindowController.routes.add(route);
         controller.drawFloppa(route);
     }
 
@@ -41,17 +44,15 @@ public class AddElementController extends AbstractController {
         System.out.println("sending data to server... " + request);
     }
 
-    private final List<Color> availableColours = List.of(Color.RED,
-            Color.BLUE, Color.GREEN, Color.CHOCOLATE,
-            Color.HOTPINK, Color.CORAL, Color.LIME);
-
     private void processServerResponse() {
         Response response = readerSender.read();
         System.out.println(response.status + " [" + response.msg + "]");
         label.setText(response.msg);
         if (response.status.equals(Status.OK)) {
             try {
-                sendDataToDrawFloppa(info().fromX, info().fromY, info().toX, info().toY, Color.BLUE);
+                sendDataToDrawFloppa(
+                        info().fromX,
+                        info().fromY, info().toX, info().toY, String.valueOf(readerSender.user.hashCode()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -173,9 +174,11 @@ public class AddElementController extends AbstractController {
 
     @FXML
     private void go_back(ActionEvent actionEvent) {
-        switchStages(actionEvent, "/client/actionChoice.fxml");
+        pane.getScene().getWindow().hide();
     }
 
+    @FXML
+    private Pane pane;
     @FXML
     private TextField name_field;
     @FXML
@@ -219,4 +222,6 @@ public class AddElementController extends AbstractController {
     private Text distance_warning;
     @FXML
     private Label label;
+
+
 }

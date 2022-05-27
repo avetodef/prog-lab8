@@ -1,5 +1,8 @@
 package client.gui.controllers;
 
+import interaction.Request;
+import interaction.Response;
+import interaction.Status;
 import javafx.animation.Animation;
 import javafx.animation.PathTransition;
 import javafx.animation.TranslateTransition;
@@ -10,14 +13,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import json.ColorConverter;
+import json.JsonConverter;
+import utils.animation.Route;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,33 +28,17 @@ import java.util.ResourceBundle;
 
 
 public class AnimationWindowController extends AbstractController implements Initializable {
-//    @FXML
-//    private ImageView floppa;
 
     @FXML
     private Canvas canvas;
 
-    @FXML
-    private Button draw;
-
-    @FXML
-    public void draw_route(ActionEvent event) {
-//        drawFloppa(0, 0, -100, 200, Color.RED); //TODO так рисует
-//        drawFloppa(0, 0, -100, -200, Color.BLUE); //TODO так рисует
-
-    }
-
-    private List<Route> routes = new ArrayList<>();
 
 
     public void drawFloppa(Route route) {
-        // floppa = new ImageView("/images/floppa.jpg");
-        System.out.println("drawing a route...");
         Path path = createPath(route);
-        Animation animation = createPathAnimation(path, Duration.seconds(10), route.getColor());
-        routes.add(route);
+        Color color = Color.valueOf(route.getColor());
+        Animation animation = createPathAnimation(path, Duration.seconds(10), color);
         animation.play();
-        //moveFloppa(fromX, fromY , toX, toY);
     }
 
     private Path createPath(Route route) {
@@ -60,7 +47,10 @@ public class AnimationWindowController extends AbstractController implements Ini
         path.setStrokeWidth(10);
         path.getElements().addAll
                 (new MoveTo(route.getFromX() + 579, -route.getFromY() + 300),
-                        new LineTo(route.toX + 579, -route.getToX() + 300));
+                        new LineTo(route.getToX() + 579, -route.getToX() + 300));
+//        (new MoveTo(route.getFromX() + 200, -route.getFromY() + 100),
+//                new LineTo(route.getToX() + 579, -route.getToX() + 300));
+
         return path;
     }
 
@@ -109,7 +99,6 @@ public class AnimationWindowController extends AbstractController implements Ini
                 oldLocation.y = y;
             }
         });
-
         return pathTransition;
     }
 
@@ -135,55 +124,45 @@ public class AnimationWindowController extends AbstractController implements Ini
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
-        graphicsContext.setFill(Color.WHITE);
-        graphicsContext.setFill(Color.WHITE);
-        graphicsContext.setStroke(Color.BLACK);
-        graphicsContext.setLineWidth(1);
-        graphicsContext.strokeLine(canvas.getWidth() / 2, 0, canvas.getWidth() / 2, canvas.getHeight());
-        graphicsContext.strokeLine(0, canvas.getHeight() / 2, canvas.getWidth(), canvas.getHeight() / 2);
-
-        for (Route route : routes) {
+        requestRoutes();
+        ArrayList<Route> routelist = processServerResponse();
+        for (Route route : routelist) {
             drawFloppa(route);
         }
 
-        //drawFloppa(0, 0, 100, 100, Color.BLUE);
     }
 
-    @AllArgsConstructor
-    public static class Route {
-        @Getter
-        protected String author;
-        @Getter
-        protected double fromX;
-        @Getter
-        protected long fromY;
-        @Getter
-        protected int toX;
-        @Getter
-        protected float toY;
-        @Getter
-        protected Color color;
 
-//        public Route(String author, double fromX, long fromY, int toX, float toY) {
-//            this.author = author;
-//            this.fromX = fromX;
-//            this.fromY = fromY;
-//            this.toX = toX;
-//            this.toY = toY;
-//        }
+    private void requestRoutes() {
+        try {
+            List<String> arguments = List.of("animation");
+            Request userRequest = new Request(arguments, null, readerSender.user);
+            readerSender.sendToServer(userRequest);
+            System.out.println("sending data to server... " + userRequest);
 
-        public Route(double fromX, long fromY, int toX, float toY, Color color) {
-            this.fromX = fromX;
-            this.fromY = fromY;
-            this.toX = toX;
-            this.toY = toY;
-            this.color = color;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    boolean draw = true;
+
+    private ArrayList<Route> processServerResponse() {
+        Response response = readerSender.read();
+
+//        ArrayList<Route> routes = JsonConverter.deserializeRoute(response.msg);
+
+        System.out.println(response.status + " [" + response.msg + "]");
+        System.out.println("ROUTELIST: " + response.routeList);
+        if (!response.status.equals(Status.OK)) {
+            draw = false;
         }
 
+        return response.routeList;
     }
 
-    public static class Location {
+
+    private static class Location {
         double x;
         double y;
     }

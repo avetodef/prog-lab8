@@ -1,7 +1,6 @@
 package server;
 
 import commands.AutoUpdate;
-import console.ConsoleOutputer;
 import dao.DataBaseDAO;
 import dao.RouteDAO;
 import interaction.Response;
