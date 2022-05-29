@@ -5,24 +5,28 @@ import interaction.Response;
 import interaction.Status;
 import javafx.animation.Animation;
 import javafx.animation.PathTransition;
-import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
 import json.ColorConverter;
+import org.postgresql.replication.fluent.CommonOptions;
 import utils.animation.Route;
 
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Timer;
 
 
 public class AnimationWindowController extends AbstractController implements Initializable {
@@ -30,13 +34,12 @@ public class AnimationWindowController extends AbstractController implements Ini
     @FXML
     private Canvas canvas;
 
+    @FXML
+    private AnchorPane pane;
 
     public void drawFloppa(Route route) {
         Path path = createPath(route);
-        path.setOnMouseClicked(e -> {
-            System.out.println("MOUSE CLICKED");
-            popUpWindow("/client/add_element.fxml");
-        });
+
 
         Color color = ColorConverter.color(route.getColor());
 
@@ -46,13 +49,27 @@ public class AnimationWindowController extends AbstractController implements Ini
 
     private Path createPath(Route route) {
         Path path = new Path();
+//        path.setOnMouseClicked(e -> {
+//            System.out.println("MOUSE CLICKED");
+//            popUpWindow("/client/add_element.fxml");
+//        });
+        path.getElements().addAll
+                (new MoveTo(route.getFromX() + 579, -route.getFromY() + 300),
+                        new LineTo(route.getToX() + 579, -route.getToX() + 300));
+        return path;
+    }
+
+    private Path drawPath(Route route) {
+        Path path = new Path();
+        path.setStroke(ColorConverter.color(route.getColor()));
+        path.setStrokeWidth(3);
         path.setOnMouseClicked(e -> {
             System.out.println("MOUSE CLICKED");
             popUpWindow("/client/add_element.fxml");
         });
         path.getElements().addAll
-                (new MoveTo(route.getFromX() + 579, -route.getFromY() + 300),
-                        new LineTo(route.getToX() + 579, -route.getToX() + 300));
+                (new MoveTo(route.getFromX() + 630, -route.getFromY() + 350),
+                        new LineTo(route.getToX() + 630, -route.getToX() + 350));
         return path;
     }
 
@@ -105,19 +122,19 @@ public class AnimationWindowController extends AbstractController implements Ini
     }
 
 
-    private void moveFloppa(double fromX, long fromY, int toX, float toY) {
-        TranslateTransition translate = new TranslateTransition();
-        //translate.setNode(floppa);
-        translate.setDuration(Duration.seconds(10));
-        translate.setCycleCount(TranslateTransition.INDEFINITE);
-        translate.setFromX(fromX);
-        translate.setFromY(fromY);
-        translate.setByX(toX);
-        translate.setByY(toY);
-        translate.interpolatorProperty();
-        translate.setAutoReverse(true);
-        translate.play();
-    }
+//    private void moveFloppa(double fromX, long fromY, int toX, float toY) {
+//        TranslateTransition translate = new TranslateTransition();
+//        //translate.setNode(floppa);
+//        translate.setDuration(Duration.seconds(10));
+//        translate.setCycleCount(TranslateTransition.INDEFINITE);
+//        translate.setFromX(fromX);
+//        translate.setFromY(fromY);
+//        translate.setByX(toX);
+//        translate.setByY(toY);
+//        translate.interpolatorProperty();
+//        translate.setAutoReverse(true);
+//        translate.play();
+//    }
 
     @FXML
     public void go_back(ActionEvent event) {
@@ -126,12 +143,23 @@ public class AnimationWindowController extends AbstractController implements Ini
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        System.out.println("initializing animation scene...");
         requestRoutes();
+        System.out.println("requesting data from server...");
         ArrayList<Route> routelist = processServerResponse();
+        System.out.println("getting routelist...");
         for (Route route : routelist) {
             drawFloppa(route);
         }
+        System.out.println("paths are drawn");
+        drawRoutes(routelist);
 
+    }
+
+    private void drawRoutes(ArrayList<Route> routelist) {
+        for (Route route : routelist) {
+            pane.getChildren().add(drawPath(route));
+        }
     }
 
 
@@ -150,18 +178,15 @@ public class AnimationWindowController extends AbstractController implements Ini
     boolean draw = true;
 
     private ArrayList<Route> processServerResponse() {
+
         Response response = readerSender.read();
-
-//        ArrayList<Route> routes = JsonConverter.deserializeRoute(response.msg);
-
         System.out.println(response.status + " [" + response.msg + "]");
-//        System.out.println("ROUTELIST: " + response.routeList);
         if (!response.status.equals(Status.OK)) {
             draw = false;
         }
+
         return response.routeList;
     }
-
 
     private static class Location {
         double x;

@@ -57,7 +57,6 @@ public class ReaderSender {
             }
         } catch (IOException e) {
             System.out.println("IO problems in reader sender line 48: " + e.getMessage());
-//            e.printStackTrace();
             if (!reconnect())
                 serverDied();
         }

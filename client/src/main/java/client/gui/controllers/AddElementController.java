@@ -9,9 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import json.ColorConverter;
 import utils.RouteInfo;
 import utils.animation.Route;
 
@@ -56,6 +54,7 @@ public class AddElementController extends AbstractController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            pane.getScene().getWindow().hide();
         }
     }
 

@@ -11,7 +11,6 @@ import java.util.ResourceBundle;
 
 public class TableWindowController extends AbstractController implements Initializable {
 
-
     @FXML
     public void go_back(ActionEvent actionEvent) {
         switchStages(actionEvent, "/client/actionChoice.fxml");
@@ -34,5 +33,7 @@ public class TableWindowController extends AbstractController implements Initial
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         username.setText("ты зашел как " + readerSender.user.getUsername());
+
+
     }
 }

@@ -33,6 +33,7 @@ public class ActionChoiceController extends AbstractController implements Initia
         avatar.setEffect(adjust);
     }
 
+
     @FXML
     private void trolling() {
         popUpWindow("/client/trolling.fxml");

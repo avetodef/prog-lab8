@@ -276,7 +276,7 @@ public class DataBaseDAO implements DAO {
 
             while (rs1.next() && rs3.next() && rs4.next()) {
                 collection.add(new utils.animation.Route
-                        (rs1.getString("username"), rs3.getDouble("from_x"),
+                        (rs1.getInt("id"), rs1.getString("username"), rs3.getDouble("from_x"),
                                 rs3.getLong("from_y"), rs4.getInt("to_x"),
                                 rs4.getFloat("to_y"),
                                 String.valueOf(rs1.getString("username").hashCode())));

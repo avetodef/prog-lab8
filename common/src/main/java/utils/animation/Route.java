@@ -3,29 +3,25 @@ package utils.animation;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
+@NoArgsConstructor
 public class Route {
     @Getter
-    public String author;
+    private int id;
     @Getter
-    public double fromX;
+    private String author;
     @Getter
-    public long fromY;
+    private double fromX;
     @Getter
-    public int toX;
+    private long fromY;
     @Getter
-    public float toY;
+    private int toX;
     @Getter
-    public String color;
-
-//        public Route(String author, double fromX, long fromY, int toX, float toY) {
-//            this.author = author;
-//            this.fromX = fromX;
-//            this.fromY = fromY;
-//            this.toX = toX;
-//            this.toY = toY;
-//        }
+    private float toY;
+    @Getter
+    private String color;
 
     public Route(double fromX, long fromY, int toX, float toY, String color) {
         this.fromX = fromX;
@@ -33,9 +29,6 @@ public class Route {
         this.toX = toX;
         this.toY = toY;
         this.color = color;
-    }
-
-    public Route() {
     }
 
     @Override
