@@ -9,6 +9,7 @@ public class Response  implements Serializable  {
     public String msg;
     public Status status;
     public ArrayList<Route> routeList;
+    public utils.Route route;
 
     //            #1
     public void setMsg(String msg) {
@@ -35,6 +36,18 @@ public class Response  implements Serializable  {
         return this;
     }
 
+    public Response route(utils.Route route) {
+        this.route = route;
+        return this;
+    }
+
+    public Response(String msg, Status status, ArrayList<Route> routeList, utils.Route route) {
+        this.msg = msg;
+        this.status = status;
+        this.routeList = routeList;
+        this.route = route;
+    }
+
     @Override
     public String toString() {
         return "Response{" +
@@ -50,11 +63,6 @@ public class Response  implements Serializable  {
     }
 
     public Response() {
-    }
-
-    public Response(Status status, ArrayList<Route> routeList) {
-        this.status = status;
-        this.routeList = routeList;
     }
 
     public String getMsg() {

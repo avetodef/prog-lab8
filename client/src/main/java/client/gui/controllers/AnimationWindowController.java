@@ -1,5 +1,6 @@
 package client.gui.controllers;
 
+import client.gui.StartingStage;
 import interaction.Request;
 import interaction.Response;
 import interaction.Status;
@@ -9,8 +10,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.AnchorPane;
@@ -18,9 +21,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
 import json.ColorConverter;
+import lombok.SneakyThrows;
 import org.postgresql.replication.fluent.CommonOptions;
 import utils.animation.Route;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -49,28 +54,38 @@ public class AnimationWindowController extends AbstractController implements Ini
 
     private Path createPath(Route route) {
         Path path = new Path();
-//        path.setOnMouseClicked(e -> {
-//            System.out.println("MOUSE CLICKED");
-//            popUpWindow("/client/add_element.fxml");
-//        });
         path.getElements().addAll
                 (new MoveTo(route.getFromX() + 579, -route.getFromY() + 300),
                         new LineTo(route.getToX() + 579, -route.getToX() + 300));
         return path;
     }
 
+
     private Path drawPath(Route route) {
         Path path = new Path();
-        path.setStroke(ColorConverter.color(route.getColor()));
-        path.setStrokeWidth(3);
+        path.setStroke(ColorConverter.transparentColor(route.getColor()));
+        path.setStrokeWidth(10);
         path.setOnMouseClicked(e -> {
-            System.out.println("MOUSE CLICKED");
-            popUpWindow("/client/add_element.fxml");
+            sendIdToInfo(route);
+            popUpWindow("/client/info.fxml");
+
         });
         path.getElements().addAll
                 (new MoveTo(route.getFromX() + 630, -route.getFromY() + 350),
                         new LineTo(route.getToX() + 630, -route.getToX() + 350));
         return path;
+    }
+
+    private void sendIdToInfo(Route route) {
+        try {
+            FXMLLoader loader = new FXMLLoader(StartingStage.class.getResource("/client/info.fxml"));
+            loader.load();
+            InfoController info = loader.getController();
+            info.routeId = route.getId();
+            System.out.println("INFO ROUTE ID: " + info.routeId);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
     private Animation createPathAnimation(Path path, Duration duration, Color color) {

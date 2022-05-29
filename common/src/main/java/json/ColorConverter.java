@@ -3,17 +3,6 @@ package json;
 import javafx.scene.paint.Color;
 
 public class ColorConverter {
-    public static Color hashCodeToRGB(String hash) {
-
-        if (hash.length() >= 10) {
-            return tenChars(hash);
-        }
-        if (hash.length() == 9) {
-            return nineChars(hash);
-        }
-
-        return null;
-    }
 
     public static Color color(String hash) {
         int hscde = Integer.parseInt(hash);
@@ -21,37 +10,33 @@ public class ColorConverter {
             hash = hash.substring(1, hash.length() - 1);
 
         if (hash.length() >= 10)
-            return tenChars(hash);
+            return tenChars(hash, 1);
         else switch (hash.length()) {
             case (9):
-                return nineChars(hash);
+                return nineChars(hash, 1);
             case (8):
-                return eightChars(hash);
+                return eightChars(hash, 1);
             case (7):
-                return sevenChars(hash);
+                return sevenChars(hash, 1);
             case (6):
-                return sixChars(hash);
+                return sixChars(hash, 1);
             case (5):
-                return fiveChars(hash);
+                return fiveChars(hash, 1);
             case (4):
-                return fourChars(hash);
+                return fourChars(hash, 1);
             case (3):
-                return threeChars(hash);
+                return threeChars(hash, 1);
             case (2):
-                return twoChars(hash);
+                return twoChars(hash, 1);
             case (1):
-                return ineChar(hash);
+                return ineChar(hash, 1);
             default:
                 return null;
         }
-
-//        int hashCode = Integer.parseInt(hash);
-//
-//        return Color.hsb(hashCode/((double)Integer.MAX_VALUE), 0.5, 0.5);
     }
 
 
-    private static Color tenChars(String hashcode) {
+    private static Color tenChars(String hashcode, int opacity) {
         String red = hashcode.substring(0, 3);
         double r = Double.parseDouble(red) / 100;
         if (r > 1)
@@ -66,10 +51,10 @@ public class ColorConverter {
         if (b > 1)
             b = b / 10;
 
-        return new Color(r, g, b, 1);
+        return new Color(r, g, b, opacity);
     }
 
-    private static Color nineChars(String hashcode) {
+    private static Color nineChars(String hashcode, int opacity) {
         String red = hashcode.substring(0, 3);
         double r = Double.parseDouble(red) / 100;
         if (r > 1)
@@ -84,10 +69,10 @@ public class ColorConverter {
         if (b > 1)
             b = b / 10;
 
-        return new Color(r, g, b, 1);
+        return new Color(r, g, b, opacity);
     }
 
-    private static Color eightChars(String hashcode) {
+    private static Color eightChars(String hashcode, int o) {
         String red = hashcode.substring(0, 3);
         double r = Double.parseDouble(red) / 100;
         if (r > 1)
@@ -102,10 +87,10 @@ public class ColorConverter {
         if (b > 1)
             b = b / 10;
 
-        return new Color(r, g, b, 1);
+        return new Color(r, g, b, o);
     }
 
-    private static Color sevenChars(String hashcode) {
+    private static Color sevenChars(String hashcode, int o) {
         String red = hashcode.substring(0, 3);
         double r = Double.parseDouble(red) / 100;
         if (r > 1)
@@ -120,10 +105,10 @@ public class ColorConverter {
         if (b > 1)
             b = b / 10;
 
-        return new Color(r, g, b, 1);
+        return new Color(r, g, b, o);
     }
 
-    private static Color sixChars(String hashcode) {
+    private static Color sixChars(String hashcode, int o) {
         String red = hashcode.substring(0, 2);
         double r = Double.parseDouble(red) / 10;
         if (r > 1)
@@ -138,10 +123,10 @@ public class ColorConverter {
         if (b > 1)
             b = b / 10;
 
-        return new Color(r, g, b, 1);
+        return new Color(r, g, b, o);
     }
 
-    private static Color fiveChars(String hashcode) {
+    private static Color fiveChars(String hashcode, int o) {
         String red = hashcode.substring(0, 2);
         double r = Double.parseDouble(red) / 10;
         if (r > 1)
@@ -156,10 +141,10 @@ public class ColorConverter {
         if (b > 1)
             b = b / 10;
 
-        return new Color(r, g, b, 1);
+        return new Color(r, g, b, o);
     }
 
-    private static Color fourChars(String hashcode) {
+    private static Color fourChars(String hashcode, int o) {
         String red = hashcode.substring(0, 2);
         double r = Double.parseDouble(red) / 10;
         if (r > 1)
@@ -174,10 +159,10 @@ public class ColorConverter {
         if (b > 1)
             b = b / 10;
 
-        return new Color(r, g, b, 1);
+        return new Color(r, g, b, o);
     }
 
-    private static Color threeChars(String hashcode) {
+    private static Color threeChars(String hashcode, int o) {
         String red = hashcode.substring(0, 1);
         double r = Double.parseDouble(red) / 10;
         if (r > 1)
@@ -192,10 +177,10 @@ public class ColorConverter {
         if (b > 1)
             b = b / 10;
 
-        return new Color(r, g, b, 1);
+        return new Color(r, g, b, o);
     }
 
-    private static Color twoChars(String hashcode) {
+    private static Color twoChars(String hashcode, int o) {
         String red = hashcode.substring(0, 1);
         double r = Double.parseDouble(red) / 10;
         if (r > 1)
@@ -210,11 +195,43 @@ public class ColorConverter {
         if (b > 1)
             b = b / 10;
 
-        return new Color(r, g, b, 1);
+        return new Color(r, g, b, o);
     }
 
-    private static Color ineChar(String hash) {
-        return new Color(Double.parseDouble(hash) / 10, Double.parseDouble(hash) / 10, Double.parseDouble(hash) / 10, 1);
+    private static Color ineChar(String hash, int o) {
+        return new Color(Double.parseDouble(hash) / 10, Double.parseDouble(hash) / 10, Double.parseDouble(hash) / 10, o);
+    }
+
+
+    public static Color transparentColor(String hash) {
+        int hscde = Integer.parseInt(hash);
+        if (hscde < 0)
+            hash = hash.substring(1, hash.length() - 1);
+
+        if (hash.length() >= 10)
+            return tenChars(hash, 0);
+        else switch (hash.length()) {
+            case (9):
+                return nineChars(hash, 0);
+            case (8):
+                return eightChars(hash, 0);
+            case (7):
+                return sevenChars(hash, 0);
+            case (6):
+                return sixChars(hash, 0);
+            case (5):
+                return fiveChars(hash, 0);
+            case (4):
+                return fourChars(hash, 0);
+            case (3):
+                return threeChars(hash, 0);
+            case (2):
+                return twoChars(hash, 0);
+            case (1):
+                return ineChar(hash, 0);
+            default:
+                return null;
+        }
     }
 
 
