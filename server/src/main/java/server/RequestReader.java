@@ -92,7 +92,6 @@ public class RequestReader implements Callable<String> {
                 }
             }
             System.out.println("жди...");
-
         }
         return null;
     }

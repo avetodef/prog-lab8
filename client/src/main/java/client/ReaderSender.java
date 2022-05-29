@@ -58,7 +58,8 @@ public class ReaderSender {
         } catch (IOException e) {
             System.out.println("IO problems in reader sender line 48: " + e.getMessage());
 //            e.printStackTrace();
-            reconnect();
+            if (!reconnect())
+                serverDied();
         }
     }
 
@@ -106,7 +107,7 @@ public class ReaderSender {
     }
 
 
-    private void reconnect() {
+    private boolean reconnect() {
         try {
             buffer = ByteBuffer.allocate(60000);
 
@@ -117,11 +118,14 @@ public class ReaderSender {
             if (socketChannel.isConnectionPending()) {
                 socketChannel.finishConnect();
                 System.out.println("CONNECTED TO SERVER");
+                return true;
             }
 
         } catch (IOException e) {
             System.out.println("cannot reconnect right now: " + e.getMessage());
+            return false;
         }
+        return false;
 
     }
 
