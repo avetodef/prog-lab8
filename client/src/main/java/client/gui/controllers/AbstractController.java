@@ -16,7 +16,7 @@ import java.nio.channels.SocketChannel;
 public abstract class AbstractController {
 
     public static SocketChannel socketChannel;
-    private final static int serverPort = 6666;
+    private static final int serverPort = 6666;
 
     private static void connect(SocketChannel client) {
         if (client.isConnectionPending()) {
@@ -33,9 +33,11 @@ public abstract class AbstractController {
         try {
             socketChannel = SocketChannel.open();
             socketChannel.configureBlocking(true);
+            System.out.println("AbstractController.static initializer");
             socketChannel.connect(new InetSocketAddress("localhost", serverPort));
+            System.out.println("AbstractController.static initializer)))))))");
             if (socketChannel.isConnected())
-                System.out.println("connection established");
+                System.out.println("connection established ABSTR CONTR");
 
         } catch (IOException e) {
             connect(socketChannel);

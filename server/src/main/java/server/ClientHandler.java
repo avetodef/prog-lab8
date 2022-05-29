@@ -1,7 +1,6 @@
 package server;
 
 import commands.AutoUpdate;
-import console.ConsoleOutputer;
 import dao.DataBaseDAO;
 import dao.RouteDAO;
 import interaction.Response;
@@ -30,15 +29,23 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
 
-        DataBaseDAO dbDAO = new DataBaseDAO();
-
-        InputStream socketInputStream;
-        OutputStream socketOutputStream;
-        DataOutputStream dataOutputStream;
-
-        Response errorResponse = new Response(null, Status.SERVER_ERROR);
+//        DataBaseDAO dbDAO = new DataBaseDAO();
+//
+//        InputStream socketInputStream;
+//        OutputStream socketOutputStream;
+//        DataOutputStream dataOutputStream;
+//
+//        Response errorResponse = new Response(null, Status.SERVER_ERROR);
 
         try {
+            DataBaseDAO dbDAO = new DataBaseDAO();
+
+            InputStream socketInputStream;
+            OutputStream socketOutputStream;
+            DataOutputStream dataOutputStream;
+
+            Response errorResponse = new Response(null, Status.SERVER_ERROR);
+
             socketInputStream = clientSocket.getInputStream();
             socketOutputStream = clientSocket.getOutputStream();
             dataOutputStream = new DataOutputStream(socketOutputStream);
@@ -49,9 +56,10 @@ public class ClientHandler implements Runnable {
                 try {
 
                     locker.lock();
-
                     dao = this.fixedThreadPool.submit(new AutoUpdate()).get();
+                    System.out.println("new dao created...");
                     String clientMessage = this.fixedThreadPool.submit(new RequestReader(socketInputStream, forkJoinPool, dao, dbDAO, fixedThreadPool, dataOutputStream)).get();
+                    System.out.println(clientMessage);
                     locker.unlock();
 
                 } catch (NullPointerException e) {
@@ -62,7 +70,7 @@ public class ClientHandler implements Runnable {
                 } catch (NoSuchElementException e) {
                     //throw new ExitException("кнтрл д момент...");
                 } catch (Exception e) {
-                    System.out.println(" ");
+                    System.out.println(e.getMessage());
                 }
             }
         } catch (IOException e) {
@@ -71,74 +79,4 @@ public class ClientHandler implements Runnable {
 
     }
 
-//    private void auth(InputStream inputStream, DataBaseDAO dbDAO, DataOutputStream dataOutputStream, InputStream socketInputStream) {
-//
-//        try {
-//
-//            String requestJson;
-//            StringBuilder builder = new StringBuilder();
-//            int byteRead;
-//            while ((byteRead = inputStream.read()) != -1) {
-//                if (byteRead == 0) break;
-//                builder.append((char) byteRead);
-//            }
-//            dbDAO = new DataBaseDAO();
-//            RouteDAO dao = dbDAO.getDAO();
-//
-//            requestJson = builder.toString();
-//
-//            Request request = JsonConverter.des(requestJson);
-//
-//            if (request.getArgs().contains("new user")) {
-//                if (request.getArgs().contains("y"))
-//                    aNewUser(dbDAO, request, dataOutputStream);
-//                else
-//                    notAFirstTime(dbDAO, request, dataOutputStream);
-//            } else {
-//
-//                //locker.lock();
-//                dao = this.fixedThreadPool.submit(new AutoUpdate()).get();
-//                String clientMessage = this.fixedThreadPool.submit(new RequestReader(socketInputStream, forkJoinPool, dao, dbDAO, fixedThreadPool, dataOutputStream)).get();
-//                //locker.unlock();
-//            }
-//        } catch (IOException | InterruptedException | ExecutionException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    private void aNewUser(DataBaseDAO dbDAO, Request request, DataOutputStream dataOutputStream) throws IOException {
-//        if (dbDAO.checkUsername(request.getUser().getUsername())) {
-//            Response authErrorResponse = new Response("username already in use", Status.USER_EBLAN_ERROR);
-//            dataOutputStream.writeUTF(JsonConverter.serResponse(authErrorResponse));
-//
-//        } else {
-//            User user = request.getUser();
-//            user.setId(id);
-//            dbDAO.insertUser(user);
-//            Response successAuth = new Response("auth complete. your id: " + dbDAO.getUserID(user.getUsername()), Status.OK);
-//            dataOutputStream.writeUTF(JsonConverter.serResponse(successAuth));
-//
-//        }
-//    }
-//
-//    public void notAFirstTime(DataBaseDAO dbDAO, Request request, DataOutputStream dataOutputStream) throws IOException {
-//        if (dbDAO.checkUsername(request.getUser().getUsername())) {
-//
-//            if (!dbDAO.checkPassword(request.getUser().getPassword())) {
-//                Response error = new Response("password and username dont match", Status.USER_EBLAN_ERROR);
-//                dataOutputStream.writeUTF(JsonConverter.serResponse(error));
-//
-//            } else {
-//                id = dbDAO.getUserID(request.getUser().getUsername());
-//                Response ok = new Response("authorized. good job", Status.OK);
-//                dataOutputStream.writeUTF(JsonConverter.serResponse(ok));
-//            }
-//        } else {
-//            Response error = new Response("no such username", Status.USER_EBLAN_ERROR);
-//            dataOutputStream.writeUTF(JsonConverter.serResponse(error));
-//
-//        }
-//    }
-
 }
-

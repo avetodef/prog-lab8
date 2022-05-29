@@ -1,5 +1,8 @@
 package client.gui.controllers;
 
+import interaction.Request;
+import interaction.Response;
+import interaction.Status;
 import javafx.animation.Animation;
 import javafx.animation.PathTransition;
 import javafx.animation.TranslateTransition;
@@ -10,50 +13,46 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
+import json.ColorConverter;
+import utils.animation.Route;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 
 public class AnimationWindowController extends AbstractController implements Initializable {
-//    @FXML
-//    private ImageView floppa;
 
     @FXML
     private Canvas canvas;
 
-    @FXML
-    private Button draw;
 
-    @FXML
-    public void draw_route(ActionEvent event) {
-        drawFloppa(0, 0, -100, 200, Color.RED); //TODO так рисует
-        drawFloppa(0, 0, -100, -200, Color.BLUE); //TODO так рисует
+    public void drawFloppa(Route route) {
+        Path path = createPath(route);
+        path.setOnMouseClicked(e -> {
+            System.out.println("MOUSE CLICKED");
+            popUpWindow("/client/add_element.fxml");
+        });
 
-    }
+        Color color = ColorConverter.color(route.getColor());
 
-
-    public void drawFloppa(double fromX, long fromY, int toX, float toY, Color color) {
-        // floppa = new ImageView("/images/floppa.jpg");
-        System.out.println("drawing a route...");
-        Path path = createPath(fromX + 579, -fromY + 300, toX + 579, -toY + 300);
         Animation animation = createPathAnimation(path, Duration.seconds(10), color);
         animation.play();
-
-        //moveFloppa(fromX, fromY , toX, toY);
     }
 
-    private Path createPath(double fromX, long fromY, int toX, float toY) {
+    private Path createPath(Route route) {
         Path path = new Path();
-        path.setStroke(Color.RED);
-        path.setStrokeWidth(10);
+        path.setOnMouseClicked(e -> {
+            System.out.println("MOUSE CLICKED");
+            popUpWindow("/client/add_element.fxml");
+        });
         path.getElements().addAll
-                (new MoveTo(fromX, fromY),
-                        new LineTo(toX, toY));
+                (new MoveTo(route.getFromX() + 579, -route.getFromY() + 300),
+                        new LineTo(route.getToX() + 579, -route.getToX() + 300));
         return path;
     }
 
@@ -67,7 +66,7 @@ public class AnimationWindowController extends AbstractController implements Ini
         PathTransition pathTransition = new PathTransition(duration, path, pen);
         pathTransition.currentTimeProperty().addListener(new ChangeListener<Duration>() {
 
-            Controller.Location oldLocation = null;
+            Location oldLocation = null;
 
             /**
              * Draw a line from the old location to the new location
@@ -85,7 +84,7 @@ public class AnimationWindowController extends AbstractController implements Ini
 
                 // initialize the location
                 if (oldLocation == null) {
-                    oldLocation = new Controller.Location();
+                    oldLocation = new Location();
                     oldLocation.x = x;
                     oldLocation.y = y;
                     return;
@@ -94,7 +93,7 @@ public class AnimationWindowController extends AbstractController implements Ini
                 // draw line
                 gc.setStroke(color);
                 //gc.setFill(Color.YELLOW);
-                gc.setLineWidth(4);
+                gc.setLineWidth(10);
                 gc.strokeLine(oldLocation.x, oldLocation.y, x, y);
 
                 // update old location with current one
@@ -102,7 +101,6 @@ public class AnimationWindowController extends AbstractController implements Ini
                 oldLocation.y = y;
             }
         });
-
         return pathTransition;
     }
 
@@ -128,14 +126,46 @@ public class AnimationWindowController extends AbstractController implements Ini
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
-        graphicsContext.setFill(Color.WHITE);
-        graphicsContext.setStroke(Color.BLACK);
-        graphicsContext.setLineWidth(1);
-        graphicsContext.strokeLine(canvas.getWidth() / 2, 0, canvas.getWidth() / 2, canvas.getHeight());
-        graphicsContext.strokeLine(0, canvas.getHeight() / 2, canvas.getWidth(), canvas.getHeight() / 2);
+        requestRoutes();
+        ArrayList<Route> routelist = processServerResponse();
+        for (Route route : routelist) {
+            drawFloppa(route);
+        }
 
-        //drawFloppa(0, 0, 100, 100, Color.BLUE);
+    }
+
+
+    private void requestRoutes() {
+        try {
+            List<String> arguments = List.of("animation");
+            Request userRequest = new Request(arguments, null, readerSender.user);
+            readerSender.sendToServer(userRequest);
+            System.out.println("sending data to server... " + userRequest);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    boolean draw = true;
+
+    private ArrayList<Route> processServerResponse() {
+        Response response = readerSender.read();
+
+//        ArrayList<Route> routes = JsonConverter.deserializeRoute(response.msg);
+
+        System.out.println(response.status + " [" + response.msg + "]");
+//        System.out.println("ROUTELIST: " + response.routeList);
+        if (!response.status.equals(Status.OK)) {
+            draw = false;
+        }
+        return response.routeList;
+    }
+
+
+    private static class Location {
+        double x;
+        double y;
     }
 
 }

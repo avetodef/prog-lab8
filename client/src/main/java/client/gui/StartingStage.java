@@ -13,16 +13,6 @@ public class StartingStage extends Application implements Runnable {
             FXMLLoader fxmlLoader = new FXMLLoader(StartingStage.class.getResource("/client/auth.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
 
-//            AbstractController controller = fxmlLoader.getController();
-//
-//            scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-//                @Override
-//                public void handle(KeyEvent event) {
-//                    if (event.getCode() == KeyCode.ENTER)
-//                        controller.submit(new ActionEvent());
-//                }
-//            });
-
             stage.setResizable(false);
             stage.setMinHeight(400.0);
             stage.setMinWidth(640.0);

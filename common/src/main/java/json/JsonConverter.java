@@ -5,7 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import interaction.Request;
 import interaction.Response;
 import interaction.User;
+import utils.animation.Route;
 
+import java.io.DataInput;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Scanner;
 
 public class JsonConverter {
@@ -48,7 +54,7 @@ public class JsonConverter {
         return ouput + "\0";
     }
 
-    public static Response desResponse(String s){
+    public static Response desResponse(String s) {
         Response output = null;
         try {
             output = new ObjectMapper().readValue(s, Response.class);
@@ -58,4 +64,41 @@ public class JsonConverter {
         }
         return output;
     }
+
+
+//    public static String serializeRoute(List<Route> route){
+//        String output = "";
+//        try{
+//            output = new ObjectMapper().writeValueAsString(route);
+//        } catch (JsonProcessingException e) {
+//            System.out.println("беды с сериализацией route " + e.getMessage());
+//        }
+//
+//        return output + "\0";
+//    }
+
+//    public static ArrayList<Route> deserializeRoute(String s){
+//        ArrayList<Route> output = null;
+//
+//        try {
+//            output = new ObjectMapper().readValue(s, ArrayList.class);
+//
+//        } catch (JsonProcessingException e) {
+//            System.out.println("краказябра хи хи ха ха чин чань чунь (десер реквеста)" + e.getMessage());
+//        }
+//        return output;
+//    }
+
+//    public static Route restoreRoute(LinkedHashMap s){
+//        Route output = null;
+//        try {
+//            output = new ObjectMapper().readValue((DataInput) s, Route.class);
+//
+//        } catch (JsonProcessingException e) {
+//            System.out.println("краказябра хи хи ха ха чин чань чунь (десер реквеста)" + e.getMessage());
+//        } catch (IOException exception) {
+//            exception.printStackTrace();
+//        }
+//        return output;
+//    }
 }

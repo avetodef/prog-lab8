@@ -2,13 +2,16 @@ package dao;
 
 import console.ConsoleOutputer;
 import interaction.User;
+import json.ColorConverter;
 import utils.Route;
 import utils.RouteInfo;
 
 import java.sql.*;
 import java.time.ZonedDateTime;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 
 public class DataBaseDAO implements DAO {
 
@@ -36,11 +39,10 @@ public class DataBaseDAO implements DAO {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(url, username, password);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             o.printRed("database sleep. wait");
 
-            while(true){
+            while (true) {
 
             }
         }
@@ -48,7 +50,7 @@ public class DataBaseDAO implements DAO {
 //            o.printWhite("подключено к датабейс");
 //        else
 //            o.printRed("не удается подключиться к датабазе");
-        if(conn == null)
+        if (conn == null)
             o.printRed("not connected to database");
 
         return conn;
@@ -107,7 +109,7 @@ public class DataBaseDAO implements DAO {
 
     }
 
-    public String getUsernameByRouteId(int routeID){
+    public String getUsernameByRouteId(int routeID) {
         String SQL = "SELECT * FROM route WHERE id=?";
         try {
             PreparedStatement pstmt = connection.prepareStatement(SQL);
@@ -130,7 +132,7 @@ public class DataBaseDAO implements DAO {
                 + "WHERE id = ?";
         String statement2 = "UPDATE coordinates SET coord_x = ?, coord_y = ?" + "WHERE id = ?";
 
-        String statement3="UPDATE location_from SET from_x = ?,from_y = ?, from_name = ?"
+        String statement3 = "UPDATE location_from SET from_x = ?,from_y = ?, from_name = ?"
                 + "WHERE id = ?";
         String statement4 = "UPDATE location_to SET to_x = ?, to_y = ?, to_name = ?" +
                 "WHERE id = ?";
@@ -188,13 +190,13 @@ public class DataBaseDAO implements DAO {
             pstmt1.setInt(1, id);
 
             PreparedStatement pstmt2 = connection.prepareStatement(SQL2);
-            pstmt2.setInt(1,id);
+            pstmt2.setInt(1, id);
 
             PreparedStatement pstmt3 = connection.prepareStatement(SQL3);
-            pstmt3.setInt(1,id);
+            pstmt3.setInt(1, id);
 
             PreparedStatement pstmt4 = connection.prepareStatement(SQL4);
-            pstmt4.setInt(1,id);
+            pstmt4.setInt(1, id);
             pstmt1.executeUpdate();
             pstmt2.executeUpdate();
             pstmt3.executeUpdate();
@@ -233,11 +235,11 @@ public class DataBaseDAO implements DAO {
             rs4.next();
 
 
-            while(rs1.next()){
+            while (rs1.next()) {
                 collection.add(new Route(rs1.getInt("id"), rs1.getString("name"), rs2.getDouble("coord_x"),
                         rs2.getDouble("coord_y"), rs3.getDouble("from_x"),
                         rs3.getLong("from_y"), rs3.getString("from_name"), rs4.getInt("to_x"),
-                        rs4.getFloat("to_y"), rs4.getString("to_name"),rs1.getInt("distance"),
+                        rs4.getFloat("to_y"), rs4.getString("to_name"), rs1.getInt("distance"),
                         getUserByName(rs1.getString("username"))));
             }
             return collection;
@@ -247,6 +249,48 @@ public class DataBaseDAO implements DAO {
         } catch (NullPointerException e) {
             System.out.println("пусто в душе и в коллеекции ");
             return new ArrayDeque<Route>();
+        }
+    }
+
+
+    public ArrayList<utils.animation.Route> getAnimationRoute() {
+        Connection connection = connect();
+        String SQL1 = "SELECT * FROM route";
+        String SQL3 = "SELECT * FROM location_from ";
+        String SQL4 = "SELECT * FROM location_to ";
+
+        ArrayList<utils.animation.Route> collection = new ArrayList<>();
+        try {
+            PreparedStatement pstmt1 = connection.prepareStatement(SQL1);
+            ResultSet rs1 = pstmt1.executeQuery();
+            rs1.next();
+
+            PreparedStatement pstmt3 = connection.prepareStatement(SQL3);
+            ResultSet rs3 = pstmt3.executeQuery();
+            rs3.next();
+
+            PreparedStatement pstmt4 = connection.prepareStatement(SQL4);
+            ResultSet rs4 = pstmt4.executeQuery();
+            rs4.next();
+
+
+            while (rs1.next() && rs3.next() && rs4.next()) {
+                collection.add(new utils.animation.Route
+                        (rs1.getString("username"), rs3.getDouble("from_x"),
+                                rs3.getLong("from_y"), rs4.getInt("to_x"),
+                                rs4.getFloat("to_y"),
+                                String.valueOf(rs1.getString("username").hashCode())));
+            }
+
+            System.out.println("COLLECTION " + collection);
+
+            return collection;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return new ArrayList<utils.animation.Route>();
+        } catch (NullPointerException e) {
+            System.out.println("пусто в душе и в коллеекции ");
+            return new ArrayList<utils.animation.Route>();
         }
     }
 
@@ -331,7 +375,7 @@ public class DataBaseDAO implements DAO {
         }
         return false;
     }
-    //TODO на пароль ему вообще похуй почему то
+
     public boolean checkPassword(String password) {
         String sql = "SELECT password FROM users WHERE password=?";
         try {
@@ -346,7 +390,7 @@ public class DataBaseDAO implements DAO {
             if (count > 0) {
                 return true;
             }
-            if(count == 0)
+            if (count == 0)
                 return false;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -377,19 +421,19 @@ public class DataBaseDAO implements DAO {
     }
 
 
-    public String getusername(int id) {
-        String SQL = "SELECT username FROM users WHERE user_id=?";
-        try {
-            PreparedStatement pstmt = connection.prepareStatement(SQL);
-            pstmt.setInt(1, id);
-            ResultSet rs = pstmt.executeQuery();
-            rs.next();
-            return rs.getString("username");
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-            return null;
-        }
-    }
+    //    public String getusername(int id) {
+//        String SQL = "SELECT username FROM users WHERE user_id=?";
+//        try {
+//            PreparedStatement pstmt = connection.prepareStatement(SQL);
+//            pstmt.setInt(1, id);
+//            ResultSet rs = pstmt.executeQuery();
+//            rs.next();
+//            return rs.getString("username");
+//        } catch (SQLException ex) {
+//            System.out.println(ex.getMessage());
+//            return null;
+//        }
+//    }
     public User getUserByName(String username) {
         String SQL = "SELECT * FROM users WHERE username=?";
         try {
@@ -406,19 +450,19 @@ public class DataBaseDAO implements DAO {
         }
     }
 
-    public String getPassword(int id) {
-        String SQL = "SELECT password FROM users WHERE user_id=?";
-        try {
-            PreparedStatement pstmt = connection.prepareStatement(SQL);
-            pstmt.setInt(1, id);
-            ResultSet rs = pstmt.executeQuery();
-            rs.next();
-            return rs.getString("password");
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-    }
+//    public String getPassword(int id) {
+//        String SQL = "SELECT password FROM users WHERE user_id=?";
+//        try {
+//            PreparedStatement pstmt = connection.prepareStatement(SQL);
+//            pstmt.setInt(1, id);
+//            ResultSet rs = pstmt.executeQuery();
+//            rs.next();
+//            return rs.getString("password");
+//        } catch (SQLException ex) {
+//            ex.printStackTrace();
+//            return null;
+//        }
+//    }
 
     public int getUserID(String username) {
         String sql = "SELECT user_id FROM users WHERE username=?";

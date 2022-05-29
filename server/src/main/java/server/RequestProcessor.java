@@ -9,7 +9,6 @@ import interaction.Response;
 import interaction.Status;
 import interaction.User;
 import json.JsonConverter;
-import utils.RouteInfo;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -63,7 +62,7 @@ public class RequestProcessor extends RecursiveTask<String> {
         }
 //        System.out.println("61");
         //newUser = JsonConverter.des(msg).getUser();
-        System.out.println("63 " + newUser);
+//        System.out.println("63 " + newUser);
         newUser.setId(dataBaseDAO.getUserID(newUser.getUsername()));
 //        System.out.println("65");
         request.setUser(newUser);
@@ -77,7 +76,7 @@ public class RequestProcessor extends RecursiveTask<String> {
 
             command.setUser(request.getUser());
             command.setInfo(request.getInfo());
-            System.out.println("command " + command);
+            //System.out.println("command " + command);
             this.fixedThreadPool.execute(new ResponseSender(dataOutputStream, command.execute(dao, dataBaseDAO)));
         }
         return null;
