@@ -34,7 +34,9 @@ public class ServerApp {
                     Socket client = serverSocket.accept();
                     output.printPurple("Клиент подключился ");
                     ClientHandler clientHandler = new ClientHandler(client);
+                    output.printWhite("creating a new client handler...");
                     new Thread(clientHandler).start();
+                    output.printYellow("new thread started...");
 
                 } catch (SocketException e) {
                     System.err.println("клиент упал. подожди немного");

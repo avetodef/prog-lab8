@@ -2,6 +2,8 @@ package server;
 
 import dao.DataBaseDAO;
 import dao.RouteDAO;
+import interaction.Response;
+import interaction.Status;
 import interaction.User;
 
 import java.io.DataOutputStream;
@@ -41,28 +43,8 @@ public class RequestReader implements Callable<String> {
 
     @Override
     public String call() {
-        User newUser;
         try {
-
             String requestJson = read();
-//            Request request = JsonConverter.des(requestJson);
-//
-//            if (request.getArgs().contains("authorization")) {
-//                newUser = notAFirstTime(dataBaseDAO, request, dataOutputStream);
-//                newUser.setId(dataBaseDAO.getUserID(newUser.getUsername()));
-//                request.setUser(newUser);
-//            }
-//
-//            if (request.getArgs().contains("registration")) {
-//                newUser = aNewUser(requestJson);
-//                newUser.setId(dataBaseDAO.getUserID(newUser.getUsername()));
-//                request.setUser(newUser);
-//            }
-//
-//            newUser = JsonConverter.des(requestJson).getUser();
-//            newUser.setId(dataBaseDAO.getUserID(newUser.getUsername()));
-//            request.setUser(newUser);
-
             System.out.println("REQUEST " + requestJson);
 
             this.forkJoinPool.invoke(new RequestProcessor(requestJson, routeDAO, dataBaseDAO, fixedThreadPool, dataOutputStream));
@@ -71,33 +53,30 @@ public class RequestReader implements Callable<String> {
         } catch (NullPointerException e) {
             return ("stalo pusto v dushe i v request'e: " + e.getMessage());
         }
-//        catch (IOException exception) {
-//            exception.printStackTrace();
-//        }
-        //return "executed";
     }
 
 
 
 
     private String read() {
+        System.out.println("read method invoked...");
         try {
+
             StringBuilder builder = new StringBuilder();
 
             int byteRead;
-
+            System.out.println("builder and byteRead created... ");
             while ((byteRead = socketInputStream.read()) != -1) {
 
                 if (byteRead == 0) break;
-
                 builder.append((char) byteRead);
-
             }
+            System.out.println("reading ended");
 
             return builder.toString();
 
-        } catch (IOException e) { //TODO mb socket exception все так
-            System.err.println(" client die. server kill? {yes/no} ");
+        } catch (IOException e) {
+            System.err.println("client died");
             Scanner sc = new Scanner(System.in);
             String answer;
 

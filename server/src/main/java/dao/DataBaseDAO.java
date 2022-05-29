@@ -279,7 +279,7 @@ public class DataBaseDAO implements DAO {
                         (rs1.getString("username"), rs3.getDouble("from_x"),
                                 rs3.getLong("from_y"), rs4.getInt("to_x"),
                                 rs4.getFloat("to_y"),
-                                String.valueOf(ColorConverter.hashCodeToRGB(getUserByName(rs1.getString("username")).hashCode()))));
+                                String.valueOf(rs1.getString("username").hashCode())));
             }
 
             System.out.println("COLLECTION " + collection);

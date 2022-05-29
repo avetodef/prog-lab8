@@ -17,10 +17,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
 import json.ColorConverter;
-import json.JsonConverter;
 import utils.animation.Route;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,24 +31,28 @@ public class AnimationWindowController extends AbstractController implements Ini
     private Canvas canvas;
 
 
-
     public void drawFloppa(Route route) {
         Path path = createPath(route);
-        Color color = Color.valueOf(route.getColor());
+        path.setOnMouseClicked(e -> {
+            System.out.println("MOUSE CLICKED");
+            popUpWindow("/client/add_element.fxml");
+        });
+
+        Color color = ColorConverter.color(route.getColor());
+
         Animation animation = createPathAnimation(path, Duration.seconds(10), color);
         animation.play();
     }
 
     private Path createPath(Route route) {
         Path path = new Path();
-        path.setStroke(Color.RED);
-        path.setStrokeWidth(10);
+        path.setOnMouseClicked(e -> {
+            System.out.println("MOUSE CLICKED");
+            popUpWindow("/client/add_element.fxml");
+        });
         path.getElements().addAll
                 (new MoveTo(route.getFromX() + 579, -route.getFromY() + 300),
                         new LineTo(route.getToX() + 579, -route.getToX() + 300));
-//        (new MoveTo(route.getFromX() + 200, -route.getFromY() + 100),
-//                new LineTo(route.getToX() + 579, -route.getToX() + 300));
-
         return path;
     }
 
@@ -91,7 +93,7 @@ public class AnimationWindowController extends AbstractController implements Ini
                 // draw line
                 gc.setStroke(color);
                 //gc.setFill(Color.YELLOW);
-                gc.setLineWidth(4);
+                gc.setLineWidth(10);
                 gc.strokeLine(oldLocation.x, oldLocation.y, x, y);
 
                 // update old location with current one
@@ -153,11 +155,10 @@ public class AnimationWindowController extends AbstractController implements Ini
 //        ArrayList<Route> routes = JsonConverter.deserializeRoute(response.msg);
 
         System.out.println(response.status + " [" + response.msg + "]");
-        System.out.println("ROUTELIST: " + response.routeList);
+//        System.out.println("ROUTELIST: " + response.routeList);
         if (!response.status.equals(Status.OK)) {
             draw = false;
         }
-
         return response.routeList;
     }
 
