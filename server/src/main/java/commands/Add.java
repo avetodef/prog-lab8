@@ -40,6 +40,7 @@ public class Add extends ACommands {
         } catch (
                 RuntimeException e) {
             response.msg("невозможно добавить элемент в коллекцию" + e.getMessage()).status(Status.COLLECTION_ERROR);
+            e.printStackTrace();
 
         }
         return response;

@@ -68,6 +68,7 @@ public class DataBaseDAO implements DAO {
 
         try {
             PreparedStatement pstmt1 = connection.prepareStatement(statement1);
+            System.out.println(Timestamp.valueOf(route.getCreationDate()));
             pstmt1.setTimestamp(1, Timestamp.valueOf(route.getCreationDate()));
             pstmt1.setInt(2, route.getDistance());
             pstmt1.setString(3, route.getUser().getUsername());

@@ -26,9 +26,7 @@ import utils.animation.Route;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 public class AnimationWindowController extends AbstractController implements Initializable {
@@ -75,7 +73,7 @@ public class AnimationWindowController extends AbstractController implements Ini
             Parent root = loader.load();
             InfoController controller = loader.getController();
             utils.Route r = buidRoute();
-            System.out.println(r);
+
             controller.id.setText(String.valueOf(r.getId()));
             controller.username.setText(r.getUser().getUsername());
             controller.coords.setText(String.valueOf(r.getCoordinates()));
@@ -84,6 +82,14 @@ public class AnimationWindowController extends AbstractController implements Ini
             controller.date.setText(r.getCreationDate());
             controller.distance.setText(String.valueOf(r.getDistance()));
 
+            controller.distance.setEditable(false);
+            controller.to.setEditable(false);
+            controller.from.setEditable(false);
+            controller.coords.setEditable(false);
+            controller.id.setEditable(false);
+            controller.date.setEditable(false);
+            controller.username.setEditable(false);
+
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.show();
@@ -91,28 +97,6 @@ public class AnimationWindowController extends AbstractController implements Ini
         } catch (IOException exception) {
             exception.printStackTrace();
         }
-//        try {
-//            askRoute(route);
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/test.fxml"));
-//            Parent root = loader.load();
-//            Test test = loader.getController();
-//            test.displayRouteInfo(getRoute());
-//            Stage stage = new Stage();
-//            stage.setScene(new Scene(root));
-//            stage.show();
-//        } catch (IOException exception) {
-//            exception.printStackTrace();
-//        }
-        //try{
-
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/r.fxml"));
-//            Parent root = loader.load();
-//            InfoController controller = loader.getController();
-
-
-//        } catch (IOException exception) {
-//            exception.printStackTrace();
-//        }
     }
 
     private void askRoute(Route route) {
@@ -203,6 +187,7 @@ public class AnimationWindowController extends AbstractController implements Ini
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("initializing animation scene...");
+
         requestRoutes();
         ArrayList<Route> routelist = processServerResponse();
         for (Route route : routelist) {
@@ -210,6 +195,34 @@ public class AnimationWindowController extends AbstractController implements Ini
         }
         drawRoutes(routelist);
 
+
+        //while(true) {
+
+//            requestRoutes();
+//            ArrayList<Route> routelist = processServerResponse();
+//            for (Route route : routelist) {
+//                drawFloppa(route);
+//            }
+//            drawRoutes(routelist);
+//            reloadRoutes();
+        //}
+    }
+
+    private void reloadRoutes() {
+        TimerTask task = new TimerTask() {
+            public void run() {
+                System.out.println("AAA");
+                requestRoutes();
+                ArrayList<Route> routelist = processServerResponse();
+                for (Route route : routelist) {
+                    drawFloppa(route);
+                }
+                drawRoutes(routelist);
+            }
+        };
+        Timer timer = new Timer("Timer");
+        long delay = 10000L;
+        timer.schedule(task, delay);
     }
 
     private void drawRoutes(ArrayList<Route> routelist) {
