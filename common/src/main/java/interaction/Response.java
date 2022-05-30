@@ -1,20 +1,24 @@
 package interaction;
 
+import lombok.AllArgsConstructor;
 import utils.animation.Route;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
+@AllArgsConstructor
 public class Response  implements Serializable  {
     public String msg;
     public Status status;
     public ArrayList<Route> routeList;
     public utils.Route route;
+    public ArrayList<utils.Route> arrayRoute;
 
     //            #1
     public void setMsg(String msg) {
         this.msg = msg;
     }
+
     public void setStatus(Status status) {
         this.status = status;
     }
@@ -40,6 +44,12 @@ public class Response  implements Serializable  {
         this.route = route;
         return this;
     }
+
+    public Response arrayRoute(ArrayList<utils.Route> arrayRoute) {
+        this.arrayRoute = arrayRoute;
+        return this;
+    }
+
 
     public Response(String msg, Status status, ArrayList<Route> routeList, utils.Route route) {
         this.msg = msg;

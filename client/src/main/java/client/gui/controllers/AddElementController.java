@@ -19,17 +19,17 @@ import java.util.List;
 
 public class AddElementController extends AbstractController {
 
-    private void sendDataToDrawFloppa(double fromX, long fromY, int toX, float toY, String color) throws IOException {
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/animation.fxml"));
-        loader.load();
-        AnimationWindowController controller = loader.getController();
-        Route route = new
-                Route(
-                fromX, fromY, toX, toY, color);
-        //AnimationWindowController.routes.add(route);
-        controller.drawFloppa(route);
-    }
+//    private void sendDataToDrawFloppa(double fromX, long fromY, int toX, float toY, String color) throws IOException {
+//
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/animation.fxml"));
+//        loader.load();
+//        AnimationWindowController controller = loader.getController();
+//        Route route = new
+//                Route(
+//                fromX, fromY, toX, toY, color);
+//        //AnimationWindowController.routes.add(route);
+//        controller.drawFloppa(route);
+//    }
 
     private boolean send = true;
 
@@ -47,15 +47,10 @@ public class AddElementController extends AbstractController {
         System.out.println(response.status + " [" + response.msg + "]");
         label.setText(response.msg);
         if (response.status.equals(Status.OK)) {
-            try {
-                sendDataToDrawFloppa(
-                        info().fromX,
-                        info().fromY, info().toX, info().toY, String.valueOf(readerSender.user.hashCode()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
             pane.getScene().getWindow().hide();
         }
+        if (response.msg.equals("database sleep"))
+            readerSender.serverDied();
     }
 
     @FXML

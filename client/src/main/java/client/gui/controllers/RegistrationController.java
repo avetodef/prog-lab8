@@ -61,6 +61,8 @@ public class RegistrationController extends AbstractController implements Initia
             }
             if (response.status.equals(Status.USERNAME_ERROR))
                 username_warning_text.setText(response.msg);
+            if (response.msg.equals("database sleep"))
+                readerSender.serverDied();
         }
     }
 

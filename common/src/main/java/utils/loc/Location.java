@@ -1,5 +1,8 @@
 package utils.loc;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class Location {
     private int x;
     private float y;
@@ -23,7 +26,7 @@ public class Location {
     public String toString() {
         return
                 "x=" + x +
-                ", y=" + y +
-                ", name='" + name + '\'';
+                        ", y=" + y +
+                        ", name='" + name + '\'';
     }
 }

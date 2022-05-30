@@ -2,12 +2,14 @@ package client.gui.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -57,5 +59,17 @@ public class ActionChoiceController extends AbstractController implements Initia
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         username.setText("ты зашел как " + readerSender.user.getUsername());
+    }
+
+    @FXML
+    private void test() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/route_info.fxml"));
+            loader.load();
+            InfoController controller = loader.getController();
+            System.out.println(controller);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 }

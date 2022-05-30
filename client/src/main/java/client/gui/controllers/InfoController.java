@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
+import lombok.Setter;
 import utils.Route;
 
 import java.io.IOException;
@@ -16,35 +17,46 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class InfoController extends AbstractController implements Initializable {
+public class InfoController extends AbstractController {
 
     @FXML
-    private Text id;
+    protected Text id;
     @FXML
-    private Text coords;
+    protected Text coords;
     @FXML
-    private Text from;
+    protected Text from;
     @FXML
-    private Text to;
+    protected Text to;
     @FXML
-    private Text distance;
+    protected Text distance;
     @FXML
-    private Text date;
+    protected Text date;
     @FXML
-    private Text username;
+    protected Text username;
     @FXML
     private AnchorPane pane;
 
-    public int routeId;
+    //public int routeId;
 
     private void requestInfo() {
-        int id = routeId;
+        int id = routeid;
         Request request = new Request();
         request.setArgs(List.of("routeinfo", String.valueOf(id)));
         readerSender.sendToServer(request);
     }
 
+    @Setter
+    private int routeid;
+
     private void processResponse() {
+        id.setText("");
+        coords.setText("");
+        to.setText("");
+        from.setText("");
+        distance.setText("");
+        date.setText("");
+        username.setText("");
+
         Response response = readerSender.read();
         Route route = response.route;
         System.out.println(response.status + " [" + response.msg + "]");
@@ -57,22 +69,10 @@ public class InfoController extends AbstractController implements Initializable 
             date.setText(route.getCreationDate());
             username.setText(route.getUser().getUsername());
         }
+        if (response.msg.equals("database sleep"))
+            readerSender.serverDied();
     }
 
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        id.setText("");
-        coords.setText("");
-        to.setText("");
-        from.setText("");
-        distance.setText("");
-        date.setText("");
-        username.setText("");
-
-        requestInfo();
-        processResponse();
-    }
 
 
     @FXML

@@ -89,7 +89,7 @@ public class ReaderSender {
         return null;
     }
 
-    private void serverDied() {
+    public void serverDied() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(StartingStage.class.getResource("/client/server_die.fxml"));
             Scene scene = new Scene(fxmlLoader.load());

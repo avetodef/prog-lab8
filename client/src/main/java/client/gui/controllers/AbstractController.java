@@ -75,5 +75,27 @@ public abstract class AbstractController {
         }
     }
 
+    public InfoController getInfoController(String path) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(StartingStage.class.getResource(path));
+            fxmlLoader.load();
+            return fxmlLoader.getController();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public AuthController getAuthController(String path) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(StartingStage.class.getResource(path));
+            fxmlLoader.load();
+            return fxmlLoader.getController();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
 }

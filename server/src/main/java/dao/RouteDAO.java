@@ -13,7 +13,8 @@ public class RouteDAO implements DAO {
 
     private  Deque<Route> collection = new ArrayDeque<>();
 
-    public String initDate = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy : HH.mm.ss"));
+//    public String initDate = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy : HH.mm.ss"));
+public ZonedDateTime initDate = ZonedDateTime.now();
 
     public int create(Route route) {
         collection.add(route);
@@ -53,10 +54,6 @@ public class RouteDAO implements DAO {
     public Deque<Route> getAll() {
         return new ArrayDeque<>(collection);
     }
-
-//    public void clear() {
-//        collection.clear();
-//    }
 
     public boolean removeById(int id){
         Optional<Route> route = collection.stream()

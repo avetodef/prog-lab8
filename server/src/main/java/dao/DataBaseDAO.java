@@ -1,18 +1,26 @@
 package dao;
 
 import console.ConsoleOutputer;
+import interaction.Response;
+import interaction.Status;
 import interaction.User;
 import json.ColorConverter;
+import lombok.NoArgsConstructor;
+import server.ResponseSender;
 import utils.Route;
 import utils.RouteInfo;
 
+import java.io.DataOutputStream;
 import java.sql.*;
 import java.time.ZonedDateTime;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+@NoArgsConstructor
 public class DataBaseDAO implements DAO {
 
     static final String url = "jdbc:postgresql://localhost:5432/postgres";
@@ -20,15 +28,11 @@ public class DataBaseDAO implements DAO {
     static final String password = "lterm54201";
     private final static ConsoleOutputer o = new ConsoleOutputer();
     private Connection connection = connect();
+    private static DataOutputStream outputStream;
 
-//    {
-//        try {
-//            connection = DriverManager.getConnection(url, username, password);
-//            connection.setAutoCommit(true);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    public DataBaseDAO(DataOutputStream outputStream) {
+        this.outputStream = outputStream;
+    }
 
     public static Connection connect() {
         try {
@@ -41,15 +45,9 @@ public class DataBaseDAO implements DAO {
             conn = DriverManager.getConnection(url, username, password);
         } catch (SQLException e) {
             o.printRed("database sleep. wait");
-
-            while (true) {
-
-            }
+            ExecutorService fixedThreadPool = Executors.newFixedThreadPool(3);
+            fixedThreadPool.execute(new ResponseSender(outputStream, new Response("database sleep", Status.SERVER_ERROR)));
         }
-//        if (conn != null)
-//            o.printWhite("подключено к датабейс");
-//        else
-//            o.printRed("не удается подключиться к датабазе");
         if (conn == null)
             o.printRed("not connected to database");
 

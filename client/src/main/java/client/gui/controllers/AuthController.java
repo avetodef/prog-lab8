@@ -71,8 +71,6 @@ public class AuthController extends AbstractController implements Initializable 
             Response response = readerSender.read();
             if (response != null) {
                 System.out.println(response.status + " [" + response.msg + "]");
-
-
                 if (response.status.equals(Status.OK)) {
 
                     switchStages(actionEvent, "/client/actionChoice.fxml");
@@ -82,15 +80,15 @@ public class AuthController extends AbstractController implements Initializable 
                     }
                     if (response.status.equals(Status.USERNAME_ERROR))
                         username_warning_text.setText(response.msg);
+                    if (response.msg.equals("database sleep"))
+                        readerSender.serverDied();
                 }
             } else
                 System.out.println("NULL SERVER RESPONSE ");
         } catch (RuntimeException e) {
             e.printStackTrace();
         }
-
     }
-
 
     @FXML
     public void submit(ActionEvent actionEvent) {
