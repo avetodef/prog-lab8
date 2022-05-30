@@ -4,11 +4,11 @@ import console.ConsoleOutputer;
 import interaction.Response;
 import interaction.Status;
 import interaction.User;
-import json.ColorConverter;
 import lombok.NoArgsConstructor;
 import server.ResponseSender;
 import utils.Route;
 import utils.RouteInfo;
+import utils.animation.AnimationRoute;
 
 import java.io.DataOutputStream;
 import java.sql.*;
@@ -16,7 +16,6 @@ import java.time.ZonedDateTime;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -234,7 +233,7 @@ public class DataBaseDAO implements DAO {
             rs4.next();
 
 
-            while (rs1.next()) {
+            while (rs1.next() && rs3.next() && rs4.next() && rs2.next()) {
                 collection.add(new Route(rs1.getInt("id"), rs1.getString("name"), rs2.getDouble("coord_x"),
                         rs2.getDouble("coord_y"), rs3.getDouble("from_x"),
                         rs3.getLong("from_y"), rs3.getString("from_name"), rs4.getInt("to_x"),
@@ -252,13 +251,13 @@ public class DataBaseDAO implements DAO {
     }
 
 
-    public ArrayList<utils.animation.Route> getAnimationRoute() {
+    public ArrayList<AnimationRoute> getAnimationRoute() {
         Connection connection = connect();
         String SQL1 = "SELECT * FROM route";
         String SQL3 = "SELECT * FROM location_from ";
         String SQL4 = "SELECT * FROM location_to ";
 
-        ArrayList<utils.animation.Route> collection = new ArrayList<>();
+        ArrayList<AnimationRoute> collection = new ArrayList<>();
         try {
             PreparedStatement pstmt1 = connection.prepareStatement(SQL1);
             ResultSet rs1 = pstmt1.executeQuery();
@@ -274,7 +273,7 @@ public class DataBaseDAO implements DAO {
 
 
             while (rs1.next() && rs3.next() && rs4.next()) {
-                collection.add(new utils.animation.Route
+                collection.add(new AnimationRoute
                         (rs1.getInt("id"), rs1.getString("username"), rs3.getDouble("from_x"),
                                 rs3.getLong("from_y"), rs4.getInt("to_x"),
                                 rs4.getFloat("to_y"),
@@ -286,10 +285,10 @@ public class DataBaseDAO implements DAO {
             return collection;
         } catch (SQLException ex) {
             ex.printStackTrace();
-            return new ArrayList<utils.animation.Route>();
+            return new ArrayList<AnimationRoute>();
         } catch (NullPointerException e) {
             System.out.println("пусто в душе и в коллеекции ");
-            return new ArrayList<utils.animation.Route>();
+            return new ArrayList<AnimationRoute>();
         }
     }
 

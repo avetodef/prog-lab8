@@ -44,9 +44,12 @@ public class RouteDAO implements DAO {
     public Route get(int id) {
         for (Route route : collection) {
             if (route.getId() == id) {
+//                System.err.println("ROUTE FOUND");
+//                System.err.println(route);
                 return route;
             }
         }
+        //System.err.println("ROUTE NOT FOUND");
         return null;
     }
 
@@ -99,24 +102,26 @@ public class RouteDAO implements DAO {
 
     @Override
     public String toString() {
-        return "Route{" + "type: " + collection.getClass().getSimpleName() + "," + "size: " + collection.size() + "," +
+        return "AnimationRoute{" + "type: " + collection.getClass().getSimpleName() + "," + "size: " + collection.size() + "," +
                 "initDate: " + initDate + '\'' +
                 '}';
     }
 
-    public int getMaxId() {
-        if (collection.isEmpty()) return 0;
-        return collection.getLast().getId();
-    }
-
-    public int getSize() {
-        return collection.size();
-    }
+//    public int getMaxId() {
+//        if (collection.isEmpty()) return 0;
+//        return collection.getLast().getId();
+//    }
+//
+//    public int getSize() {
+//        return collection.size();
+//    }
 
 
     public RouteDAO(Deque<Route> collection) {
         this.collection = collection;
     }
-    public RouteDAO(){}
+
+    public RouteDAO() {
+    }
 
 }

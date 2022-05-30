@@ -1,7 +1,7 @@
 package interaction;
 
 import lombok.AllArgsConstructor;
-import utils.animation.Route;
+import utils.animation.AnimationRoute;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Response  implements Serializable  {
     public String msg;
     public Status status;
-    public ArrayList<Route> routeList;
+    public ArrayList<AnimationRoute> animationRouteList;
     public utils.Route route;
     public ArrayList<utils.Route> arrayRoute;
 
@@ -35,8 +35,8 @@ public class Response  implements Serializable  {
         return this;
     }
 
-    public Response routeList(ArrayList<Route> routeList) {
-        this.routeList = routeList;
+    public Response routeList(ArrayList<AnimationRoute> animationRouteList) {
+        this.animationRouteList = animationRouteList;
         return this;
     }
 
@@ -45,16 +45,11 @@ public class Response  implements Serializable  {
         return this;
     }
 
-    public Response arrayRoute(ArrayList<utils.Route> arrayRoute) {
-        this.arrayRoute = arrayRoute;
-        return this;
-    }
 
-
-    public Response(String msg, Status status, ArrayList<Route> routeList, utils.Route route) {
+    public Response(String msg, Status status, ArrayList<AnimationRoute> animationRouteList, utils.Route route) {
         this.msg = msg;
         this.status = status;
-        this.routeList = routeList;
+        this.animationRouteList = animationRouteList;
         this.route = route;
     }
 
@@ -63,7 +58,9 @@ public class Response  implements Serializable  {
         return "Response{" +
                 "msg='" + msg + '\'' +
                 ", status=" + status +
-                ", routeList=" + routeList +
+                ", animationRouteList=" + animationRouteList +
+                ", route=" + route +
+                ", arrayRoute=" + arrayRoute +
                 '}';
     }
 

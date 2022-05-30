@@ -5,15 +5,12 @@ import interaction.Response;
 import interaction.Status;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import utils.RouteInfo;
-import utils.animation.Route;
 
-import java.io.IOException;
 import java.util.List;
 
 
@@ -24,8 +21,8 @@ public class AddElementController extends AbstractController {
 //        FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/animation.fxml"));
 //        loader.load();
 //        AnimationWindowController controller = loader.getController();
-//        Route route = new
-//                Route(
+//        AnimationRoute route = new
+//                AnimationRoute(
 //                fromX, fromY, toX, toY, color);
 //        //AnimationWindowController.routes.add(route);
 //        controller.drawFloppa(route);

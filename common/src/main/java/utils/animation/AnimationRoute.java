@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class Route {
+public class AnimationRoute {
     @Getter
     private int id;
     @Getter
@@ -23,7 +23,7 @@ public class Route {
     @Getter
     private String color;
 
-    public Route(double fromX, long fromY, int toX, float toY, String color) {
+    public AnimationRoute(double fromX, long fromY, int toX, float toY, String color) {
         this.fromX = fromX;
         this.fromY = fromY;
         this.toX = toX;
@@ -33,7 +33,7 @@ public class Route {
 
     @Override
     public String toString() {
-        return "Route{" +
+        return "AnimationRoute{" +
                 "author='" + author + '\'' +
                 ", fromX=" + fromX +
                 ", fromY=" + fromY +
@@ -42,4 +42,5 @@ public class Route {
                 ", color='" + color + '\'' +
                 '}';
     }
+
 }

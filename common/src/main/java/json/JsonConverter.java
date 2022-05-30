@@ -44,7 +44,6 @@ public class JsonConverter {
 
         try {
             output = objectMapper.readValue(s, Request.class);
-            //output = new ObjectMapper().readValue(s, Request.class);
 
         } catch (JsonProcessingException e) {
             System.out.println("краказябра хи хи ха ха чин чань чунь (десер реквеста)" + e.getMessage());
@@ -67,13 +66,13 @@ public class JsonConverter {
 
     public static Response desResponse(String s) {
         Response output = null;
+
         try {
 
-            output = objectMapper.readValue(s, Response.class);
+            output = objectMapper.readValue(s, Response.class); //TODO теряет значения from и to здесь, причем теряет только икс и игрек.
 
-            //output = new ObjectMapper().readValue(s, Response.class);
         } catch (JsonProcessingException e) {
-            System.out.println("краказябра хи хи ха ха чин чань чунь (десер response) " + e.getMessage());
+            System.out.println("десериализация response..." + e.getMessage());
             e.printStackTrace();
         }
         return output;

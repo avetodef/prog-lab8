@@ -8,6 +8,8 @@ import interaction.Response;
 import interaction.Status;
 import utils.Route;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.NoSuchElementException;
 
 /**
@@ -23,9 +25,15 @@ public class Add extends ACommands {
                     info.fromY, info.nameFrom, info.toX, info.toY, info.nameTo,
                     info.distance, user);
             route.setUser(user);
+
+            ZonedDateTime zonedDateTime = ZonedDateTime.now();
+            route.setCreationDate(zonedDateTime);
             int id = dbDAO.create(route);
             route.setId(id);
             routeDAO.create(route);
+
+            System.out.println(route);
+
             response.msg("успешно").status(Status.OK);
 
         } catch (

@@ -18,6 +18,7 @@ public class Show extends ACommands {
 
         }
         else
+            System.out.println(routeDAO.getCollection());
         response.status(Status.OK).msg(routeDAO.getCollection());
 
         return response;

@@ -5,6 +5,7 @@ package utils;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import interaction.User;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -18,6 +19,7 @@ public class Route {
     private Coordinates coordinates; //Поле не может быть null
 
     //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy : HH.mm.ss")
+    @Setter
     private ZonedDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
     private Location from; //Поле не может быть null
     private utils.loc.Location to; //Поле может быть null
@@ -72,7 +74,7 @@ public class Route {
 
     @Override
     public String toString() {
-        return "Route" + System.lineSeparator() + "{" + System.lineSeparator() +
+        return "AnimationRoute" + System.lineSeparator() + "{" + System.lineSeparator() +
                 "id: " + id + System.lineSeparator() +
                 "name: '" + name + '\'' + System.lineSeparator() +
                 "coordinates: " + coordinates + System.lineSeparator() +
