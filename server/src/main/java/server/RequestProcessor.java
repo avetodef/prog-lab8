@@ -29,7 +29,6 @@ public class RequestProcessor extends RecursiveTask<String> {
         this.dataBaseDAO = dataBaseDAO;
         this.fixedThreadPool = fixedThreadPool;
         this.dataOutputStream = dataOutputStream;
-
     }
 
     /**

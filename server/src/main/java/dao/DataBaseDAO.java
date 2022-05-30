@@ -67,8 +67,8 @@ public class DataBaseDAO implements DAO {
         String statement4 = "INSERT INTO location_to(to_x,to_y,to_name)" + "VALUES(?,?,?) returning id";
 
         try {
+
             PreparedStatement pstmt1 = connection.prepareStatement(statement1);
-            System.out.println(Timestamp.valueOf(route.getCreationDate()));
             pstmt1.setTimestamp(1, Timestamp.valueOf(route.getCreationDate()));
             pstmt1.setInt(2, route.getDistance());
             pstmt1.setString(3, route.getUser().getUsername());
@@ -95,7 +95,6 @@ public class DataBaseDAO implements DAO {
             pstmt4.setString(3, route.getTo().getName());
             ResultSet rs4 = pstmt4.executeQuery();
             rs4.next();
-
 
             return rs1.getInt("id");
             //connection.commit();

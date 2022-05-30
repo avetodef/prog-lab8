@@ -17,13 +17,11 @@ public class Add extends ACommands {
     {
         isAsker = true;
     }
-
     public Response execute(RouteDAO routeDAO, DataBaseDAO dbDAO) {
         try {
             Route route = new Route(-1, info.name, info.x, info.y, info.fromX,
                     info.fromY, info.nameFrom, info.toX, info.toY, info.nameTo,
                     info.distance, user);
-
             route.setUser(user);
             int id = dbDAO.create(route);
             route.setId(id);
@@ -41,7 +39,6 @@ public class Add extends ACommands {
                 RuntimeException e) {
             response.msg("невозможно добавить элемент в коллекцию" + e.getMessage()).status(Status.COLLECTION_ERROR);
             e.printStackTrace();
-
         }
         return response;
     }

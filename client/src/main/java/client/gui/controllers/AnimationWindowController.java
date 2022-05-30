@@ -3,12 +3,12 @@ package client.gui.controllers;
 import interaction.Request;
 import interaction.Response;
 import interaction.Status;
+
 import javafx.animation.Animation;
 import javafx.animation.PathTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -110,11 +110,6 @@ public class AnimationWindowController extends AbstractController implements Ini
         return response.route;
     }
 
-    private utils.Route getRoute() {
-        Response response = readerSender.read();
-        return response.route;
-    }
-
 
     private Animation createPathAnimation(Path path, Duration duration, Color color) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -195,17 +190,6 @@ public class AnimationWindowController extends AbstractController implements Ini
         }
         drawRoutes(routelist);
 
-
-        //while(true) {
-
-//            requestRoutes();
-//            ArrayList<Route> routelist = processServerResponse();
-//            for (Route route : routelist) {
-//                drawFloppa(route);
-//            }
-//            drawRoutes(routelist);
-//            reloadRoutes();
-        //}
     }
 
     private void reloadRoutes() {
