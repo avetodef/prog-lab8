@@ -71,16 +71,48 @@ public class AnimationWindowController extends AbstractController implements Ini
     private void sendIdToInfo(Route route) {
         try {
             askRoute(route);
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/test.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/r.fxml"));
             Parent root = loader.load();
-            Test test = loader.getController();
-            test.displayRouteInfo(getRoute());
+            InfoController controller = loader.getController();
+            utils.Route r = buidRoute();
+            System.out.println(r);
+            controller.id.setText(String.valueOf(r.getId()));
+            controller.username.setText(r.getUser().getUsername());
+            controller.coords.setText(String.valueOf(r.getCoordinates()));
+            controller.from.setText(String.valueOf(r.getFrom()));
+            controller.to.setText(String.valueOf(r.getTo()));
+            controller.date.setText(r.getCreationDate());
+            controller.distance.setText(String.valueOf(r.getDistance()));
+
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.show();
+
         } catch (IOException exception) {
             exception.printStackTrace();
         }
+//        try {
+//            askRoute(route);
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/test.fxml"));
+//            Parent root = loader.load();
+//            Test test = loader.getController();
+//            test.displayRouteInfo(getRoute());
+//            Stage stage = new Stage();
+//            stage.setScene(new Scene(root));
+//            stage.show();
+//        } catch (IOException exception) {
+//            exception.printStackTrace();
+//        }
+        //try{
+
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/r.fxml"));
+//            Parent root = loader.load();
+//            InfoController controller = loader.getController();
+
+
+//        } catch (IOException exception) {
+//            exception.printStackTrace();
+//        }
     }
 
     private void askRoute(Route route) {
@@ -89,9 +121,14 @@ public class AnimationWindowController extends AbstractController implements Ini
         readerSender.sendToServer(request);
     }
 
-    private String getRoute() {
+    private utils.Route buidRoute() {
         Response response = readerSender.read();
-        return response.msg;
+        return response.route;
+    }
+
+    private utils.Route getRoute() {
+        Response response = readerSender.read();
+        return response.route;
     }
 
 

@@ -3,17 +3,35 @@ package json;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.datatype.jsr310.util.*;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import interaction.Request;
 import interaction.Response;
 
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class JsonConverter {
 
-    public static String ser(Request request){
+    private static final ObjectMapper objectMapper = getDefaultObjectMapper();
+
+    private static ObjectMapper getDefaultObjectMapper() {
+
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(ZonedDateTime.class, new TimeDeserializer());
+
+        ObjectMapper defaultObjectMapper = new ObjectMapper();
+        defaultObjectMapper.registerModule(module);
+        defaultObjectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        //defaultObjectMapper.setDateFormat(new SimpleDateFormat("dd.MM.yyyy : HH.mm.ss"));
+        return defaultObjectMapper;
+    }
+
+
+    public static String ser(Request request) {
         String output = "";
-        try{
-            output = new ObjectMapper().writeValueAsString(request);
+        try {
+            output = objectMapper.writeValueAsString(request);
         } catch (JsonProcessingException e) {
             System.out.println("беды с сериализацией реквеста " + e.getMessage());
         }
@@ -25,10 +43,7 @@ public class JsonConverter {
         Request output = null;
 
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.registerModule(new JavaTimeModule());
-            ;
-            output = mapper.readValue(s, Request.class);
+            output = objectMapper.readValue(s, Request.class);
             //output = new ObjectMapper().readValue(s, Request.class);
 
         } catch (JsonProcessingException e) {
@@ -40,7 +55,7 @@ public class JsonConverter {
     public static String serResponse(Response r){
         String ouput = " ";
         try {
-            ouput = new ObjectMapper().writeValueAsString(r);
+            ouput = objectMapper.writeValueAsString(r);
         } catch (JsonProcessingException e) {
             System.out.println("КАКОЙ ЖЕ ТЫ......говно. залупа. пенис. хер. давалка. хуй. " +
                     "блядина. головка. шлюха. жопа. член. еблан. петух. мудила. рукоблуд. ссанина. очко. " +
@@ -53,10 +68,9 @@ public class JsonConverter {
     public static Response desResponse(String s) {
         Response output = null;
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.registerModule(new JavaTimeModule());
-//            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            output = mapper.readValue(s, Response.class);
+
+            output = objectMapper.readValue(s, Response.class);
+
             //output = new ObjectMapper().readValue(s, Response.class);
         } catch (JsonProcessingException e) {
             System.out.println("краказябра хи хи ха ха чин чань чунь (десер response) " + e.getMessage());

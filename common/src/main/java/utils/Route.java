@@ -3,6 +3,7 @@ package utils;
 
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import interaction.User;
 
 import java.time.LocalDateTime;
@@ -15,6 +16,8 @@ public class Route {
     private int id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; //Поле не может быть null
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy : HH.mm.ss")
     private ZonedDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
     private Location from; //Поле не может быть null
     private utils.loc.Location to; //Поле может быть null
@@ -69,11 +72,11 @@ public class Route {
 
     @Override
     public String toString() {
-        return "Route" + System.lineSeparator() +"{" + System.lineSeparator() +
-                "id: " + id  + System.lineSeparator() +
+        return "Route" + System.lineSeparator() + "{" + System.lineSeparator() +
+                "id: " + id + System.lineSeparator() +
                 "name: '" + name + '\'' + System.lineSeparator() +
                 "coordinates: " + coordinates + System.lineSeparator() +
-                "creationDate: " + creationDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")) + System.lineSeparator() +
+                "creationDate: " + creationDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy : HH.mm.ss")) + System.lineSeparator() +
                 "from: " + from + System.lineSeparator() +
                 "to: " + to + System.lineSeparator() +
                 "distance: " + distance + System.lineSeparator() +
@@ -98,7 +101,7 @@ public class Route {
     }
 
     public String getCreationDate() {
-        return creationDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        return creationDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy : HH.mm.ss"));
     }
 
     public Location getFrom() {

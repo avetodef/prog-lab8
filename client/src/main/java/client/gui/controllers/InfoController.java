@@ -6,10 +6,12 @@ import interaction.Status;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import lombok.Setter;
 import utils.Route;
+
 
 import java.io.IOException;
 import java.net.URL;
@@ -20,19 +22,19 @@ import java.util.ResourceBundle;
 public class InfoController extends AbstractController {
 
     @FXML
-    protected Text id;
+    protected TextField id;
     @FXML
-    protected Text coords;
+    protected TextField coords;
     @FXML
-    protected Text from;
+    protected TextField from;
     @FXML
-    protected Text to;
+    protected TextField to;
     @FXML
-    protected Text distance;
+    protected TextField distance;
     @FXML
-    protected Text date;
+    protected TextField date;
     @FXML
-    protected Text username;
+    protected TextField username;
     @FXML
     private AnchorPane pane;
 
