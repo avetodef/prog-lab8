@@ -104,6 +104,10 @@ public class Route {
         return creationDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy : HH.mm.ss"));
     }
 
+    public String getDateForSQL() {
+        return creationDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
     public Location getFrom() {
         return from;
     }
