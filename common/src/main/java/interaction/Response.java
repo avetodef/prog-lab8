@@ -1,18 +1,24 @@
 package interaction;
 
 import lombok.AllArgsConstructor;
+import lombok.Setter;
+import utils.Route;
 import utils.animation.AnimationRoute;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Deque;
 
 @AllArgsConstructor
-public class Response  implements Serializable  {
+public class Response implements Serializable {
     public String msg;
     public Status status;
-    public ArrayList<AnimationRoute> animationRouteList;
+    @Setter
+    public Deque<Route> collection;
     public utils.Route route;
-    public ArrayList<utils.Route> arrayRoute;
+    @Setter
+    public ArrayList<AnimationRoute> animationRouteList;
+
 
     //            #1
     public void setMsg(String msg) {
@@ -35,32 +41,24 @@ public class Response  implements Serializable  {
         return this;
     }
 
-    public Response routeList(ArrayList<AnimationRoute> animationRouteList) {
-        this.animationRouteList = animationRouteList;
-        return this;
-    }
-
     public Response route(utils.Route route) {
         this.route = route;
         return this;
     }
 
-
-    public Response(String msg, Status status, ArrayList<AnimationRoute> animationRouteList, utils.Route route) {
-        this.msg = msg;
-        this.status = status;
+    public Response routeList(ArrayList<AnimationRoute> animationRouteList) {
         this.animationRouteList = animationRouteList;
-        this.route = route;
+        return this;
     }
+
 
     @Override
     public String toString() {
         return "Response{" +
                 "msg='" + msg + '\'' +
                 ", status=" + status +
-                ", animationRouteList=" + animationRouteList +
+                ", animationRouteList=" + collection +
                 ", route=" + route +
-                ", arrayRoute=" + arrayRoute +
                 '}';
     }
 

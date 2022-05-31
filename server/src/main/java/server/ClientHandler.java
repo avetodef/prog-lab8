@@ -26,7 +26,6 @@ public class ClientHandler implements Runnable {
         this.clientSocket = clientSocket;
     }
 
-
     @Override
     public void run() {
 
@@ -44,9 +43,6 @@ public class ClientHandler implements Runnable {
 
             DataBaseDAO dbDAO = new DataBaseDAO(dataOutputStream);
             RouteDAO dao = dbDAO.getDAO();
-
-            Show show = new Show();
-            //show.execute(dao, dbDAO);
 
             while (true) {
 

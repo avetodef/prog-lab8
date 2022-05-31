@@ -250,7 +250,6 @@ public class DataBaseDAO implements DAO {
         }
     }
 
-
     public ArrayList<AnimationRoute> getAnimationRoute() {
         Connection connection = connect();
         String SQL1 = "SELECT * FROM route";

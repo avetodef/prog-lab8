@@ -24,7 +24,8 @@ public class RouteInfo {
         name = data.get(1);
         x = Double.parseDouble(data.get(2));
         y = Double.parseDouble(data.get(3));
-        creationDate = ZonedDateTime.parse(data.get(4)).format(DateTimeFormatter.ofPattern("dd.MM.yyyy : HH.mm.ss"));
+        //creationDate = ZonedDateTime.parse(data.get(4)).format(DateTimeFormatter.ofPattern("dd.MM.yyyy : HH.mm.ss"));
+        creationDate = data.get(4);
         //creationDate = String.valueOf(ZonedDateTime.parse(data.get(4)));
         fromX = Double.parseDouble(data.get(5));
         fromY = Long.parseLong(data.get(6));
