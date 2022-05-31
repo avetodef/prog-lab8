@@ -1,6 +1,5 @@
 package client.gui.controllers;
 
-import client.gui.CollectionReloader;
 import interaction.Request;
 import interaction.Response;
 import interaction.Status;
@@ -10,7 +9,6 @@ import javafx.animation.PathTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,19 +17,18 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import json.ColorConverter;
-import lombok.Getter;
 import utils.Route;
 import utils.animation.AnimationRoute;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -43,35 +40,35 @@ public class AnimationWindowController extends AbstractController implements Ini
     @FXML
     public AnchorPane pane;
 
-    //private final Response response = readerSender.read();
+    @FXML
+    public void go_back(ActionEvent event) {
+        switchStages(event, "/client/actionChoice.fxml");
+    }
 
+
+    /**
+     * initialization of the scene
+     *
+     * @param url            - url
+     * @param resourceBundle - resourse bundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         animate();
-        Thread thread = new Thread(new Runnable() {
+        Thread thread = new Thread(() -> {
+            Runnable updater = this::animate;
 
-            @Override
-            public void run() {
-                Runnable updater = new Runnable() {
-
-                    @Override
-                    public void run() {
-                        animate();
-                    }
-                };
-
-                while (true) {
-                    try {
-                        Thread.sleep(15000);
-                    } catch (InterruptedException ex) {
-                    }
-
-                    // UI update is run on the Application thread
-                    Platform.runLater(updater);
+            while (true) {
+                try {
+                    Thread.sleep(15000);
+                } catch (InterruptedException ex) {
+                    System.out.println(ex.getMessage());
                 }
-            }
 
+                // UI update is run on the Application thread
+                Platform.runLater(updater);
+            }
         });
         // don't let thread prevent JVM shutdown
         thread.setDaemon(true);
@@ -79,23 +76,9 @@ public class AnimationWindowController extends AbstractController implements Ini
 
     }
 
-    private void animate() {
-        System.out.println("initializing animation...");
-        requestRoutes();
-        ArrayList<AnimationRoute> routelist = processServerResponse();
-        for (AnimationRoute animationRoute : routelist) {
-            drawFloppa(animationRoute);
-        }
-        drawRoutes(routelist);
-        clearCanvas();
-    }
-
-    private void clearCanvas() {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-    }
-
-
+    /**
+     * method to send request to server
+     */
     private void requestRoutes() {
         try {
             List<String> arguments = List.of("animation");
@@ -110,6 +93,11 @@ public class AnimationWindowController extends AbstractController implements Ini
 
     boolean draw = true;
 
+    /**
+     * method to get an ArrayList of special type of routes (AnimationRoute)
+     *
+     * @return ArrayList of animationRoutes
+     */
     private ArrayList<AnimationRoute> processServerResponse() {
 
         Response response = readerSender.read();
@@ -123,7 +111,12 @@ public class AnimationWindowController extends AbstractController implements Ini
     }
 
 
-    private void sendIdToInfo(AnimationRoute animationRoute) {
+    /**
+     * method to initialize a pop-up window with info about route
+     *
+     * @param animationRoute - animation route
+     */
+    private void initializeRouteInfoScene(AnimationRoute animationRoute) {
         try {
             askRoute(animationRoute);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/r.fxml"));
@@ -138,15 +131,12 @@ public class AnimationWindowController extends AbstractController implements Ini
             controller.to.setText(getPrettyTo(animationRoute, r));
 
             controller.date.setText(r.getCreationDate());
+
             controller.distance.setText(String.valueOf(r.getDistance()));
 
-            controller.distance.setEditable(false);
-            controller.to.setEditable(false);
-            controller.from.setEditable(false);
-            controller.coords.setEditable(false);
-            controller.id.setEditable(false);
-            controller.date.setEditable(false);
-            controller.username.setEditable(false);
+            for (TextField textField : Arrays.asList(controller.distance, controller.to, controller.from, controller.coords, controller.id, controller.date, controller.username)) {
+                textField.setEditable(false);
+            }
 
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
@@ -157,18 +147,50 @@ public class AnimationWindowController extends AbstractController implements Ini
         }
     }
 
+
+    /**
+     * method that sends a request for server to get a specific route
+     *
+     * @param animationRoute- animation route
+     */
     private void askRoute(AnimationRoute animationRoute) {
         Request request = new Request();
         request.setArgs(List.of("routeinfo", String.valueOf(animationRoute.getId())));
         readerSender.sendToServer(request);
     }
 
+    /**
+     * method which collects data from server and draws routes
+     */
+    private void animate() {
+        System.out.println("initializing animation...");
+        requestRoutes();
+        ArrayList<AnimationRoute> routelist = processServerResponse();
+        for (AnimationRoute animationRoute : routelist) {
+            drawRoutes(animationRoute);
+        }
+        drawRoutes(routelist);
+        clearCanvas();
+    }
+
+    /**
+     * methos that build route from server's response
+     *
+     * @return Route
+     */
     private Route buildRoute() {
         Response response = readerSender.read();
         System.out.println(response.route);
         return response.route;
     }
 
+    /**
+     * two methods to get a pretty view of location(from) and location(to)
+     *
+     * @param route - animation route
+     * @param r     - ulits route
+     * @return pretty strings
+     */
     private String getPrettyFrom(AnimationRoute route, Route r) {
         return "x=" + route.getFromX() +
                 ", y=" + route.getFromY() +
@@ -181,16 +203,28 @@ public class AnimationWindowController extends AbstractController implements Ini
                 ", name='" + r.getTo().getName();
     }
 
-    public void drawFloppa(AnimationRoute animationRoute) {
+    /**
+     * method to draw route
+     *
+     * @param animationRoute - animation route
+     */
+    public void drawRoutes(AnimationRoute animationRoute) {
         Path path = createPath(animationRoute);
 
         Color color = ColorConverter.color(animationRoute.getColor());
-//        System.out.println(color);
 
         Animation animation = createPathAnimation(path, Duration.seconds(10), color);
+
         animation.play();
     }
 
+
+    /**
+     * method to create Path
+     *
+     * @param animationRoute - animation route
+     * @return path
+     */
     private Path createPath(AnimationRoute animationRoute) {
         Path path = new Path();
         path.getElements().addAll
@@ -200,11 +234,17 @@ public class AnimationWindowController extends AbstractController implements Ini
     }
 
 
+    /**
+     * methos to draw path
+     *
+     * @param animationRoute - animation route
+     * @return path
+     */
     private Path drawPath(AnimationRoute animationRoute) {
         Path path = new Path();
         path.setStroke(ColorConverter.transparentColor(animationRoute.getColor()));
         path.setStrokeWidth(10);
-        path.setOnMouseClicked(e -> sendIdToInfo(animationRoute));
+        path.setOnMouseClicked(e -> initializeRouteInfoScene(animationRoute));
         path.getElements().addAll
                 (new MoveTo(animationRoute.getFromX() + 630, -animationRoute.getFromY() + 350),
                         new LineTo(animationRoute.getToX() + 630, -animationRoute.getToY() + 350));
@@ -212,34 +252,42 @@ public class AnimationWindowController extends AbstractController implements Ini
     }
 
 
-    private utils.Route buildRoute(int id) {
-        Response response = readerSender.read();
-        for (Route route : response.collection) {
-            if (route.getId() == id) {
-                System.err.println("ROUTE FOUND");
-                return route;
-            }
-        }
-        System.out.println("ya yeban");
-        return null;
-    }
+    /**
+     * old method to build route from Dequeue<Route>
+     * @param event
+     */
+//    private utils.Route buildRoute(int id) {
+//        Response response = readerSender.read();
+//        for (Route route : response.collection) {
+//            if (route.getId() == id) {
+//                System.err.println("ROUTE FOUND");
+//                return route;
+//            }
+//        }
+//        System.out.println("ya yeban");
+//        return null;
+//    }
 
-    @FXML
-    public void go_back(ActionEvent event) {
-        switchStages(event, "/client/actionChoice.fxml");
-    }
 
-
+    /**
+     * method to draw all routes
+     *
+     * @param routelist list of animation routes
+     */
     private void drawRoutes(ArrayList<AnimationRoute> routelist) {
         for (AnimationRoute animationRoute : routelist) {
             pane.getChildren().add(drawPath(animationRoute));
         }
     }
 
-    private static class Location {
-        double x;
-        double y;
-    }
+    /**
+     * methos to create path animation
+     *
+     * @param path     path
+     * @param duration time of animation
+     * @param color    - color of the route
+     * @return
+     */
 
     private Animation createPathAnimation(Path path, Duration duration, Color color) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -287,5 +335,18 @@ public class AnimationWindowController extends AbstractController implements Ini
             }
         });
         return pathTransition;
+    }
+
+    private static class Location {
+        double x;
+        double y;
+    }
+
+    /**
+     * method to clear canvas
+     */
+    private void clearCanvas() {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 }
