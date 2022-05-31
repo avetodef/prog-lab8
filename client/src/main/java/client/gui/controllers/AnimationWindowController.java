@@ -41,6 +41,8 @@ public class AnimationWindowController extends AbstractController implements Ini
     private AnchorPane pane;
     @FXML
     private Text username;
+    @FXML
+    private Rectangle userColour;
 
     @FXML
     public void go_back(ActionEvent event) {
@@ -212,11 +214,9 @@ public class AnimationWindowController extends AbstractController implements Ini
      */
     public void drawRoutes(AnimationRoute animationRoute) {
         Path path = createPath(animationRoute);
-
         Color color = ColorConverter.color(animationRoute.getColor());
-
+        userColour.setFill(ColorConverter.color(animationRoute.getColor()));
         Animation animation = createPathAnimation(path, Duration.seconds(10), color);
-
         animation.play();
     }
 
