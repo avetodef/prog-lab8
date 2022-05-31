@@ -26,8 +26,8 @@ public class Add extends ACommands {
                     info.distance, user);
             route.setUser(user);
 
-            ZonedDateTime zonedDateTime = ZonedDateTime.now();
-            route.setCreationDate(zonedDateTime);
+//            ZonedDateTime zonedDateTime = ZonedDateTime.now();
+//            route.setCreationDate(zonedDateTime);
             int id = dbDAO.create(route);
             route.setId(id);
             routeDAO.create(route);

@@ -56,29 +56,34 @@ public class DataBaseDAO implements DAO {
     @Override
     public int create(Route route) {
         Connection connection = connect();
-        String statement1 = "INSERT INTO route(creationdate, distance, username, name )"
-                + "VALUES(?,?,?,?) returning id";
-//        String statement = "INSERT INTO collection(name, coord_x, coord_y, creationdate, from_x, from_y, from_name, to_x, to_y, to_name , distance)"
-//                + "VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+        String statement1 = "INSERT INTO route(creationdate, distance, username, name )" +
+                "VALUES(?,?,?,?) returning id";
 
-        String statement2 = "INSERT INTO coordinates(coord_x,coord_y)" + "VALUES (?,?) returning id";
-        String statement3 = "INSERT INTO location_from(from_x,from_y,from_name)" + "VALUES (?,?,?) returning id";
-        String statement4 = "INSERT INTO location_to(to_x,to_y,to_name)" + "VALUES(?,?,?) returning id";
+        String statement2 = "INSERT INTO coordinates(coord_x,coord_y)" +
+                "VALUES (?,?) returning id";
+
+        String statement3 = "INSERT INTO location_from(from_x,from_y,from_name)" +
+                "VALUES (?,?,?) returning id";
+
+        String statement4 = "INSERT INTO location_to(to_x,to_y,to_name)" +
+                "VALUES(?,?,?) returning id";
 
         try {
 
             PreparedStatement pstmt1 = connection.prepareStatement(statement1);
-            System.out.println(route.getDateForSQL());
+
             pstmt1.setTimestamp(1, Timestamp.valueOf(route.getDateForSQL()));
             pstmt1.setInt(2, route.getDistance());
             pstmt1.setString(3, route.getUser().getUsername());
             pstmt1.setString(4, route.getName());
+
             ResultSet rs1 = pstmt1.executeQuery();
             rs1.next();
 
             PreparedStatement pstmt2 = connection.prepareStatement(statement2);
             pstmt2.setDouble(1, route.getCoordinates().getCoorX());
             pstmt2.setDouble(2, route.getCoordinates().getCoorY());
+
             ResultSet rs2 = pstmt2.executeQuery();
             rs2.next();
 
@@ -86,6 +91,7 @@ public class DataBaseDAO implements DAO {
             pstmt3.setDouble(1, route.getFrom().getFromX());
             pstmt3.setLong(2, route.getFrom().getFromY());
             pstmt3.setString(3, route.getFrom().getName());
+
             ResultSet rs3 = pstmt3.executeQuery();
             rs3.next();
 
@@ -93,11 +99,11 @@ public class DataBaseDAO implements DAO {
             pstmt4.setInt(1, route.getTo().getToX());
             pstmt4.setFloat(2, route.getTo().getToY());
             pstmt4.setString(3, route.getTo().getName());
+
             ResultSet rs4 = pstmt4.executeQuery();
             rs4.next();
 
             return rs1.getInt("id");
-            //connection.commit();
 
         } catch (SQLException e) {
             e.printStackTrace();

@@ -185,7 +185,7 @@ public class AnimationWindowController extends AbstractController implements Ini
         Path path = createPath(animationRoute);
 
         Color color = ColorConverter.color(animationRoute.getColor());
-        System.out.println(color);
+//        System.out.println(color);
 
         Animation animation = createPathAnimation(path, Duration.seconds(10), color);
         animation.play();
@@ -195,7 +195,7 @@ public class AnimationWindowController extends AbstractController implements Ini
         Path path = new Path();
         path.getElements().addAll
                 (new MoveTo(animationRoute.getFromX() + 579, -animationRoute.getFromY() + 300),
-                        new LineTo(animationRoute.getToX() + 579, -animationRoute.getToX() + 300));
+                        new LineTo(animationRoute.getToX() + 579, -animationRoute.getToY() + 300));
         return path;
     }
 
@@ -207,7 +207,7 @@ public class AnimationWindowController extends AbstractController implements Ini
         path.setOnMouseClicked(e -> sendIdToInfo(animationRoute));
         path.getElements().addAll
                 (new MoveTo(animationRoute.getFromX() + 630, -animationRoute.getFromY() + 350),
-                        new LineTo(animationRoute.getToX() + 630, -animationRoute.getToX() + 350));
+                        new LineTo(animationRoute.getToX() + 630, -animationRoute.getToY() + 350));
         return path;
     }
 
