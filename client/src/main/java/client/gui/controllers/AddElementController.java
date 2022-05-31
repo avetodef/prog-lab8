@@ -16,18 +16,6 @@ import java.util.List;
 
 public class AddElementController extends AbstractController {
 
-//    private void sendDataToDrawFloppa(double fromX, long fromY, int toX, float toY, String color) throws IOException {
-//
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/animation.fxml"));
-//        loader.load();
-//        AnimationWindowController controller = loader.getController();
-//        AnimationRoute route = new
-//                AnimationRoute(
-//                fromX, fromY, toX, toY, color);
-//        //AnimationWindowController.routes.add(route);
-//        controller.drawFloppa(route);
-//    }
-
     private boolean send;
 
     private void sendDataToServer(RouteInfo info) {
@@ -58,7 +46,6 @@ public class AddElementController extends AbstractController {
             processServerResponse();
         } else
             label.setText("Неверный ввод. Попробуй снова");
-//        processServerResponse();
     }
 
     private RouteInfo info() {

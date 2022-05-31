@@ -21,6 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import json.ColorConverter;
@@ -35,10 +36,11 @@ import java.util.*;
 public class AnimationWindowController extends AbstractController implements Initializable {
 
     @FXML
-    public Canvas canvas;
-
+    private Canvas canvas;
     @FXML
-    public AnchorPane pane;
+    private AnchorPane pane;
+    @FXML
+    private Text username;
 
     @FXML
     public void go_back(ActionEvent event) {
@@ -54,7 +56,8 @@ public class AnimationWindowController extends AbstractController implements Ini
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        username.setText("вы вошли как " + readerSender.user.getUsername());
+        drawAxis();
         animate();
         Thread thread = new Thread(() -> {
             Runnable updater = this::animate;
@@ -227,14 +230,14 @@ public class AnimationWindowController extends AbstractController implements Ini
     private Path createPath(AnimationRoute animationRoute) {
         Path path = new Path();
         path.getElements().addAll
-                (new MoveTo(animationRoute.getFromX() + 579, -animationRoute.getFromY() + 300),
-                        new LineTo(animationRoute.getToX() + 579, -animationRoute.getToY() + 300));
+                (new MoveTo(animationRoute.getFromX() + 500, -animationRoute.getFromY() + 300),
+                        new LineTo(animationRoute.getToX() + 500, -animationRoute.getToY() + 300));
         return path;
     }
 
 
     /**
-     * methos to draw path
+     * methos to draw transparent path
      *
      * @param animationRoute - animation route
      * @return path
@@ -245,8 +248,8 @@ public class AnimationWindowController extends AbstractController implements Ini
         path.setStrokeWidth(10);
         path.setOnMouseClicked(e -> initializeRouteInfoScene(animationRoute));
         path.getElements().addAll
-                (new MoveTo(animationRoute.getFromX() + 630, -animationRoute.getFromY() + 350),
-                        new LineTo(animationRoute.getToX() + 630, -animationRoute.getToY() + 350));
+                (new MoveTo(animationRoute.getFromX() + 515, -animationRoute.getFromY() + 360),
+                        new LineTo(animationRoute.getToX() + 515, -animationRoute.getToY() + 360));
         return path;
     }
 
@@ -285,7 +288,7 @@ public class AnimationWindowController extends AbstractController implements Ini
      * @param path     path
      * @param duration time of animation
      * @param color    - color of the route
-     * @return
+     * @return path animation
      */
 
     private Animation createPathAnimation(Path path, Duration duration, Color color) {
@@ -347,5 +350,18 @@ public class AnimationWindowController extends AbstractController implements Ini
     private void clearCanvas() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+    }
+
+    /**
+     * method to draw axis
+     */
+    private void drawAxis() {
+        Line x = new Line(500, 60, 500, 600);
+        Line y = new Line(0, 300, 1000, 300);
+        x.setStrokeWidth(2);
+        y.setStrokeWidth(2);
+        x.setStroke(Color.GRAY);
+        y.setStroke(Color.GRAY);
+        pane.getChildren().addAll(x, y);
     }
 }
