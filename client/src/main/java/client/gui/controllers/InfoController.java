@@ -8,19 +8,19 @@ import javafx.scene.layout.AnchorPane;
 public class InfoController extends AbstractController {
 
     @FXML
-    protected TextField id;
+    public TextField id;
     @FXML
-    protected TextField coords;
+    public TextField coords;
     @FXML
-    protected TextField from;
+    public TextField from;
     @FXML
-    protected TextField to;
+    public TextField to;
     @FXML
-    protected TextField distance;
+    public TextField distance;
     @FXML
-    protected TextField date;
+    public TextField date;
     @FXML
-    protected TextField username;
+    public TextField username;
     @FXML
     private AnchorPane pane;
 

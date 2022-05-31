@@ -1,100 +1,73 @@
-package client.gui.controllers;
+package client.gui;
 
-import client.gui.CollectionReloader;
+import client.gui.controllers.AbstractController;
+import client.gui.controllers.AnimationWindowController;
+import client.gui.controllers.InfoController;
 import interaction.Request;
 import interaction.Response;
 import interaction.Status;
-
 import javafx.animation.Animation;
 import javafx.animation.PathTransition;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import json.ColorConverter;
-import lombok.Getter;
 import utils.Route;
 import utils.animation.AnimationRoute;
 
 import java.io.IOException;
-import java.net.URL;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
 
-
-public class AnimationWindowController extends AbstractController implements Initializable {
-
-    @FXML
-    public Canvas canvas;
-
-    @FXML
-    public AnchorPane pane;
-
-    //private final Response response = readerSender.read();
+public class CollectionReloader extends AbstractController implements Runnable {
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        animate();
-        Thread thread = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                Runnable updater = new Runnable() {
-
-                    @Override
-                    public void run() {
-                        animate();
-                    }
-                };
-
-                while (true) {
-                    try {
-                        Thread.sleep(15000);
-                    } catch (InterruptedException ex) {
-                    }
-
-                    // UI update is run on the Application thread
-                    Platform.runLater(updater);
-                }
+    public void run() {
+        System.out.println("running...");
+        while (true) {
+            try {
+                System.out.println("прошло 5 секунд...");
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-
-        });
-        // don't let thread prevent JVM shutdown
-        thread.setDaemon(true);
-        thread.start();
-
-    }
-
-    private void animate() {
-        System.out.println("initializing animation...");
-        requestRoutes();
-        ArrayList<AnimationRoute> routelist = processServerResponse();
-        for (AnimationRoute animationRoute : routelist) {
-            drawFloppa(animationRoute);
         }
-        drawRoutes(routelist);
-        clearCanvas();
-    }
+//        try {
+//            System.out.println("initializing animation scene...");
+//
+//            FXMLLoader loader1 = new FXMLLoader(getClass().getResource("/client/animation.fxml"));
+//            loader1.load();
+//            AnimationWindowController animation = loader1.getController();
+//            requestRoutes();
+//
+//            ArrayList<AnimationRoute> routelist = getAnimationRoutes();
+//            for (AnimationRoute animationRoute : routelist) {
+//                drawFloppa(animationRoute, animation.canvas);
+//            }
+//            drawRoutes(routelist, animation.pane);
+//        } catch (IOException exception) {
+//            exception.printStackTrace();
+//        }
+//        try {
+//            Thread.sleep(15000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
-    private void clearCanvas() {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
-
 
     private void requestRoutes() {
         try {
@@ -108,32 +81,92 @@ public class AnimationWindowController extends AbstractController implements Ini
         }
     }
 
-    boolean draw = true;
-
-    private ArrayList<AnimationRoute> processServerResponse() {
+    private ArrayList<AnimationRoute> getAnimationRoutes() {
 
         Response response = readerSender.read();
         System.out.println(response.status + " [" + response.msg + "]");
         if (!response.status.equals(Status.OK)) {
-            draw = false;
             if (response.msg.equals("database sleep"))
                 readerSender.serverDied();
         }
         return response.animationRouteList;
     }
 
+    private ArrayDeque<Route> getCollection() {
+        Response response = readerSender.read();
+        System.out.println(response.status + " [" + response.msg + "]");
+        if (!response.status.equals(Status.OK)) {
+            if (response.msg.equals("database sleep"))
+                readerSender.serverDied();
+        }
+        return (ArrayDeque<Route>) response.collection;
+    }
+
+    public void drawFloppa(AnimationRoute animationRoute, Canvas canvas) {
+        Path path = createPath(animationRoute);
+
+        Color color = ColorConverter.color(animationRoute.getColor());
+
+        Animation animation = createPathAnimation(path, Duration.seconds(10), color, canvas);
+        animation.play();
+    }
+
+    private Path createPath(AnimationRoute animationRoute) {
+        Path path = new Path();
+        path.getElements().addAll
+                (new MoveTo(animationRoute.getFromX() + 579, -animationRoute.getFromY() + 300),
+                        new LineTo(animationRoute.getToX() + 579, -animationRoute.getToX() + 300));
+        return path;
+    }
+
+    private Path drawPath(AnimationRoute animationRoute) {
+        Path path = new Path();
+        path.setStroke(ColorConverter.transparentColor(animationRoute.getColor()));
+        path.setStrokeWidth(10);
+        path.setOnMouseClicked(e -> sendIdToInfo(animationRoute));
+        path.getElements().addAll
+                (new MoveTo(animationRoute.getFromX() + 630, -animationRoute.getFromY() + 350),
+                        new LineTo(animationRoute.getToX() + 630, -animationRoute.getToX() + 350));
+        return path;
+    }
+
+    private void drawRoutes(ArrayList<AnimationRoute> routelist, AnchorPane pane) {
+        for (AnimationRoute animationRoute : routelist) {
+            pane.getChildren().add(drawPath(animationRoute));
+        }
+    }
+
+//    private InfoController getInfoController(){
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/r.fxml"));
+//            Parent root = loader.load();
+//            return loader.getController();
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println("я дурак");
+//        return null;
+//    }
 
     private void sendIdToInfo(AnimationRoute animationRoute) {
         try {
             askRoute(animationRoute);
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/r.fxml"));
             Parent root = loader.load();
             InfoController controller = loader.getController();
+
+            //utils.Route r = buidRoute();
+            //Route r = buildRoute(animationRoute.getId());
+
             Route r = buildRoute();
+            System.out.println("ROUTE " + r);
 
             controller.id.setText(String.valueOf(r.getId()));
             controller.username.setText(r.getUser().getUsername());
             controller.coords.setText(String.valueOf(r.getCoordinates()));
+
             controller.from.setText(getPrettyFrom(animationRoute, r));
             controller.to.setText(getPrettyTo(animationRoute, r));
 
@@ -181,67 +214,7 @@ public class AnimationWindowController extends AbstractController implements Ini
                 ", name='" + r.getTo().getName();
     }
 
-    public void drawFloppa(AnimationRoute animationRoute) {
-        Path path = createPath(animationRoute);
-
-        Color color = ColorConverter.color(animationRoute.getColor());
-        System.out.println(color);
-
-        Animation animation = createPathAnimation(path, Duration.seconds(10), color);
-        animation.play();
-    }
-
-    private Path createPath(AnimationRoute animationRoute) {
-        Path path = new Path();
-        path.getElements().addAll
-                (new MoveTo(animationRoute.getFromX() + 579, -animationRoute.getFromY() + 300),
-                        new LineTo(animationRoute.getToX() + 579, -animationRoute.getToX() + 300));
-        return path;
-    }
-
-
-    private Path drawPath(AnimationRoute animationRoute) {
-        Path path = new Path();
-        path.setStroke(ColorConverter.transparentColor(animationRoute.getColor()));
-        path.setStrokeWidth(10);
-        path.setOnMouseClicked(e -> sendIdToInfo(animationRoute));
-        path.getElements().addAll
-                (new MoveTo(animationRoute.getFromX() + 630, -animationRoute.getFromY() + 350),
-                        new LineTo(animationRoute.getToX() + 630, -animationRoute.getToX() + 350));
-        return path;
-    }
-
-
-    private utils.Route buildRoute(int id) {
-        Response response = readerSender.read();
-        for (Route route : response.collection) {
-            if (route.getId() == id) {
-                System.err.println("ROUTE FOUND");
-                return route;
-            }
-        }
-        System.out.println("ya yeban");
-        return null;
-    }
-
-    @FXML
-    public void go_back(ActionEvent event) {
-        switchStages(event, "/client/actionChoice.fxml");
-    }
-
-
-    private void drawRoutes(ArrayList<AnimationRoute> routelist) {
-        for (AnimationRoute animationRoute : routelist) {
-            pane.getChildren().add(drawPath(animationRoute));
-        }
-    }
-
-    private static class Location {
-        double x;
-        double y;
-    }
-
-    private Animation createPathAnimation(Path path, Duration duration, Color color) {
+    private Animation createPathAnimation(Path path, Duration duration, Color color, Canvas canvas) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         // move a node along a path. we want its position
@@ -251,7 +224,7 @@ public class AnimationWindowController extends AbstractController implements Ini
         PathTransition pathTransition = new PathTransition(duration, path, pen);
         pathTransition.currentTimeProperty().addListener(new ChangeListener<Duration>() {
 
-            Location oldLocation = null;
+            Loc oldLocation = null;
 
             /**
              * Draw a line from the old location to the new location
@@ -269,7 +242,7 @@ public class AnimationWindowController extends AbstractController implements Ini
 
                 // initialize the location
                 if (oldLocation == null) {
-                    oldLocation = new Location();
+                    oldLocation = new Loc();
                     oldLocation.x = x;
                     oldLocation.y = y;
                     return;
@@ -287,5 +260,10 @@ public class AnimationWindowController extends AbstractController implements Ini
             }
         });
         return pathTransition;
+    }
+
+    private static class Loc {
+        double x;
+        double y;
     }
 }
