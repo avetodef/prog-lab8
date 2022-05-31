@@ -238,7 +238,6 @@ public class DataBaseDAO implements DAO {
             ResultSet rs4 = pstmt4.executeQuery();
             rs4.next();
 
-
             while (rs1.next() && rs3.next() && rs4.next() && rs2.next()) {
                 collection.add(new Route(rs1.getInt("id"), rs1.getString("name"), rs2.getDouble("coord_x"),
                         rs2.getDouble("coord_y"), rs3.getDouble("from_x"),

@@ -28,13 +28,12 @@ public class AddElementController extends AbstractController {
 //        controller.drawFloppa(route);
 //    }
 
-    private boolean send = true;
+    private boolean send;
 
-    private void sendDataToServer() {
+    private void sendDataToServer(RouteInfo info) {
         Request request = new Request();
         request.setArgs(List.of("add"));
-        RouteInfo inf = info();
-        request.setInfo(inf);
+        request.setInfo(info);
         readerSender.sendToServer(request);
         System.out.println("sending data to server... " + request);
     }
@@ -53,13 +52,13 @@ public class AddElementController extends AbstractController {
     @FXML
     @Override
     public void submit(ActionEvent actionEvent) {
+        RouteInfo inf = info();
         if (send) {
-            sendDataToServer();
+            sendDataToServer(inf);
             processServerResponse();
         } else
             label.setText("Неверный ввод. Попробуй снова");
 //        processServerResponse();
-
     }
 
     private RouteInfo info() {
@@ -77,6 +76,7 @@ public class AddElementController extends AbstractController {
         RouteInfo out = new RouteInfo();
 
         send = true;
+
         try {
             out.name = name_field.getText().trim();
             if (out.name.isEmpty()) {

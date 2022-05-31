@@ -61,11 +61,10 @@ public class AnimationWindowController extends AbstractController implements Ini
 
             while (true) {
                 try {
-                    Thread.sleep(15000);
+                    Thread.sleep(20000);
                 } catch (InterruptedException ex) {
                     System.out.println(ex.getMessage());
                 }
-
                 // UI update is run on the Application thread
                 Platform.runLater(updater);
             }

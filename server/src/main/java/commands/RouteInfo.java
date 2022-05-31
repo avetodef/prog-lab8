@@ -19,10 +19,10 @@ public class RouteInfo extends ACommands {
             Deque<Route> collection = dbDAO.getAll();
             for (Route r : collection) {
                 if (r.getId() == id) {
+                    System.out.println("ROUTE FOUND " + r);
                     response.route(r).status(Status.OK);
                 }
             }
-
             return response;
         } catch (RuntimeException e) {
             response.msg("ошибка: " + e.getMessage()).status(Status.UNKNOWN_ERROR).route(null);

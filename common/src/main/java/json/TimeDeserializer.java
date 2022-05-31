@@ -15,7 +15,6 @@ public class TimeDeserializer extends JsonDeserializer<ZonedDateTime> {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy : HH.mm.ss");
         LocalDateTime date = LocalDateTime.parse(
                 jsonParser.getText(), DateTimeFormatter.ofPattern("dd.MM.yyyy : HH.mm.ss"));
-
         return date.atZone(ZoneId.systemDefault());
     }
 }

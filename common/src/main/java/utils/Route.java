@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import interaction.User;
 import lombok.Setter;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -33,7 +34,7 @@ public class Route {
                 + from.getName() + "," + to.getToX() + "," + to.getToY() + "," + to.getName() + "," + distance;
     }
 
-    public Route(int id, String name, double coordinatesX, Double coordinatesY, double fromX, Long fromY, String nameFrom, int toX, float toY, String nameTo, Integer distance, User user ){
+    public Route(int id, String name, double coordinatesX, Double coordinatesY, double fromX, Long fromY, String nameFrom, int toX, float toY, String nameTo, Integer distance, User user) {
         this.id = id;
         this.name = name;
         this.coordinates = new Coordinates(coordinatesX, coordinatesY);
@@ -41,6 +42,20 @@ public class Route {
         this.to = new utils.loc.Location(toX, toY, nameTo);
         this.distance = distance;
         this.creationDate = ZonedDateTime.now();
+        this.user = user;
+    }
+
+    public Route(int id, String name, double coordinatesX, Double coordinatesY, double fromX,
+                 Long fromY, String nameFrom, int toX,
+                 float toY, String nameTo,
+                 Integer distance, User user, Date date) {
+        this.id = id;
+        this.name = name;
+        this.coordinates = new Coordinates(coordinatesX, coordinatesY);
+        this.from = new Location(fromX, fromY, nameFrom);
+        this.to = new utils.loc.Location(toX, toY, nameTo);
+        this.distance = distance;
+        this.creationDate = ZonedDateTime.parse((CharSequence) date);
         this.user = user;
     }
 
