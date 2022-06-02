@@ -7,7 +7,7 @@ import interaction.Request;
 import interaction.Response;
 import interaction.Status;
 import interaction.User;
-import json.JsonConverter;
+import parsing.JsonConverter;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

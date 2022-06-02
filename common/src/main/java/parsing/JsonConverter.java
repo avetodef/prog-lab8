@@ -1,4 +1,4 @@
-package json;
+package parsing;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -7,9 +7,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import interaction.Request;
 import interaction.Response;
 
-import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class JsonConverter {
 

@@ -14,6 +14,7 @@ public class GetRoutesForAnimation extends ACommands {
         try {
             //String jsonedRoutes = JsonConverter.serializeRoute(dbDAO.getAnimationRoute());
             Deque<Route> collection = dbDAO.getAll();
+
             response.setStatus(Status.OK);
             response.setCollection(collection);
             response.routeList(dbDAO.getAnimationRoute());

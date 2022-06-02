@@ -18,6 +18,8 @@ public class Response implements Serializable {
     public utils.Route route;
     @Setter
     public ArrayList<AnimationRoute> animationRouteList;
+    @Setter
+    public ArrayList<Route> routeArrayList;
 
 
     //            #1

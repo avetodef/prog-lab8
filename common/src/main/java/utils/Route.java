@@ -135,5 +135,29 @@ public class Route {
 
     public Route() {
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCoordinates(Coordinates coordinates) {
+        this.coordinates = coordinates;
+    }
+
+    public void setCreationDate(ZonedDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public void setFrom(Location from) {
+        this.from = from;
+    }
+
+    public void setTo(utils.loc.Location to) {
+        this.to = to;
+    }
+
+    public void setDistance(Integer distance) {
+        this.distance = distance;
+    }
 }
 

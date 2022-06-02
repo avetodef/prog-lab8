@@ -24,7 +24,7 @@ import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import json.ColorConverter;
+import parsing.ColorConverter;
 import utils.Route;
 import utils.animation.AnimationRoute;
 
@@ -66,7 +66,7 @@ public class AnimationWindowController extends AbstractController implements Ini
 
             while (true) {
                 try {
-                    Thread.sleep(20000);
+                    Thread.sleep(30000);
                 } catch (InterruptedException ex) {
                     System.out.println(ex.getMessage());
                 }
@@ -102,7 +102,7 @@ public class AnimationWindowController extends AbstractController implements Ini
      *
      * @return ArrayList of animationRoutes
      */
-    private ArrayList<AnimationRoute> processServerResponse() {
+    private ArrayList<AnimationRoute> getArrayListOfAnimationRoutes() {
 
         Response response = readerSender.read();
         System.out.println(response.status + " [" + response.msg + "]");
@@ -112,6 +112,14 @@ public class AnimationWindowController extends AbstractController implements Ini
                 readerSender.serverDied();
         }
         return response.animationRouteList;
+    }
+
+    /**
+     * method to get an ArrayDeque<Routes> - to be exact, the collection "cash"
+     */
+    private ArrayDeque<Route> getCollection() {
+        Response response = readerSender.read();
+        return (ArrayDeque<Route>) response.collection;
     }
 
 
@@ -169,7 +177,7 @@ public class AnimationWindowController extends AbstractController implements Ini
     private void animate() {
         System.out.println("initializing animation...");
         requestRoutes();
-        ArrayList<AnimationRoute> routelist = processServerResponse();
+        ArrayList<AnimationRoute> routelist = getArrayListOfAnimationRoutes();
         for (AnimationRoute animationRoute : routelist) {
             drawRoutes(animationRoute);
         }

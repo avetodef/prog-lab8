@@ -284,7 +284,7 @@ public class DataBaseDAO implements DAO {
                                 String.valueOf(rs1.getString("username").hashCode())));
             }
 
-            System.out.println("COLLECTION " + collection);
+            //System.out.println("COLLECTION " + collection);
 
             return collection;
         } catch (SQLException ex) {
@@ -293,6 +293,48 @@ public class DataBaseDAO implements DAO {
         } catch (NullPointerException e) {
             System.out.println("пусто в душе и в коллеекции ");
             return new ArrayList<AnimationRoute>();
+        }
+    }
+
+    public ArrayList<Route> getArrayListOfRoutes() {
+        Connection connection = connect();
+        String SQL1 = "SELECT * FROM route";
+        String SQL2 = "SELECT * FROM coordinates ";
+        String SQL3 = "SELECT * FROM location_from ";
+        String SQL4 = "SELECT * FROM location_to ";
+
+        ArrayList<Route> collection = new ArrayList<>();
+        try {
+            PreparedStatement pstmt1 = connection.prepareStatement(SQL1);
+            ResultSet rs1 = pstmt1.executeQuery();
+            rs1.next();
+
+            PreparedStatement pstmt2 = connection.prepareStatement(SQL2);
+            ResultSet rs2 = pstmt2.executeQuery();
+            rs2.next();
+
+            PreparedStatement pstmt3 = connection.prepareStatement(SQL3);
+            ResultSet rs3 = pstmt3.executeQuery();
+            rs3.next();
+
+            PreparedStatement pstmt4 = connection.prepareStatement(SQL4);
+            ResultSet rs4 = pstmt4.executeQuery();
+            rs4.next();
+
+            while (rs1.next() && rs2.next() && rs3.next() && rs4.next()) {
+                collection.add(new Route(rs1.getInt("id"), rs1.getString("name"), rs2.getDouble("coord_x"),
+                        rs2.getDouble("coord_y"), rs3.getDouble("from_x"),
+                        rs3.getLong("from_y"), rs3.getString("from_name"), rs4.getInt("to_x"),
+                        rs4.getFloat("to_y"), rs4.getString("to_name"), rs1.getInt("distance"),
+                        getUserByName(rs1.getString("username"))));
+            }
+            return collection;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return new ArrayList<Route>();
+        } catch (NullPointerException e) {
+            System.out.println("пусто в душе и в коллеекции ");
+            return new ArrayList<Route>();
         }
     }
 
@@ -401,41 +443,6 @@ public class DataBaseDAO implements DAO {
         return false;
     }
 
-    public boolean checkID(int id) {
-        String sql = "SELECT user_id FROM users WHERE user_id=?";
-        try {
-            PreparedStatement pstmt = connection.prepareStatement(sql);
-            pstmt.setInt(1, id);
-            ResultSet rs = pstmt.executeQuery();
-
-            int count = 0;
-            while (rs.next()) {
-                count++;
-            }
-            if (count > 0) {
-                return true;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return false;
-    }
-
-
-    //    public String getusername(int id) {
-//        String SQL = "SELECT username FROM users WHERE user_id=?";
-//        try {
-//            PreparedStatement pstmt = connection.prepareStatement(SQL);
-//            pstmt.setInt(1, id);
-//            ResultSet rs = pstmt.executeQuery();
-//            rs.next();
-//            return rs.getString("username");
-//        } catch (SQLException ex) {
-//            System.out.println(ex.getMessage());
-//            return null;
-//        }
-//    }
     public User getUserByName(String username) {
         String SQL = "SELECT * FROM users WHERE username=?";
         try {
@@ -451,20 +458,6 @@ public class DataBaseDAO implements DAO {
             return null;
         }
     }
-
-//    public String getPassword(int id) {
-//        String SQL = "SELECT password FROM users WHERE user_id=?";
-//        try {
-//            PreparedStatement pstmt = connection.prepareStatement(SQL);
-//            pstmt.setInt(1, id);
-//            ResultSet rs = pstmt.executeQuery();
-//            rs.next();
-//            return rs.getString("password");
-//        } catch (SQLException ex) {
-//            ex.printStackTrace();
-//            return null;
-//        }
-//    }
 
     public int getUserID(String username) {
         String sql = "SELECT user_id FROM users WHERE username=?";

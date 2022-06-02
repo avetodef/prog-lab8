@@ -1,4 +1,4 @@
-package json;
+package parsing;
 
 import javafx.scene.paint.Color;
 

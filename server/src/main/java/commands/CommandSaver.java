@@ -18,6 +18,7 @@ public class CommandSaver {
         commandsMap.put("remove_by_id", new RemoveById());
         commandsMap.put("animation", new GetRoutesForAnimation());
         commandsMap.put("routeinfo", new RouteInfo());
+        commandsMap.put("get_all", new GetAll());
 //        commandsMap.put("clear", new Clear());
         //commandsMap.put("save", new Save());
 //        commandsMap.put("execute_script", new ExecuteScript());

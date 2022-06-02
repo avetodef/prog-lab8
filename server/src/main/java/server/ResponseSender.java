@@ -1,7 +1,7 @@
 package server;
 
 import interaction.Response;
-import json.JsonConverter;
+import parsing.JsonConverter;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -29,6 +29,8 @@ public class ResponseSender implements Runnable {
     @Override
     public void run() {
         try {
+
+            System.out.println(response);
 
             dataOutputStream.writeUTF(JsonConverter.serResponse(response));
 

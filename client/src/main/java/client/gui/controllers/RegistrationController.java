@@ -11,7 +11,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import json.PasswordHandler;
+import parsing.PasswordHandler;
 
 import java.net.URL;
 import java.util.List;
