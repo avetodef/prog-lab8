@@ -5,6 +5,9 @@ import interaction.Response;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -25,21 +29,20 @@ import utils.animation.AnimationRoute;
 import java.io.IOException;
 import java.net.URL;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * controller of table scene
  */
 public class TableWindowController extends AbstractController implements Initializable {
     @FXML
-    private Text username;
+    private Label author;
     @FXML
     private TableView<Route> table;
     @FXML
     private Label label;
+    @FXML
+    private TextField search;
 
     TableColumn<Route, Integer> id = new TableColumn<>("id");
     TableColumn<Route, String> name = new TableColumn<>("name");
@@ -62,7 +65,7 @@ public class TableWindowController extends AbstractController implements Initial
     TableColumn<Route, ZonedDateTime> date = new TableColumn<>("creation date");
 
 
-    TableColumn<Route, String> author = new TableColumn<>("username");
+    TableColumn<Route, String> user = new TableColumn<>("username");
 
     /**
      * main method, initialization of the table
@@ -72,7 +75,7 @@ public class TableWindowController extends AbstractController implements Initial
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        username.setText("ты зашел как " + readerSender.user.getUsername());
+        author.setText("ты зашел как " + readerSender.user.getUsername());
         putTableTogether();
         initializeTable();
         Thread thread = new Thread(() -> {
@@ -124,13 +127,14 @@ public class TableWindowController extends AbstractController implements Initial
 
 
         table.getColumns().addAll(id, name, coords, location_from, location_to,
-                distance, date, author);
+                distance, date, user);
     }
 
     /**
      * method that puts data collected from an ArrayList<Route> to the table
      *
      * @param routeArrayList - the ArrayList where data is taken from
+     * @return
      */
     private void putDataInTheTable(ArrayList<Route> routeArrayList) {
         System.out.println("putting data in the table...");
@@ -153,9 +157,37 @@ public class TableWindowController extends AbstractController implements Initial
         distance.setCellValueFactory(new PropertyValueFactory<>("distance"));
         date.setCellValueFactory(new PropertyValueFactory<>("creationDate"));
 
-        author.setCellValueFactory(callback -> new SimpleStringProperty(callback.getValue().getUser().getUsername()));
-        table.setItems(FXCollections.observableList(routeArrayList));
+        user.setCellValueFactory(callback -> new SimpleStringProperty(callback.getValue().getUser().getUsername()));
+
+        ObservableList<Route> routes = FXCollections.observableList(routeArrayList);
+
+        table.setItems(routes);
+
+        search(routes);
     }
+
+    private void search(ObservableList<Route> routes) {
+        FilteredList<Route> filteredRoutes = new FilteredList<>(routes, b -> true);
+
+        search.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredRoutes.setPredicate(route -> {
+                if (newValue == null || newValue.isEmpty())
+                    return true;
+                String filter = newValue.toLowerCase();
+
+                if (route.getName().toLowerCase().contains(filter))
+                    return true;
+                else if (route.getUser().getUsername().contains(filter))
+                    return true;
+                else return String.valueOf(route.getId()).equals(filter);
+            });
+        });
+
+        SortedList<Route> sortedRoutes = new SortedList<>(filteredRoutes);
+        sortedRoutes.comparatorProperty().bind(table.comparatorProperty());
+        table.setItems(sortedRoutes);
+    }
+
 
     /**
      * method that corrects the location
@@ -193,7 +225,7 @@ public class TableWindowController extends AbstractController implements Initial
         to_name.setPrefWidth(100);
         distance.setPrefWidth(100);
         date.setPrefWidth(150);
-        author.setPrefWidth(100);
+        user.setPrefWidth(100);
     }
 
     /**
