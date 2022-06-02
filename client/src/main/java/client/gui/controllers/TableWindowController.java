@@ -2,11 +2,13 @@ package client.gui.controllers;
 
 import interaction.Request;
 import interaction.Response;
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -30,6 +32,8 @@ public class TableWindowController extends AbstractController implements Initial
     private Text username;
     @FXML
     private TableView<Route> table;
+    @FXML
+    private Label label;
 
     TableColumn<Route, Integer> id = new TableColumn<>("id");
     TableColumn<Route, String> name = new TableColumn<>("name");
@@ -65,6 +69,22 @@ public class TableWindowController extends AbstractController implements Initial
     public void initialize(URL url, ResourceBundle resourceBundle) {
         username.setText("ты зашел как " + readerSender.user.getUsername());
         initializeTable();
+        Thread thread = new Thread(() -> {
+            Runnable updater = this::initializeTable;
+
+            while (true) {
+                try {
+                    Thread.sleep(30000);
+                } catch (InterruptedException ex) {
+                    System.out.println(ex.getMessage());
+                }
+                // UI update is run on the Application thread
+                Platform.runLater(updater);
+            }
+        });
+        // don't let thread prevent JVM shutdown
+        thread.setDaemon(true);
+        thread.start();
     }
 
     /**
@@ -190,6 +210,14 @@ public class TableWindowController extends AbstractController implements Initial
     @FXML
     private void add_element() {
         popUpWindow("/client/add_element.fxml");
+    }
+
+    @FXML
+    private void delete_element() {
+        if (readerSender.user == table.getSelectionModel().getSelectedItem().getUser())
+            table.getItems().removeAll(table.getSelectionModel().getSelectedItem());
+        else
+            label.setText("нет прав на удаление элемента");
     }
 
 }

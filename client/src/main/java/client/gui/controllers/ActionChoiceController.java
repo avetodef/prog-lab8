@@ -49,6 +49,7 @@ public class ActionChoiceController extends AbstractController implements Initia
     @FXML
     private void switchToTableWindow(ActionEvent actionEvent) {
         switchStages(actionEvent, "/client/tableWindow.fxml");
+        //popUpWindow("/client/tableWindow.fxml");
     }
 
     @FXML
