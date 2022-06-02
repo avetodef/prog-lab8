@@ -7,21 +7,27 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import utils.Coordinates;
 import utils.Location;
 import utils.Route;
 import utils.animation.AnimationRoute;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
@@ -64,10 +70,10 @@ public class TableWindowController extends AbstractController implements Initial
      * @param url            -url
      * @param resourceBundle -resource bundle
      */
-    //TODO автообновление как в анимации
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         username.setText("ты зашел как " + readerSender.user.getUsername());
+        putTableTogether();
         initializeTable();
         Thread thread = new Thread(() -> {
             Runnable updater = this::initializeTable;
@@ -90,12 +96,12 @@ public class TableWindowController extends AbstractController implements Initial
     /**
      * method to initialize the table
      */
-    private void initializeTable() {
+    protected void initializeTable() {
         requestRoutes();
         setTableSize();
 
         Response response = readerSender.read();
-
+//        System.out.println(response.routeArrayList);
         ArrayList<Route> routeArrayList = correctLocations(response.routeArrayList, response.animationRouteList);
 
         putDataInTheTable(routeArrayList);
@@ -111,13 +117,7 @@ public class TableWindowController extends AbstractController implements Initial
         System.out.println("sending a request to server..." + request);
     }
 
-    /**
-     * method that puts data collected from an ArrayList<Route> to the table
-     *
-     * @param routeArrayList - the ArrayList where data is taken from
-     */
-    private void putDataInTheTable(ArrayList<Route> routeArrayList) {
-        System.out.println("putting data in the table...");
+    private void putTableTogether() {
         coords.getColumns().addAll(x, y);
         location_from.getColumns().addAll(from_x, from_y, from_name);
         location_to.getColumns().addAll(to_x, to_y, to_name);
@@ -125,6 +125,16 @@ public class TableWindowController extends AbstractController implements Initial
 
         table.getColumns().addAll(id, name, coords, location_from, location_to,
                 distance, date, author);
+    }
+
+    /**
+     * method that puts data collected from an ArrayList<Route> to the table
+     *
+     * @param routeArrayList - the ArrayList where data is taken from
+     */
+    private void putDataInTheTable(ArrayList<Route> routeArrayList) {
+        System.out.println("putting data in the table...");
+
 
         id.setCellValueFactory(new PropertyValueFactory<>("id"));
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -155,19 +165,13 @@ public class TableWindowController extends AbstractController implements Initial
      * @return arraylist with correct routes
      */
     private ArrayList<Route> correctLocations(ArrayList<Route> routes, ArrayList<AnimationRoute> animationRoutes) {
-        System.out.println("correcting locations...");
-        ArrayList<Route> output = new ArrayList<>();
-        for (Route route : routes) {
-            for (AnimationRoute aniRoute : animationRoutes) {
-                route.getFrom().setX(aniRoute.getFromX());
-                route.getFrom().setY(aniRoute.getFromY());
-                route.getTo().setX(aniRoute.getToX());
-                route.getTo().setY(aniRoute.getToY());
-
-            }
-            output.add(route);
+        for (int i = 0; i < routes.size(); i++) {
+            routes.get(i).getFrom().setX(animationRoutes.get(i).getFromX());
+            routes.get(i).getFrom().setY(animationRoutes.get(i).getFromY());
+            routes.get(i).getTo().setX(animationRoutes.get(i).getToX());
+            routes.get(i).getTo().setY(animationRoutes.get(i).getToY());
         }
-        return output;
+        return routes;
     }
 
     /**
@@ -218,6 +222,22 @@ public class TableWindowController extends AbstractController implements Initial
             table.getItems().removeAll(table.getSelectionModel().getSelectedItem());
         else
             label.setText("нет прав на удаление элемента");
+    }
+
+    @FXML
+    private void update_element() throws IOException {
+        if (Objects.equals(readerSender.user.getUsername(), table.getSelectionModel().getSelectedItem().getUser().getUsername())) {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/update.fxml"));
+            Parent root = loader.load();
+            UpdateController controller = loader.getController();
+            controller.setId(table.getSelectionModel().getSelectedItem().getId());
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } else
+            label.setText("нет прав на редактирование элемента");
     }
 
 }

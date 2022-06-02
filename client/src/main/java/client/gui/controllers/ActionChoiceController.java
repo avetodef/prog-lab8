@@ -61,16 +61,4 @@ public class ActionChoiceController extends AbstractController implements Initia
     public void initialize(URL url, ResourceBundle resourceBundle) {
         username.setText("ты зашел как " + readerSender.user.getUsername());
     }
-
-    @FXML
-    private void test() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/route_info.fxml"));
-            loader.load();
-            InfoController controller = loader.getController();
-            System.out.println(controller);
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-    }
 }
