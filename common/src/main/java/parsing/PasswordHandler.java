@@ -1,4 +1,4 @@
-package json;
+package parsing;
 
 import console.ConsoleOutputer;
 import org.bouncycastle.util.encoders.Hex;

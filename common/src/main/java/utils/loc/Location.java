@@ -1,5 +1,9 @@
 package utils.loc;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
 public class Location {
     private int x;
     private float y;
@@ -11,19 +15,35 @@ public class Location {
         this.name = name; //зачем написала не знаю
     }
 
-    public int getToX(){return x;}
+    public int getToX() {
+        return x;
+    }
 
-    public float getToY() {return  y;}
+    public float getToY() {
+        return y;
+    }
 
     public String getName() {
         return name;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
     public String toString() {
         return
                 "x=" + x +
-                ", y=" + y +
-                ", name='" + name + '\'';
+                        ", y=" + y +
+                        ", name='" + name + '\'';
     }
 }

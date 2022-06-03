@@ -1,19 +1,32 @@
 package interaction;
 
-import utils.animation.Route;
+import lombok.AllArgsConstructor;
+import lombok.Setter;
+import utils.Route;
+import utils.animation.AnimationRoute;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Deque;
 
-public class Response  implements Serializable  {
+@AllArgsConstructor
+public class Response implements Serializable {
     public String msg;
     public Status status;
-    public ArrayList<Route> routeList;
+    @Setter
+    public Deque<Route> collection;
+    public utils.Route route;
+    @Setter
+    public ArrayList<AnimationRoute> animationRouteList;
+    @Setter
+    public ArrayList<Route> routeArrayList;
+
 
     //            #1
     public void setMsg(String msg) {
         this.msg = msg;
     }
+
     public void setStatus(Status status) {
         this.status = status;
     }
@@ -30,8 +43,8 @@ public class Response  implements Serializable  {
         return this;
     }
 
-    public Response routeList(ArrayList<Route> routeList) {
-        this.routeList = routeList;
+    public Response route(utils.Route route) {
+        this.route = route;
         return this;
     }
 
@@ -40,9 +53,18 @@ public class Response  implements Serializable  {
         return "Response{" +
                 "msg='" + msg + '\'' +
                 ", status=" + status +
-                ", routeList=" + routeList +
+                ", collection=" + collection +
+                ", route=" + route +
+                ", animationRouteList=" + animationRouteList +
+                ", routeArrayList=" + routeArrayList +
                 '}';
     }
+
+    public Response routeList(ArrayList<AnimationRoute> animationRouteList) {
+        this.animationRouteList = animationRouteList;
+        return this;
+    }
+
 
     public Response(String msg, Status status) {
         this.msg = msg;
@@ -50,11 +72,6 @@ public class Response  implements Serializable  {
     }
 
     public Response() {
-    }
-
-    public Response(Status status, ArrayList<Route> routeList) {
-        this.status = status;
-        this.routeList = routeList;
     }
 
     public String getMsg() {

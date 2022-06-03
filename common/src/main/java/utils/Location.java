@@ -1,5 +1,8 @@
 package utils;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class Location {
     private double x;
     private Long y; //Поле не может быть null
@@ -11,18 +14,35 @@ public class Location {
         this.name = name;
     }
 
-    public double getFromX(){return x;}
+    public double getFromX() {
+        return x;
+    }
 
-    public Long getFromY(){return y;}
+    public Long getFromY() {
+        return y;
+    }
 
     public String getName() {
         return name;
     }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public void setY(Long y) {
+        this.y = y;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         return
                 "x=" + x +
-                ", y=" + y +
-                ", name='" + name + '\'';
+                        ", y=" + y +
+                        ", name='" + name + '\'';
     }
 }

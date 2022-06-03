@@ -1,13 +1,6 @@
 .root {
-    -fx-background-color: #EBE8E8;
-}
-
-HBox {
-    -fx-background-color: #402E27;
-}
-
-VBox {
-    -fx-background-color: #402E27;
+    -fx-background-color: linear-gradient(to right, #c14e28 0%, #ffa200 18%, #fff300 32%, #00ff14 43%, #00d4ff 66%, #0023ff 75%, #ff00e4 96%);
+    -fx-text-fill: #EBE8E8;
 }
 
 .button {
@@ -26,8 +19,4 @@ VBox {
     -fx-border-color: #0D0D0D;
     -fx-background-color: #B4D9CB;
     -fx-text-fill: #0D0D0D;
-}
-
-.button:pressed {
-    -fx-background-color: #D9BFC9;
 }

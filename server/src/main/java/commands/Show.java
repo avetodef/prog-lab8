@@ -15,9 +15,9 @@ public class Show extends ACommands {
     public Response execute(RouteDAO routeDAO, DataBaseDAO dbDAO) {
         if (routeDAO.getAll().size() == 0) {
             response.msg("пусто").status(Status.COLLECTION_ERROR);
-
         }
         else
+            System.out.println(routeDAO.getCollection());
         response.status(Status.OK).msg(routeDAO.getCollection());
 
         return response;

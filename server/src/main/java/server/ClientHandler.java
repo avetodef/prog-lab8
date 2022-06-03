@@ -1,6 +1,7 @@
 package server;
 
 import commands.AutoUpdate;
+import commands.Show;
 import dao.DataBaseDAO;
 import dao.RouteDAO;
 import interaction.Response;
@@ -25,20 +26,10 @@ public class ClientHandler implements Runnable {
         this.clientSocket = clientSocket;
     }
 
-
     @Override
     public void run() {
 
-//        DataBaseDAO dbDAO = new DataBaseDAO();
-//
-//        InputStream socketInputStream;
-//        OutputStream socketOutputStream;
-//        DataOutputStream dataOutputStream;
-//
-//        Response errorResponse = new Response(null, Status.SERVER_ERROR);
-
         try {
-            DataBaseDAO dbDAO = new DataBaseDAO();
 
             InputStream socketInputStream;
             OutputStream socketOutputStream;
@@ -49,6 +40,8 @@ public class ClientHandler implements Runnable {
             socketInputStream = clientSocket.getInputStream();
             socketOutputStream = clientSocket.getOutputStream();
             dataOutputStream = new DataOutputStream(socketOutputStream);
+
+            DataBaseDAO dbDAO = new DataBaseDAO(dataOutputStream);
             RouteDAO dao = dbDAO.getDAO();
 
             while (true) {

@@ -1,28 +1,20 @@
 package client.gui.controllers;
 
-import client.ReaderSender;
 import interaction.Request;
 import interaction.Response;
 import interaction.Status;
 import interaction.User;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
-import json.PasswordHandler;
+import parsing.PasswordHandler;
 
 import java.net.URL;
-import java.nio.channels.ClosedChannelException;
-import java.nio.channels.SelectionKey;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -58,7 +50,7 @@ public class AuthController extends AbstractController implements Initializable 
             Request userRequest = new Request(arguments, null, user);
             readerSender.setUser(user);
             readerSender.sendToServer(userRequest);
-            System.out.println("sending data to server... " + userRequest);
+            System.out.println("sending data to server... ");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,8 +63,6 @@ public class AuthController extends AbstractController implements Initializable 
             Response response = readerSender.read();
             if (response != null) {
                 System.out.println(response.status + " [" + response.msg + "]");
-
-
                 if (response.status.equals(Status.OK)) {
 
                     switchStages(actionEvent, "/client/actionChoice.fxml");
@@ -82,15 +72,15 @@ public class AuthController extends AbstractController implements Initializable 
                     }
                     if (response.status.equals(Status.USERNAME_ERROR))
                         username_warning_text.setText(response.msg);
+                    if (response.msg.equals("database sleep"))
+                        readerSender.dbDied();
                 }
             } else
                 System.out.println("NULL SERVER RESPONSE ");
         } catch (RuntimeException e) {
             e.printStackTrace();
         }
-
     }
-
 
     @FXML
     public void submit(ActionEvent actionEvent) {
@@ -104,16 +94,14 @@ public class AuthController extends AbstractController implements Initializable 
             sendDataToServer(user);
 
             processServerResponse(actionEvent);
-            System.out.println("setting user...");
+
             readerSender.setUser(user);
 
         } else {
             if (user.getUsername().isEmpty()) {
-                System.out.println("NAME IS EMPTY");
                 username_warning_text.setText("пустое имя");
             }
             if (password_field.getText().isEmpty()) {
-                System.out.println("PASSWORD IS EMPTY");
                 password_warning_text.setText("пустой пароль");
             }
         }

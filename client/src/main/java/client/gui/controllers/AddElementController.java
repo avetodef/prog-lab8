@@ -5,43 +5,25 @@ import interaction.Response;
 import interaction.Status;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import json.ColorConverter;
 import utils.RouteInfo;
-import utils.animation.Route;
 
-import java.io.IOException;
 import java.util.List;
 
 
 public class AddElementController extends AbstractController {
 
-    private void sendDataToDrawFloppa(double fromX, long fromY, int toX, float toY, String color) throws IOException {
+    private boolean send;
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/animation.fxml"));
-        loader.load();
-        AnimationWindowController controller = loader.getController();
-        Route route = new
-                Route(
-                fromX, fromY, toX, toY, color);
-        //AnimationWindowController.routes.add(route);
-        controller.drawFloppa(route);
-    }
-
-    private boolean send = true;
-
-    private void sendDataToServer() {
+    private void sendDataToServer(RouteInfo info) {
         Request request = new Request();
         request.setArgs(List.of("add"));
-        RouteInfo inf = info();
-        request.setInfo(inf);
+        request.setInfo(info);
         readerSender.sendToServer(request);
-        System.out.println("sending data to server... " + request);
+        System.out.println("sending data to server... ");
     }
 
     private void processServerResponse() {
@@ -49,26 +31,21 @@ public class AddElementController extends AbstractController {
         System.out.println(response.status + " [" + response.msg + "]");
         label.setText(response.msg);
         if (response.status.equals(Status.OK)) {
-            try {
-                sendDataToDrawFloppa(
-                        info().fromX,
-                        info().fromY, info().toX, info().toY, String.valueOf(readerSender.user.hashCode()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            pane.getScene().getWindow().hide();
         }
+        if (response.msg.equals("database sleep"))
+            readerSender.dbDied();
     }
 
     @FXML
     @Override
     public void submit(ActionEvent actionEvent) {
+        RouteInfo inf = info();
         if (send) {
-            sendDataToServer();
+            sendDataToServer(inf);
             processServerResponse();
         } else
             label.setText("Неверный ввод. Попробуй снова");
-//        processServerResponse();
-
     }
 
     private RouteInfo info() {
@@ -86,6 +63,7 @@ public class AddElementController extends AbstractController {
         RouteInfo out = new RouteInfo();
 
         send = true;
+
         try {
             out.name = name_field.getText().trim();
             if (out.name.isEmpty()) {

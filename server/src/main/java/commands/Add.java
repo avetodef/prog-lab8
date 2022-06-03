@@ -8,6 +8,8 @@ import interaction.Response;
 import interaction.Status;
 import utils.Route;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.NoSuchElementException;
 
 /**
@@ -17,17 +19,21 @@ public class Add extends ACommands {
     {
         isAsker = true;
     }
-
     public Response execute(RouteDAO routeDAO, DataBaseDAO dbDAO) {
         try {
             Route route = new Route(-1, info.name, info.x, info.y, info.fromX,
                     info.fromY, info.nameFrom, info.toX, info.toY, info.nameTo,
                     info.distance, user);
-
             route.setUser(user);
+
+//            ZonedDateTime zonedDateTime = ZonedDateTime.now();
+//            route.setCreationDate(zonedDateTime);
             int id = dbDAO.create(route);
             route.setId(id);
             routeDAO.create(route);
+
+            System.out.println(route);
+
             response.msg("успешно").status(Status.OK);
 
         } catch (
@@ -40,7 +46,7 @@ public class Add extends ACommands {
         } catch (
                 RuntimeException e) {
             response.msg("невозможно добавить элемент в коллекцию" + e.getMessage()).status(Status.COLLECTION_ERROR);
-
+            e.printStackTrace();
         }
         return response;
     }

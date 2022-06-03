@@ -45,7 +45,7 @@ public class RequestReader implements Callable<String> {
     public String call() {
         try {
             String requestJson = read();
-            System.out.println("REQUEST " + requestJson);
+            //System.out.println("REQUEST " + requestJson);
 
             this.forkJoinPool.invoke(new RequestProcessor(requestJson, routeDAO, dataBaseDAO, fixedThreadPool, dataOutputStream));
 
@@ -59,19 +59,19 @@ public class RequestReader implements Callable<String> {
 
 
     private String read() {
-        System.out.println("read method invoked...");
+        //System.out.println("read method invoked...");
         try {
 
             StringBuilder builder = new StringBuilder();
 
             int byteRead;
-            System.out.println("builder and byteRead created... ");
+            //System.out.println("builder and byteRead created... ");
             while ((byteRead = socketInputStream.read()) != -1) {
 
                 if (byteRead == 0) break;
                 builder.append((char) byteRead);
             }
-            System.out.println("reading ended");
+            //System.out.println("reading ended");
 
             return builder.toString();
 

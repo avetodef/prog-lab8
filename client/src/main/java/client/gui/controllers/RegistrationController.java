@@ -11,7 +11,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import json.PasswordHandler;
+import parsing.PasswordHandler;
 
 import java.net.URL;
 import java.util.List;
@@ -54,13 +54,16 @@ public class RegistrationController extends AbstractController implements Initia
 
         if (response.status.equals(Status.OK)) {
             switchStages(actionEvent, "/client/actionChoice.fxml");
-            System.out.println("AUTHENTICATION WENT SUCCESSFULLY");
+            //System.out.println("AUTHENTICATION WENT SUCCESSFULLY");
         } else {
             if (response.status.equals(Status.PASSWORD_ERROR)) {
                 password_warning_text.setText(response.msg);
             }
             if (response.status.equals(Status.USERNAME_ERROR))
                 username_warning_text.setText(response.msg);
+            if (response.msg.equals("database sleep"))
+                readerSender.dbDied();
+
         }
     }
 
@@ -79,15 +82,15 @@ public class RegistrationController extends AbstractController implements Initia
         }
         else {
             if (user.getUsername().isEmpty()) {
-                System.out.println("NAME IS EMPTY");
+                //System.out.println("NAME IS EMPTY");
                 username_warning_text.setText("пустое имя");
             }
             if (password_field.getText().isEmpty()) {
-                System.out.println("PASSWORD IS EMPTY");
+                //System.out.println("PASSWORD IS EMPTY");
                 password_warning_text.setText("пустой пароль");
             }
             if (!areTheSame) {
-                System.out.println("PASSWORD AND REPEAT PASSWORD DO NOT MATCH");
+                //System.out.println("PASSWORD AND REPEAT PASSWORD DO NOT MATCH");
                 password_warning_text.setText("пароли не совпадают");
             }
         }

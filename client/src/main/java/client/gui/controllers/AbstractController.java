@@ -33,9 +33,9 @@ public abstract class AbstractController {
         try {
             socketChannel = SocketChannel.open();
             socketChannel.configureBlocking(true);
-            System.out.println("AbstractController.static initializer");
+            //System.out.println("AbstractController.static initializer");
             socketChannel.connect(new InetSocketAddress("localhost", serverPort));
-            System.out.println("AbstractController.static initializer)))))))");
+            //System.out.println("AbstractController.static initializer)))))))");
             if (socketChannel.isConnected())
                 System.out.println("connection established ABSTR CONTR");
 
@@ -71,7 +71,30 @@ public abstract class AbstractController {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
+            System.out.println(e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public InfoController getInfoController(String path) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(StartingStage.class.getResource(path));
+            fxmlLoader.load();
+            return fxmlLoader.getController();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public AuthController getAuthController(String path) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(StartingStage.class.getResource(path));
+            fxmlLoader.load();
+            return fxmlLoader.getController();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

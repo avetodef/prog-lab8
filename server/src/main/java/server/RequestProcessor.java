@@ -8,7 +8,7 @@ import interaction.Request;
 import interaction.Response;
 import interaction.Status;
 import interaction.User;
-import json.JsonConverter;
+import parsing.JsonConverter;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -29,7 +29,6 @@ public class RequestProcessor extends RecursiveTask<String> {
         this.dataBaseDAO = dataBaseDAO;
         this.fixedThreadPool = fixedThreadPool;
         this.dataOutputStream = dataOutputStream;
-
     }
 
     /**

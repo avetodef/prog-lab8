@@ -4,23 +4,15 @@ import client.gui.StartingStage;
 import interaction.Request;
 import interaction.Response;
 import interaction.User;
-import javafx.application.Platform;
-import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import json.JsonConverter;
-import lombok.SneakyThrows;
+import parsing.JsonConverter;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.ClosedChannelException;
 import java.nio.channels.NotYetConnectedException;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
@@ -57,7 +49,6 @@ public class ReaderSender {
             }
         } catch (IOException e) {
             System.out.println("IO problems in reader sender line 48: " + e.getMessage());
-//            e.printStackTrace();
             if (!reconnect())
                 serverDied();
         }
@@ -90,7 +81,7 @@ public class ReaderSender {
         return null;
     }
 
-    private void serverDied() {
+    public void serverDied() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(StartingStage.class.getResource("/client/server_die.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
@@ -127,6 +118,22 @@ public class ReaderSender {
         }
         return false;
 
+    }
+
+    public void dbDied() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(StartingStage.class.getResource("/client/database_sleep.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setOnCloseRequest(event -> System.exit(0)); //TODO вообще надо не систем экзитом а через ноуды
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            System.out.println("IO problems in reader sender line 97: " + e.getMessage());
+        }
     }
 
 }
