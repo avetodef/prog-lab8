@@ -48,21 +48,23 @@ public class Response implements Serializable {
         return this;
     }
 
-    public Response routeList(ArrayList<AnimationRoute> animationRouteList) {
-        this.animationRouteList = animationRouteList;
-        return this;
-    }
-
-
     @Override
     public String toString() {
         return "Response{" +
                 "msg='" + msg + '\'' +
                 ", status=" + status +
-                ", animationRouteList=" + collection +
+                ", collection=" + collection +
                 ", route=" + route +
+                ", animationRouteList=" + animationRouteList +
+                ", routeArrayList=" + routeArrayList +
                 '}';
     }
+
+    public Response routeList(ArrayList<AnimationRoute> animationRouteList) {
+        this.animationRouteList = animationRouteList;
+        return this;
+    }
+
 
     public Response(String msg, Status status) {
         this.msg = msg;

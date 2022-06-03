@@ -91,7 +91,7 @@ public class TableWindowController extends AbstractController implements Initial
 
             while (true) {
                 try {
-                    Thread.sleep(30000);
+                    Thread.sleep(10000);
                 } catch (InterruptedException ex) {
                     System.out.println(ex.getMessage());
                 }
@@ -112,8 +112,8 @@ public class TableWindowController extends AbstractController implements Initial
         setTableSize();
 
         Response response = readerSender.read();
-//        System.out.println(response.routeArrayList);
-        ArrayList<Route> routeArrayList = correctLocations(response.routeArrayList, response.animationRouteList);
+        System.out.println(response);
+        ArrayList<Route> routeArrayList = correctLocations(response.routeArrayList, response.animationRouteList);//TODO пусто выросла капуста
 
         putDataInTheTable(routeArrayList);
     }

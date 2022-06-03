@@ -11,7 +11,7 @@ public class GetAll extends ACommands {
         response.setCollection(dbDAO.getAll());
         response.setAnimationRouteList(dbDAO.getAnimationRoute());
         response.setRouteArrayList(dbDAO.getArrayListOfRoutes());
-//        System.out.println(dbDAO.getAll());
+
 
         return response;
 

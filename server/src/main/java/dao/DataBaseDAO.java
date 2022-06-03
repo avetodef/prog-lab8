@@ -55,8 +55,8 @@ public class DataBaseDAO implements DAO {
 
     @Override
     public int create(Route route) {
-        Connection connection = connect();
-        String statement1 = "INSERT INTO route(creationdate, distance, username, name )" +
+        //Connection connection = connect();
+        String statement1 = "INSERT INTO route(creation_date, distance, username, name )" +
                 "VALUES(?,?,?,?) returning id";
 
         String statement2 = "INSERT INTO coordinates(coord_x,coord_y)" +
@@ -113,6 +113,7 @@ public class DataBaseDAO implements DAO {
 
     }
 
+
     public String getUsernameByRouteId(int routeID) {
         String SQL = "SELECT * FROM route WHERE id=?";
         try {
@@ -129,7 +130,7 @@ public class DataBaseDAO implements DAO {
 
     @Override
     public boolean update(int id, RouteInfo routeInfo) {
-        Connection connection = connect();
+        //Connection connection = connect();
 
 
         String statement1 = "UPDATE route SET  creationdate = ?,distance = ?, name =?"
@@ -182,7 +183,7 @@ public class DataBaseDAO implements DAO {
 
     @Override
     public boolean delete(int id) {
-        Connection connection = connect();
+        //Connection connection = connect();
         String SQL1 = "DELETE FROM route WHERE id = ? ";
         String SQL2 = "DELETE FROM coordinates WHERE id = ?";
         String SQL3 = "DELETE FROM location_from WHERE id =?";
@@ -214,7 +215,7 @@ public class DataBaseDAO implements DAO {
 
     @Override
     public Deque<Route> getAll() {
-        Connection connection = connect();
+        //Connection connection = connect();
         String SQL1 = "SELECT * FROM route";
         String SQL2 = "SELECT * FROM coordinates ";
         String SQL3 = "SELECT * FROM location_from ";
@@ -224,19 +225,15 @@ public class DataBaseDAO implements DAO {
         try {
             PreparedStatement pstmt1 = connection.prepareStatement(SQL1);
             ResultSet rs1 = pstmt1.executeQuery();
-            rs1.next();
 
             PreparedStatement pstmt2 = connection.prepareStatement(SQL2);
             ResultSet rs2 = pstmt2.executeQuery();
-            rs2.next();
 
             PreparedStatement pstmt3 = connection.prepareStatement(SQL3);
             ResultSet rs3 = pstmt3.executeQuery();
-            rs3.next();
 
             PreparedStatement pstmt4 = connection.prepareStatement(SQL4);
             ResultSet rs4 = pstmt4.executeQuery();
-            rs4.next();
 
             while (rs1.next() && rs3.next() && rs4.next() && rs2.next()) {
                 collection.add(new Route(rs1.getInt("id"), rs1.getString("name"), rs2.getDouble("coord_x"),
@@ -245,6 +242,8 @@ public class DataBaseDAO implements DAO {
                         rs4.getFloat("to_y"), rs4.getString("to_name"), rs1.getInt("distance"),
                         getUserByName(rs1.getString("username"))));
             }
+
+            System.out.println(collection);
             return collection;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -256,7 +255,7 @@ public class DataBaseDAO implements DAO {
     }
 
     public ArrayList<AnimationRoute> getAnimationRoute() {
-        Connection connection = connect();
+        //Connection connection = connect();
         String SQL1 = "SELECT * FROM route";
         String SQL3 = "SELECT * FROM location_from ";
         String SQL4 = "SELECT * FROM location_to ";
@@ -265,15 +264,15 @@ public class DataBaseDAO implements DAO {
         try {
             PreparedStatement pstmt1 = connection.prepareStatement(SQL1);
             ResultSet rs1 = pstmt1.executeQuery();
-            rs1.next();
+//            rs1.next();
 
             PreparedStatement pstmt3 = connection.prepareStatement(SQL3);
             ResultSet rs3 = pstmt3.executeQuery();
-            rs3.next();
+//            rs3.next();
 
             PreparedStatement pstmt4 = connection.prepareStatement(SQL4);
             ResultSet rs4 = pstmt4.executeQuery();
-            rs4.next();
+//            rs4.next();
 
 
             while (rs1.next() && rs3.next() && rs4.next()) {
@@ -297,7 +296,7 @@ public class DataBaseDAO implements DAO {
     }
 
     public ArrayList<Route> getArrayListOfRoutes() {
-        Connection connection = connect();
+        //Connection connection = connect();
         String SQL1 = "SELECT * FROM route";
         String SQL2 = "SELECT * FROM coordinates ";
         String SQL3 = "SELECT * FROM location_from ";
@@ -307,19 +306,19 @@ public class DataBaseDAO implements DAO {
         try {
             PreparedStatement pstmt1 = connection.prepareStatement(SQL1);
             ResultSet rs1 = pstmt1.executeQuery();
-            rs1.next();
+//            rs1.next();
 
             PreparedStatement pstmt2 = connection.prepareStatement(SQL2);
             ResultSet rs2 = pstmt2.executeQuery();
-            rs2.next();
+//            rs2.next();
 
             PreparedStatement pstmt3 = connection.prepareStatement(SQL3);
             ResultSet rs3 = pstmt3.executeQuery();
-            rs3.next();
+//            rs3.next();
 
             PreparedStatement pstmt4 = connection.prepareStatement(SQL4);
             ResultSet rs4 = pstmt4.executeQuery();
-            rs4.next();
+//            rs4.next();
 
             while (rs1.next() && rs2.next() && rs3.next() && rs4.next()) {
                 collection.add(new Route(rs1.getInt("id"), rs1.getString("name"), rs2.getDouble("coord_x"),
@@ -340,7 +339,7 @@ public class DataBaseDAO implements DAO {
 
 
     public void removeFirst(RouteDAO dao) {
-        Connection connection = connect();
+        //Connection connection = connect();
         String sql1 = "DELETE FROM route WHERE id = ?";
         String sql2 = "DELETE FROM coordinates WHERE id = ?";
         String sql3 = "DELETE FROM location_from WHERE id = ?";
