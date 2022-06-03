@@ -14,12 +14,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import utils.Coordinates;
 import utils.Location;
@@ -42,7 +38,14 @@ public class TableWindowController extends AbstractController implements Initial
     @FXML
     private Label label;
     @FXML
-    private TextField search;
+    private TextField search_by_id;
+    @FXML
+    private TextField search_by_name;
+    @FXML
+    private TextField search_by_username;
+
+    @FXML
+    private ChoiceBox<String> filter;
 
     TableColumn<Route, Integer> id = new TableColumn<>("id");
     TableColumn<Route, String> name = new TableColumn<>("name");
@@ -164,22 +167,110 @@ public class TableWindowController extends AbstractController implements Initial
         table.setItems(routes);
 
         search(routes);
+
+//        searchById(routes);
+//        searchByName(routes);
+//        searchByUsername(routes);
+
     }
 
     private void search(ObservableList<Route> routes) {
         FilteredList<Route> filteredRoutes = new FilteredList<>(routes, b -> true);
 
-        search.textProperty().addListener((observable, oldValue, newValue) -> {
+        search_by_id.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredRoutes.setPredicate(route -> {
+                if (newValue == null || newValue.isEmpty())
+                    return true;
+                String filter = newValue.toLowerCase();
+                return String.valueOf(route.getId()).equals(filter);
+            });
+        });
+
+        search_by_name.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredRoutes.setPredicate(route -> {
                 if (newValue == null || newValue.isEmpty())
                     return true;
                 String filter = newValue.toLowerCase();
 
-                if (route.getName().toLowerCase().contains(filter))
+                return route.getName().contains(filter);
+//                else if (route.getUser().getUsername().contains(filter))
+//                    return true;
+                //return String.valueOf(route.getId()).equals(filter);
+            });
+        });
+
+        search_by_username.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredRoutes.setPredicate(route -> {
+                if (newValue == null || newValue.isEmpty())
                     return true;
-                else if (route.getUser().getUsername().contains(filter))
+                String filter = newValue.toLowerCase();
+
+                return (route.getUser().getUsername().contains(filter));
+//                else if (route.getUser().getUsername().contains(filter))
+//                    return true;
+                //return String.valueOf(route.getId()).equals(filter);
+            });
+        });
+
+        SortedList<Route> sortedRoutes = new SortedList<>(filteredRoutes);
+        sortedRoutes.comparatorProperty().bind(table.comparatorProperty());
+        table.setItems(sortedRoutes);
+
+
+    }
+
+    private void searchById(ObservableList<Route> routes) {
+        FilteredList<Route> filteredRoutes = new FilteredList<>(routes, b -> true);
+
+        search_by_id.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredRoutes.setPredicate(route -> {
+                if (newValue == null || newValue.isEmpty())
                     return true;
-                else return String.valueOf(route.getId()).equals(filter);
+                String filter = newValue.toLowerCase();
+                return String.valueOf(route.getId()).equals(filter);
+            });
+        });
+
+        SortedList<Route> sortedRoutes = new SortedList<>(filteredRoutes);
+        sortedRoutes.comparatorProperty().bind(table.comparatorProperty());
+        table.setItems(sortedRoutes);
+    }
+
+    private void searchByName(ObservableList<Route> routes) {
+        FilteredList<Route> filteredRoutes = new FilteredList<>(routes, b -> true);
+
+        search_by_name.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredRoutes.setPredicate(route -> {
+                if (newValue == null || newValue.isEmpty())
+                    return true;
+                String filter = newValue.toLowerCase();
+
+                return route.getName().contains(filter);
+//                else if (route.getUser().getUsername().contains(filter))
+//                    return true;
+                //return String.valueOf(route.getId()).equals(filter);
+            });
+        });
+
+        SortedList<Route> sortedRoutes = new SortedList<>(filteredRoutes);
+        sortedRoutes.comparatorProperty().bind(table.comparatorProperty());
+        table.setItems(sortedRoutes);
+    }
+
+    //TODO работает только это.. почему.
+    private void searchByUsername(ObservableList<Route> routes) {
+        FilteredList<Route> filteredRoutes = new FilteredList<>(routes, b -> true);
+
+        search_by_username.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredRoutes.setPredicate(route -> {
+                if (newValue == null || newValue.isEmpty())
+                    return true;
+                String filter = newValue.toLowerCase();
+
+                return (route.getUser().getUsername().contains(filter));
+//                else if (route.getUser().getUsername().contains(filter))
+//                    return true;
+                //return String.valueOf(route.getId()).equals(filter);
             });
         });
 
