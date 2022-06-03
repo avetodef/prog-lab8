@@ -57,10 +57,12 @@ public class RegistrationController extends AbstractController implements Initia
             if (response.status.equals(Status.PASSWORD_ERROR)) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, response.msg, ButtonType.OK);
                 alert.setTitle(response.msg);
+                alert.show();
             }
             if (response.status.equals(Status.USERNAME_ERROR)) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, response.msg, ButtonType.OK);
                 alert.setTitle(response.msg);
+                alert.show();
             }
             if (response.msg.equals("database sleep"))
                 readerSender.dbDied();
@@ -86,18 +88,21 @@ public class RegistrationController extends AbstractController implements Initia
                 String msg = "пустое имя";
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
                 alert.setTitle(msg);
+                alert.show();
             }
             if (password_field.getText().isEmpty()) {
                 //System.out.println("PASSWORD IS EMPTY");
                 String msg = "пустой пароль";
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
                 alert.setTitle(msg);
+                alert.show();
             }
             if (!areTheSame) {
                 //System.out.println("PASSWORD AND REPEAT PASSWORD DO NOT MATCH");
                 String msg = "пароли не совпадают";
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
                 alert.setTitle(msg);
+                alert.show();
             }
         }
     }

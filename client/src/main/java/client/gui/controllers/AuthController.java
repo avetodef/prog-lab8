@@ -68,11 +68,13 @@ public class AuthController extends AbstractController implements Initializable 
                         //password_warning_text.setText(response.msg);
                         Alert alert = new Alert(Alert.AlertType.INFORMATION, response.msg, ButtonType.OK);
                         alert.setTitle(response.msg);
+                        alert.show();
                     }
                     if (response.status.equals(Status.USERNAME_ERROR)) {
                         String title = "тебе букетик через интернетик";
                         Alert alert = new Alert(Alert.AlertType.INFORMATION, response.msg, ButtonType.OK);
                         alert.setTitle(title);
+                        alert.show();
                     }
                     if (response.msg.equals("database sleep"))
                         readerSender.dbDied();
@@ -105,12 +107,14 @@ public class AuthController extends AbstractController implements Initializable 
                 String msg = "пустое имя";
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
                 alert.setTitle(title);
+                alert.show();
             }
             if (password_field.getText().isEmpty()) {
                 String title = "тебе букетик через интернетик";
                 String msg = "пустой пароль";
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
                 alert.setTitle(title);
+                alert.show();
             }
         }
     }
@@ -126,7 +130,6 @@ public class AuthController extends AbstractController implements Initializable 
     public void initialize(URL url, ResourceBundle resourceBundle) {
         languageChoice.setValue("Choose your language");
         languageChoice.getItems().addAll(availableLanguages);
-
     }
 
 }

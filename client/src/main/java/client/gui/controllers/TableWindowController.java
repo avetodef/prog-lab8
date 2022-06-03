@@ -17,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import parsing.PasswordHandler;
 import utils.Coordinates;
 import utils.Location;
 import utils.Route;
@@ -75,6 +76,7 @@ public class TableWindowController extends AbstractController implements Initial
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         author.setText("ты зашел как " + readerSender.user.getUsername());
         putTableTogether();
         initializeTable();
@@ -270,17 +272,19 @@ public class TableWindowController extends AbstractController implements Initial
 
     @FXML
     private void delete_element() {
-        if (readerSender.user == table.getSelectionModel().getSelectedItem().getUser()) {
+        if (readerSender.user.getUsername().equals(table.getSelectionModel().getSelectedItem().getUser().getUsername())) {
             table.getItems().removeAll(table.getSelectionModel().getSelectedItem());
 
             Request request = new Request();
             request.setArgs(List.of("remove_by_id", String.valueOf(table.getSelectionModel().getSelectedItem().getId())));
             readerSender.sendToServer(request);
         } else {
+            System.out.println("user eblan");
             String msg = "нет прав на удаление элемента";
             String title = "тебе букетик через интернетик";
             Alert alert = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
             alert.setTitle(title);
+            alert.show();
         }
     }
 
@@ -301,7 +305,7 @@ public class TableWindowController extends AbstractController implements Initial
             String title = "тебе букетик через интернетик";
             Alert alert = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
             alert.setTitle(title);
-
+            alert.show();
         }
     }
 
