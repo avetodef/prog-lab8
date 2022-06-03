@@ -7,10 +7,7 @@ import interaction.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import parsing.PasswordHandler;
 
@@ -68,10 +65,15 @@ public class AuthController extends AbstractController implements Initializable 
                     switchStages(actionEvent, "/client/actionChoice.fxml");
                 } else {
                     if (response.status.equals(Status.PASSWORD_ERROR)) {
-                        password_warning_text.setText(response.msg);
+                        //password_warning_text.setText(response.msg);
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION, response.msg, ButtonType.OK);
+                        alert.setTitle(response.msg);
                     }
-                    if (response.status.equals(Status.USERNAME_ERROR))
-                        username_warning_text.setText(response.msg);
+                    if (response.status.equals(Status.USERNAME_ERROR)) {
+                        String title = "тебе букетик через интернетик";
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION, response.msg, ButtonType.OK);
+                        alert.setTitle(title);
+                    }
                     if (response.msg.equals("database sleep"))
                         readerSender.dbDied();
                 }
@@ -99,10 +101,16 @@ public class AuthController extends AbstractController implements Initializable 
 
         } else {
             if (user.getUsername().isEmpty()) {
-                username_warning_text.setText("пустое имя");
+                String title = "тебе букетик через интернетик";
+                String msg = "пустое имя";
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
+                alert.setTitle(title);
             }
             if (password_field.getText().isEmpty()) {
-                password_warning_text.setText("пустой пароль");
+                String title = "тебе букетик через интернетик";
+                String msg = "пустой пароль";
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
+                alert.setTitle(title);
             }
         }
     }

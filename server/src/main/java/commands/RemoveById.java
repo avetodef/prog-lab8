@@ -17,6 +17,7 @@ public class RemoveById extends ACommands {
     {
         isIdAsker = true;
     }
+
     public Response execute(RouteDAO routeDAO, DataBaseDAO dbDAO) {
         if (routeDAO.getAll().size() == 0) {
             response.setMsg("коллекция пустая. нечего удалять");

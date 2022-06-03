@@ -86,7 +86,7 @@ public class AddElementController extends AbstractController {
         try {
             out.y = Double.parseDouble(coord_y_field.getText().trim());
             if (out.y < -210) {
-                y_warning.setText("не может быть меньше -210");
+                y_warning.setText("неправильный тип данных");
                 send = false;
             }
         } catch (RuntimeException e) {
@@ -109,11 +109,11 @@ public class AddElementController extends AbstractController {
         try {
             out.nameFrom = from_name_field.getText().trim();
             if (out.nameFrom.isEmpty()) {
-                from_x_warning.setText("название не может быть пустым");
+                from_x_warning.setText("неправильный тип данных");
                 send = false;
             }
         } catch (RuntimeException e) {
-            from_x_warning.setText("введите строку");
+            from_x_warning.setText("неправильный тип данных");
             send = false;
         }
 
@@ -140,7 +140,7 @@ public class AddElementController extends AbstractController {
         try {
             out.distance = Integer.parseInt(distance_field.getText().trim());
             if (out.distance < 0 || out.distance < 1) {
-                distance_warning.setText("длина маршрута должна быть больше 1");
+                distance_warning.setText("неправильный тип данных");
                 send = false;
             }
         } catch (RuntimeException e) {
@@ -200,6 +200,4 @@ public class AddElementController extends AbstractController {
     private Text distance_warning;
     @FXML
     private Label label;
-
-
 }

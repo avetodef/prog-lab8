@@ -12,18 +12,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import utils.Coordinates;
 import utils.Location;
@@ -278,10 +270,18 @@ public class TableWindowController extends AbstractController implements Initial
 
     @FXML
     private void delete_element() {
-        if (readerSender.user == table.getSelectionModel().getSelectedItem().getUser())
+        if (readerSender.user == table.getSelectionModel().getSelectedItem().getUser()) {
             table.getItems().removeAll(table.getSelectionModel().getSelectedItem());
-        else
-            label.setText("нет прав на удаление элемента");
+
+            Request request = new Request();
+            request.setArgs(List.of("remove_by_id", String.valueOf(table.getSelectionModel().getSelectedItem().getId())));
+            readerSender.sendToServer(request);
+        } else {
+            String msg = "нет прав на удаление элемента";
+            String title = "тебе букетик через интернетик";
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
+            alert.setTitle(title);
+        }
     }
 
     @FXML
@@ -303,47 +303,6 @@ public class TableWindowController extends AbstractController implements Initial
             alert.setTitle(title);
 
         }
-    }
-
-    private void createAlert() {
-//        Alert alert = new Alert(Alert.AlertType.ERROR);
-////        alert.setTitle("ты еблан?");
-//        ButtonType type = new ButtonType("ok", ButtonBar.ButtonData.OK_DONE);
-//        alert.setContentText("пустое имя");
-//        alert.getDialogPane().getButtonTypes().add(type);
-
-        //Creating a dialog
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        //Setting the title
-        alert.setTitle("Alert");
-        ButtonType type = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
-        //Setting the content of the dialog
-        alert.setContentText("This is a confirmmation alert");
-        //Adding buttons to the dialog pane
-        alert.getDialogPane().getButtonTypes().add(type);
-        //Setting the label
-        Text txt = new Text("Click the button to show the dialog");
-        Font font = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 12);
-        txt.setFont(font);
-        //Creating a button
-        Button button = new Button("Show Dialog");
-        //Showing the dialog on clicking the button
-        button.setOnAction(e -> {
-            alert.showAndWait();
-        });
-        //Creating a vbox to hold the button and the label
-        HBox pane = new HBox(15);
-        //Setting the space between the nodes of a HBox pane
-        pane.setPadding(new Insets(50, 150, 50, 60));
-        pane.getChildren().addAll(txt, button);
-        //Creating a scene object
-        Stage stage = new Stage();
-        Scene scene = new Scene(new Group(pane), 595, 300, Color.BEIGE);
-        stage.setTitle("Alert");
-        stage.setScene(scene);
-        stage.show();
-
-
     }
 
 }
