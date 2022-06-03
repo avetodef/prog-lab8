@@ -88,7 +88,7 @@ public class AnimationWindowController extends AbstractController implements Ini
             List<String> arguments = List.of("animation");
             Request userRequest = new Request(arguments, null, readerSender.user);
             readerSender.sendToServer(userRequest);
-            System.out.println("sending data to server... " + userRequest);
+            System.out.println("sending data to server... ");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,7 +126,7 @@ public class AnimationWindowController extends AbstractController implements Ini
     /**
      * method to initialize a pop-up window with info about route
      *
-     * @param animationRoute - animation route
+     * @param animationRoute animation route
      */
     private void initializeRouteInfoScene(AnimationRoute animationRoute) {
         try {
@@ -192,7 +192,7 @@ public class AnimationWindowController extends AbstractController implements Ini
      */
     private Route buildRoute() {
         Response response = readerSender.read();
-        System.out.println(response.route);
+
         return response.route;
     }
 

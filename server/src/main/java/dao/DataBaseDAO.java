@@ -12,7 +12,7 @@ import utils.animation.AnimationRoute;
 
 import java.io.DataOutputStream;
 import java.sql.*;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -236,14 +236,23 @@ public class DataBaseDAO implements DAO {
             ResultSet rs4 = pstmt4.executeQuery();
 
             while (rs1.next() && rs3.next() && rs4.next() && rs2.next()) {
-                collection.add(new Route(rs1.getInt("id"), rs1.getString("name"), rs2.getDouble("coord_x"),
+                var route = new Route(rs1.getInt("id"), rs1.getString("name"), rs2.getDouble("coord_x"),
                         rs2.getDouble("coord_y"), rs3.getDouble("from_x"),
                         rs3.getLong("from_y"), rs3.getString("from_name"), rs4.getInt("to_x"),
                         rs4.getFloat("to_y"), rs4.getString("to_name"), rs1.getInt("distance"),
-                        getUserByName(rs1.getString("username"))));
+                        getUserByName(rs1.getString("username")));
+
+
+                LocalDateTime localDateTime = rs1.getObject("creation_date", LocalDateTime.class);
+
+                //Instant instant = rs1.getObject("creation_date", Instant.class);
+                ZoneId zoneId = ZoneId.systemDefault();
+                Instant instant = localDateTime.atOffset(ZoneOffset.UTC).toInstant();
+                ZonedDateTime time = instant.atZone(zoneId);
+                route.setCreationDate(time);
+                collection.add(route);
             }
 
-            System.out.println(collection);
             return collection;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -321,11 +330,20 @@ public class DataBaseDAO implements DAO {
 //            rs4.next();
 
             while (rs1.next() && rs2.next() && rs3.next() && rs4.next()) {
-                collection.add(new Route(rs1.getInt("id"), rs1.getString("name"), rs2.getDouble("coord_x"),
+
+                var route = new Route(rs1.getInt("id"), rs1.getString("name"), rs2.getDouble("coord_x"),
                         rs2.getDouble("coord_y"), rs3.getDouble("from_x"),
                         rs3.getLong("from_y"), rs3.getString("from_name"), rs4.getInt("to_x"),
                         rs4.getFloat("to_y"), rs4.getString("to_name"), rs1.getInt("distance"),
-                        getUserByName(rs1.getString("username"))));
+                        getUserByName(rs1.getString("username")));
+
+                LocalDateTime localDateTime = rs1.getObject("creation_date", LocalDateTime.class);
+                //Instant instant = rs1.getObject("creation_date", Instant.class);
+                ZoneId zoneId = ZoneId.systemDefault();
+                Instant instant = localDateTime.atOffset(ZoneOffset.UTC).toInstant();
+                ZonedDateTime time = instant.atZone(zoneId);
+                route.setCreationDate(time);
+                collection.add(route);
             }
             return collection;
         } catch (SQLException ex) {
@@ -361,7 +379,6 @@ public class DataBaseDAO implements DAO {
             PreparedStatement pstmt4 = connection.prepareStatement(sql4);
             pstmt4.setInt(1, id);
             pstmt4.execute();
-
 
         } catch (SQLException e) {
             e.printStackTrace();

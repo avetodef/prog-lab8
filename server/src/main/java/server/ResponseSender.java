@@ -30,7 +30,7 @@ public class ResponseSender implements Runnable {
     public void run() {
         try {
 
-            System.out.println(response);
+//            System.out.println(response);
 
             dataOutputStream.writeUTF(JsonConverter.serResponse(response));
 

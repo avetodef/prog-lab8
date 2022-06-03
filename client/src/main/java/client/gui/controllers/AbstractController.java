@@ -33,9 +33,9 @@ public abstract class AbstractController {
         try {
             socketChannel = SocketChannel.open();
             socketChannel.configureBlocking(true);
-            System.out.println("AbstractController.static initializer");
+            //System.out.println("AbstractController.static initializer");
             socketChannel.connect(new InetSocketAddress("localhost", serverPort));
-            System.out.println("AbstractController.static initializer)))))))");
+            //System.out.println("AbstractController.static initializer)))))))");
             if (socketChannel.isConnected())
                 System.out.println("connection established ABSTR CONTR");
 

@@ -112,7 +112,7 @@ public class TableWindowController extends AbstractController implements Initial
         setTableSize();
 
         Response response = readerSender.read();
-        System.out.println(response);
+
         ArrayList<Route> routeArrayList = correctLocations(response.routeArrayList, response.animationRouteList);//TODO пусто выросла капуста
 
         putDataInTheTable(routeArrayList);
@@ -125,7 +125,7 @@ public class TableWindowController extends AbstractController implements Initial
         Request request = new Request();
         request.setArgs(List.of("get_all"));
         readerSender.sendToServer(request);
-        System.out.println("sending a request to server..." + request);
+        System.out.println("sending a request to server...");
     }
 
     private void putTableTogether() {

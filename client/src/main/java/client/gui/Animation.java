@@ -37,7 +37,7 @@ public class Animation extends Application {
             stage.show();
             stage.setOnCloseRequest(event -> Platform.exit());
 
-            System.out.println(controller.hashCode());
+            //System.out.println(controller.hashCode());
         } catch (Exception e) {
             e.printStackTrace();
         }

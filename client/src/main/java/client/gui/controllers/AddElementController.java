@@ -23,7 +23,7 @@ public class AddElementController extends AbstractController {
         request.setArgs(List.of("add"));
         request.setInfo(info);
         readerSender.sendToServer(request);
-        System.out.println("sending data to server... " + request);
+        System.out.println("sending data to server... ");
     }
 
     private void processServerResponse() {

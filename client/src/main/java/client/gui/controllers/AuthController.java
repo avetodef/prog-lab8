@@ -50,7 +50,7 @@ public class AuthController extends AbstractController implements Initializable 
             Request userRequest = new Request(arguments, null, user);
             readerSender.setUser(user);
             readerSender.sendToServer(userRequest);
-            System.out.println("sending data to server... " + userRequest);
+            System.out.println("sending data to server... ");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -94,16 +94,14 @@ public class AuthController extends AbstractController implements Initializable 
             sendDataToServer(user);
 
             processServerResponse(actionEvent);
-            System.out.println("setting user...");
+
             readerSender.setUser(user);
 
         } else {
             if (user.getUsername().isEmpty()) {
-                System.out.println("NAME IS EMPTY");
                 username_warning_text.setText("пустое имя");
             }
             if (password_field.getText().isEmpty()) {
-                System.out.println("PASSWORD IS EMPTY");
                 password_warning_text.setText("пустой пароль");
             }
         }

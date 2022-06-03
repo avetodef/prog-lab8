@@ -54,7 +54,7 @@ public class RegistrationController extends AbstractController implements Initia
 
         if (response.status.equals(Status.OK)) {
             switchStages(actionEvent, "/client/actionChoice.fxml");
-            System.out.println("AUTHENTICATION WENT SUCCESSFULLY");
+            //System.out.println("AUTHENTICATION WENT SUCCESSFULLY");
         } else {
             if (response.status.equals(Status.PASSWORD_ERROR)) {
                 password_warning_text.setText(response.msg);
@@ -82,15 +82,15 @@ public class RegistrationController extends AbstractController implements Initia
         }
         else {
             if (user.getUsername().isEmpty()) {
-                System.out.println("NAME IS EMPTY");
+                //System.out.println("NAME IS EMPTY");
                 username_warning_text.setText("пустое имя");
             }
             if (password_field.getText().isEmpty()) {
-                System.out.println("PASSWORD IS EMPTY");
+                //System.out.println("PASSWORD IS EMPTY");
                 password_warning_text.setText("пустой пароль");
             }
             if (!areTheSame) {
-                System.out.println("PASSWORD AND REPEAT PASSWORD DO NOT MATCH");
+                //System.out.println("PASSWORD AND REPEAT PASSWORD DO NOT MATCH");
                 password_warning_text.setText("пароли не совпадают");
             }
         }

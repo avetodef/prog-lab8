@@ -101,7 +101,22 @@ public class Route {
                 '}';
     }
 
-    public void update(RouteInfo routeInfo){
+    public Route(int id, String name, double
+            coordinatesX, Double coordinatesY,
+                 double fromX, Long fromY, String nameFrom,
+                 int toX, float toY, String nameTo, Integer distance, User user, ZonedDateTime creationDate) {
+        this.id = id;
+        this.name = name;
+        this.coordinates = new Coordinates(coordinatesX, coordinatesY);
+        this.from = new Location(fromX, fromY, nameFrom);
+        this.to = new utils.loc.Location(toX, toY, nameTo);
+        this.distance = distance;
+        this.user = user;
+        this.creationDate = creationDate;
+
+    }
+
+    public void update(RouteInfo routeInfo) {
         name = routeInfo.name;
         coordinates = new Coordinates(routeInfo.x, routeInfo.y);
         from = new Location(routeInfo.fromX, routeInfo.fromY, routeInfo.nameFrom);
