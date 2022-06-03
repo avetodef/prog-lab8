@@ -34,7 +34,7 @@ public class AddElementController extends AbstractController {
             pane.getScene().getWindow().hide();
         }
         if (response.msg.equals("database sleep"))
-            readerSender.serverDied();
+            readerSender.dbDied();
     }
 
     @FXML

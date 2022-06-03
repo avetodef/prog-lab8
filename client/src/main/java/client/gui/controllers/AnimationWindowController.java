@@ -109,7 +109,7 @@ public class AnimationWindowController extends AbstractController implements Ini
         if (!response.status.equals(Status.OK)) {
             draw = false;
             if (response.msg.equals("database sleep"))
-                readerSender.serverDied();
+                readerSender.dbDied();
         }
         return response.animationRouteList;
     }

@@ -120,4 +120,20 @@ public class ReaderSender {
 
     }
 
+    public void dbDied() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(StartingStage.class.getResource("/client/database_sleep.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setOnCloseRequest(event -> System.exit(0)); //TODO вообще надо не систем экзитом а через ноуды
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            System.out.println("IO problems in reader sender line 97: " + e.getMessage());
+        }
+    }
+
 }

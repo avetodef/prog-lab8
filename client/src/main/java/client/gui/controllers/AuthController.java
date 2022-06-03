@@ -73,7 +73,7 @@ public class AuthController extends AbstractController implements Initializable 
                     if (response.status.equals(Status.USERNAME_ERROR))
                         username_warning_text.setText(response.msg);
                     if (response.msg.equals("database sleep"))
-                        readerSender.serverDied();
+                        readerSender.dbDied();
                 }
             } else
                 System.out.println("NULL SERVER RESPONSE ");

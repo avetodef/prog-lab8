@@ -12,10 +12,18 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import utils.Coordinates;
 import utils.Location;
@@ -43,9 +51,6 @@ public class TableWindowController extends AbstractController implements Initial
     private TextField search_by_name;
     @FXML
     private TextField search_by_username;
-
-    @FXML
-    private ChoiceBox<String> filter;
 
     TableColumn<Route, Integer> id = new TableColumn<>("id");
     TableColumn<Route, String> name = new TableColumn<>("name");
@@ -168,15 +173,15 @@ public class TableWindowController extends AbstractController implements Initial
 
         search(routes);
 
-//        searchById(routes);
-//        searchByName(routes);
-//        searchByUsername(routes);
-
     }
 
+    /**
+     * method that gets an observable list of routes and returns filtered list
+     *
+     * @param routes observable list of routes
+     */
     private void search(ObservableList<Route> routes) {
         FilteredList<Route> filteredRoutes = new FilteredList<>(routes, b -> true);
-
         search_by_id.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredRoutes.setPredicate(route -> {
                 if (newValue == null || newValue.isEmpty())
@@ -193,9 +198,6 @@ public class TableWindowController extends AbstractController implements Initial
                 String filter = newValue.toLowerCase();
 
                 return route.getName().contains(filter);
-//                else if (route.getUser().getUsername().contains(filter))
-//                    return true;
-                //return String.valueOf(route.getId()).equals(filter);
             });
         });
 
@@ -206,9 +208,6 @@ public class TableWindowController extends AbstractController implements Initial
                 String filter = newValue.toLowerCase();
 
                 return (route.getUser().getUsername().contains(filter));
-//                else if (route.getUser().getUsername().contains(filter))
-//                    return true;
-                //return String.valueOf(route.getId()).equals(filter);
             });
         });
 
@@ -216,69 +215,7 @@ public class TableWindowController extends AbstractController implements Initial
         sortedRoutes.comparatorProperty().bind(table.comparatorProperty());
         table.setItems(sortedRoutes);
 
-
     }
-
-    private void searchById(ObservableList<Route> routes) {
-        FilteredList<Route> filteredRoutes = new FilteredList<>(routes, b -> true);
-
-        search_by_id.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredRoutes.setPredicate(route -> {
-                if (newValue == null || newValue.isEmpty())
-                    return true;
-                String filter = newValue.toLowerCase();
-                return String.valueOf(route.getId()).equals(filter);
-            });
-        });
-
-        SortedList<Route> sortedRoutes = new SortedList<>(filteredRoutes);
-        sortedRoutes.comparatorProperty().bind(table.comparatorProperty());
-        table.setItems(sortedRoutes);
-    }
-
-    private void searchByName(ObservableList<Route> routes) {
-        FilteredList<Route> filteredRoutes = new FilteredList<>(routes, b -> true);
-
-        search_by_name.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredRoutes.setPredicate(route -> {
-                if (newValue == null || newValue.isEmpty())
-                    return true;
-                String filter = newValue.toLowerCase();
-
-                return route.getName().contains(filter);
-//                else if (route.getUser().getUsername().contains(filter))
-//                    return true;
-                //return String.valueOf(route.getId()).equals(filter);
-            });
-        });
-
-        SortedList<Route> sortedRoutes = new SortedList<>(filteredRoutes);
-        sortedRoutes.comparatorProperty().bind(table.comparatorProperty());
-        table.setItems(sortedRoutes);
-    }
-
-    //TODO работает только это.. почему.
-    private void searchByUsername(ObservableList<Route> routes) {
-        FilteredList<Route> filteredRoutes = new FilteredList<>(routes, b -> true);
-
-        search_by_username.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredRoutes.setPredicate(route -> {
-                if (newValue == null || newValue.isEmpty())
-                    return true;
-                String filter = newValue.toLowerCase();
-
-                return (route.getUser().getUsername().contains(filter));
-//                else if (route.getUser().getUsername().contains(filter))
-//                    return true;
-                //return String.valueOf(route.getId()).equals(filter);
-            });
-        });
-
-        SortedList<Route> sortedRoutes = new SortedList<>(filteredRoutes);
-        sortedRoutes.comparatorProperty().bind(table.comparatorProperty());
-        table.setItems(sortedRoutes);
-    }
-
 
     /**
      * method that corrects the location
@@ -359,8 +296,54 @@ public class TableWindowController extends AbstractController implements Initial
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.show();
-        } else
-            label.setText("нет прав на редактирование элемента");
+        } else {
+            String msg = "нет прав на редактирование элемента";
+            String title = "тебе букетик через интернетик";
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
+            alert.setTitle(title);
+
+        }
+    }
+
+    private void createAlert() {
+//        Alert alert = new Alert(Alert.AlertType.ERROR);
+////        alert.setTitle("ты еблан?");
+//        ButtonType type = new ButtonType("ok", ButtonBar.ButtonData.OK_DONE);
+//        alert.setContentText("пустое имя");
+//        alert.getDialogPane().getButtonTypes().add(type);
+
+        //Creating a dialog
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        //Setting the title
+        alert.setTitle("Alert");
+        ButtonType type = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+        //Setting the content of the dialog
+        alert.setContentText("This is a confirmmation alert");
+        //Adding buttons to the dialog pane
+        alert.getDialogPane().getButtonTypes().add(type);
+        //Setting the label
+        Text txt = new Text("Click the button to show the dialog");
+        Font font = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 12);
+        txt.setFont(font);
+        //Creating a button
+        Button button = new Button("Show Dialog");
+        //Showing the dialog on clicking the button
+        button.setOnAction(e -> {
+            alert.showAndWait();
+        });
+        //Creating a vbox to hold the button and the label
+        HBox pane = new HBox(15);
+        //Setting the space between the nodes of a HBox pane
+        pane.setPadding(new Insets(50, 150, 50, 60));
+        pane.getChildren().addAll(txt, button);
+        //Creating a scene object
+        Stage stage = new Stage();
+        Scene scene = new Scene(new Group(pane), 595, 300, Color.BEIGE);
+        stage.setTitle("Alert");
+        stage.setScene(scene);
+        stage.show();
+
+
     }
 
 }
