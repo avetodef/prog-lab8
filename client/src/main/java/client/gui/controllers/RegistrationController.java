@@ -1,18 +1,27 @@
 package client.gui.controllers;
 
+import client.gui.tool.MapUtils;
+import client.gui.tool.ObservableResourse;
 import interaction.Request;
 import interaction.Response;
 import interaction.Status;
 import interaction.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import parsing.PasswordHandler;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class RegistrationController extends AbstractController implements Initializable {
@@ -26,6 +35,20 @@ public class RegistrationController extends AbstractController implements Initia
     private Text username_warning_text;
     @FXML
     private PasswordField repeat_password_field;
+    @FXML
+    private Text password;
+    @FXML
+    private Text username;
+    @FXML
+    private Text repeat_password;
+    @FXML
+    private Label create;
+    @FXML
+    private Button back;
+    @FXML
+    private Button submit;
+    @FXML
+    private AnchorPane pane;
 
 
     private User getUserFromAuthWindow() {
@@ -109,7 +132,21 @@ public class RegistrationController extends AbstractController implements Initia
 
     @FXML
     private void goBack(ActionEvent actionEvent) {
-        switchStages(actionEvent, "/client/auth.fxml");
+        //switchStages(actionEvent, "/client/auth.fxml");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/auth.fxml"));
+            Parent root = loader.load();
+            AuthController auth = loader.getController();
+            auth.initLang(observableResourse);
+
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            pane.getScene().getWindow().hide();
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -120,8 +157,70 @@ public class RegistrationController extends AbstractController implements Initia
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        languageChoice.setValue("Choose your language");
-        languageChoice.getItems().addAll(availableLanguages);
+        observableResourse.setResources(ResourceBundle.getBundle
+                (BUNDLE, localeMap.get(languageChoice.getSelectionModel().getSelectedItem())));
 
+        username.textProperty().bind(observableResourse.getStringBinding("username"));
+        password.textProperty().bind(observableResourse.getStringBinding("password"));
+        repeat_password.textProperty().bind(observableResourse.getStringBinding("repeat_password"));
+
+        password_field.promptTextProperty().bind(observableResourse.getStringBinding("password_field"));
+        username_field.promptTextProperty().bind(observableResourse.getStringBinding("username_field"));
+        repeat_password_field.promptTextProperty().bind(observableResourse.getStringBinding("repeat_password_field"));
+
+        back.textProperty().bind(observableResourse.getStringBinding("back"));
+        create.textProperty().bind(observableResourse.getStringBinding("create"));
+        submit.textProperty().bind(observableResourse.getStringBinding("submit"));
+
+    }
+
+    @Override
+    protected void localize() {
+        System.out.println("обзервабл ресурс пустой? " + observableResourse.resourcesProperty().isNull());
+        username_field.setPromptText((observableResourse.getString("username_field")));
+        password_field.setPromptText((observableResourse.getString("password_field")));
+        repeat_password_field.setPromptText((observableResourse.getString("repeat_password_field")));
+        username.setText(observableResourse.getString("username"));
+        password.setText(observableResourse.getString("password"));
+
+        repeat_password.setText(observableResourse.getString("repeat_password"));
+
+        username_warning_text.setText(observableResourse.getString("username_warning_text"));
+        password_warning_text.setText(observableResourse.getString("password_warning_text"));
+
+        create.setText(observableResourse.getString("create"));
+        back.setText(observableResourse.getString("back"));
+        submit.setText(observableResourse.getString("submit"));
+
+        languageChoice.setValue(observableResourse.getString("languageChoice"));
+
+    }
+
+    public void initLang(ObservableResourse observableResourse) {
+        AbstractController.observableResourse = observableResourse;
+
+        for (String localName : AbstractController.localeMap.keySet()) {
+
+            Locale s = AbstractController.localeMap.get(localName);
+            System.out.println(s);
+            var res = observableResourse.getResources();
+            System.out.println(res);
+            if (s.equals(res.getLocale()))
+                languageChoice.getSelectionModel().select(localName);
+
+        }
+        if (languageChoice.getSelectionModel().getSelectedItem().isEmpty()) {
+            if (AbstractController.localeMap.containsValue(Locale.getDefault()))
+                languageChoice.getSelectionModel().select(MapUtils.getKeyByValue(AbstractController.localeMap, Locale.getDefault()));
+            else languageChoice.getSelectionModel().selectFirst();
+        }
+
+        languageChoice.setOnAction((event) -> {
+            Locale loc = AbstractController.localeMap.get(languageChoice.getValue());
+            observableResourse.setResources(ResourceBundle.getBundle(BUNDLE, loc));
+
+
+        });
+        bindGuiLanguage();
     }
 }

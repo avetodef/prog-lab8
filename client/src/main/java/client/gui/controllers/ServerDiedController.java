@@ -18,4 +18,9 @@ public class ServerDiedController extends AbstractController {
     private void reconnect() {
         pane.getScene().getWindow().hide();
     }
+
+    @Override
+    protected void localize() {
+
+    }
 }

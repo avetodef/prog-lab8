@@ -17,4 +17,9 @@ public class DBDiedController extends AbstractController {
     private void exit() {
         pane.getScene().getWindow().hide();
     }
+
+    @Override
+    protected void localize() {
+
+    }
 }

@@ -1,9 +1,12 @@
 package client.gui.controllers;
 
+import client.gui.tool.MapUtils;
+import client.gui.tool.ObservableResourse;
 import interaction.Request;
 import interaction.Response;
 import javafx.application.Platform;
 import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -16,8 +19,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import parsing.PasswordHandler;
 import utils.Coordinates;
 import utils.Location;
 import utils.Route;
@@ -25,6 +28,7 @@ import utils.animation.AnimationRoute;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.util.*;
 
@@ -37,13 +41,23 @@ public class TableWindowController extends AbstractController implements Initial
     @FXML
     private TableView<Route> table;
     @FXML
-    private Label label;
+    private Label labelTable;
     @FXML
     private TextField search_by_id;
     @FXML
     private TextField search_by_name;
     @FXML
     private TextField search_by_username;
+    @FXML
+    private Button logOut;
+    @FXML
+    private Button back;
+    @FXML
+    private ChoiceBox<String> languageChoice;
+    @FXML
+    private AnchorPane panes;
+
+    private Map<String, Locale> localeMap;
 
     TableColumn<Route, Integer> id = new TableColumn<>("id");
     TableColumn<Route, String> name = new TableColumn<>("name");
@@ -80,6 +94,14 @@ public class TableWindowController extends AbstractController implements Initial
         author.setText("ты зашел как " + readerSender.user.getUsername());
         putTableTogether();
         initializeTable();
+
+        localeMap = new HashMap<>();
+        localeMap.put("Русский", new Locale("ru", "RU"));
+        localeMap.put("Slovenščina", new Locale("sl", "SL"));
+        localeMap.put("Український", new Locale("uk", "UK"));
+        localeMap.put("Español (República Dominicana)", new Locale("es", "ES"));
+        languageChoice.setItems(FXCollections.observableArrayList(localeMap.keySet()));
+
         Thread thread = new Thread(() -> {
             Runnable updater = this::initializeTable;
 
@@ -136,7 +158,6 @@ public class TableWindowController extends AbstractController implements Initial
      * method that puts data collected from an ArrayList<Route> to the table
      *
      * @param routeArrayList - the ArrayList where data is taken from
-     * @return
      */
     private void putDataInTheTable(ArrayList<Route> routeArrayList) {
         System.out.println("putting data in the table...");
@@ -157,7 +178,8 @@ public class TableWindowController extends AbstractController implements Initial
         to_name.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTo().getName()));
 
         distance.setCellValueFactory(new PropertyValueFactory<>("distance"));
-        date.setCellValueFactory(new PropertyValueFactory<>("creationDate"));
+        //date.setCellValueFactory(new PropertyValueFactory<>("creationDate"));
+        date.setCellValueFactory(c -> (ObservableValue<ZonedDateTime>) new SimpleDateFormat(c.getValue().getCreationDate()));
 
         user.setCellValueFactory(callback -> new SimpleStringProperty(callback.getValue().getUser().getUsername()));
 
@@ -253,16 +275,44 @@ public class TableWindowController extends AbstractController implements Initial
     /**
      * methods for buttons clicked
      *
-     * @param actionEvent - click on back button
+     * @param actionEvent click on back button
      */
     @FXML
     public void go_back(ActionEvent actionEvent) {
-        switchStages(actionEvent, "/client/actionChoice.fxml");
+        //switchStages(actionEvent, "/client/actionChoice.fxml");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/actionChoice.fxml"));
+            Parent root = loader.load();
+            ActionChoiceController auth = loader.getController();
+            auth.initLang(observableResourse);
+
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            panes.getScene().getWindow().hide();
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     public void log_out(ActionEvent actionEvent) {
-        switchStages(actionEvent, "/client/auth.fxml");
+        //switchStages(actionEvent, "/client/auth.fxml");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/auth.fxml"));
+            Parent root = loader.load();
+            AuthController auth = loader.getController();
+            auth.initLang(observableResourse);
+
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            panes.getScene().getWindow().hide();
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -309,4 +359,47 @@ public class TableWindowController extends AbstractController implements Initial
         }
     }
 
+
+    public void bindGuiLanguage() {
+        observableResourse.setResources(ResourceBundle.getBundle
+                (BUNDLE, localeMap.get(languageChoice.getSelectionModel().getSelectedItem())));
+
+        logOut.textProperty().bind(observableResourse.getStringBinding("logOut"));
+        back.textProperty().bind(observableResourse.getStringBinding("back"));
+        search_by_id.promptTextProperty().bind(observableResourse.getStringBinding("search_by_id"));
+        search_by_name.promptTextProperty().bind(observableResourse.getStringBinding("search_by_name"));
+        search_by_username.promptTextProperty().bind(observableResourse.getStringBinding("search_by_username"));
+
+    }
+
+    public void initLang(ObservableResourse observableResourse) {
+        this.observableResourse = observableResourse;
+        for (String localName : localeMap.keySet()) {
+            if (localeMap.get(localName).equals(observableResourse.getResources().getLocale()))
+                languageChoice.getSelectionModel().select(localName);
+        }
+        if (languageChoice.getSelectionModel().getSelectedItem().isEmpty()) {
+            if (localeMap.containsValue(Locale.getDefault()))
+                languageChoice.getSelectionModel().select(MapUtils.getKeyByValue(localeMap, Locale.getDefault()));
+            else languageChoice.getSelectionModel().selectFirst();
+        }
+        languageChoice.setOnAction((event) -> {
+            Locale loc = localeMap.get(languageChoice.getValue());
+            observableResourse.setResources(ResourceBundle.getBundle(BUNDLE, loc));
+            System.out.println("AbstractController.initLang");
+
+        });
+        bindGuiLanguage();
+    }
+
+    @Override
+    protected void localize() {
+        logOut.setText(observableResourse.getString("logOut"));
+        back.setText(observableResourse.getString("back"));
+        labelTable.setText(observableResourse.getString("label"));
+        search_by_id.setPromptText(observableResourse.getString("search_by_id"));
+        search_by_name.setPromptText(observableResourse.getString("search_by_name"));
+        search_by_username.setPromptText(observableResourse.getString("search_by_username"));
+        languageChoice.setValue(observableResourse.getString("languageChoice"));
+    }
 }

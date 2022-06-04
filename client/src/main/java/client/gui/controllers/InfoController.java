@@ -28,4 +28,9 @@ public class InfoController extends AbstractController {
     private void go_back(ActionEvent event) {
         pane.getScene().getWindow().hide();
     }
+
+    @Override
+    protected void localize() {
+
+    }
 }

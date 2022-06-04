@@ -1,5 +1,7 @@
 package client.gui.controllers;
 
+import client.gui.tool.MapUtils;
+import client.gui.tool.ObservableResourse;
 import interaction.Request;
 import interaction.Response;
 import interaction.Status;
@@ -9,6 +11,7 @@ import javafx.animation.PathTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +20,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -43,12 +49,54 @@ public class AnimationWindowController extends AbstractController implements Ini
     private Text username;
     @FXML
     private Rectangle userColour;
+    @FXML
+    private Button back;
+    @FXML
+    private Button AnimationButton;
+    @FXML
+    private Label collection;
+
+    @FXML
+    private ChoiceBox<String> languageChoice;
 
     @FXML
     public void go_back(ActionEvent event) {
         switchStages(event, "/client/actionChoice.fxml");
     }
 
+    @Override
+    protected void localize() {
+        back.setText(observableResourse.getString("back"));
+        collection.setText(observableResourse.getString("collection"));
+        languageChoice.setValue(observableResourse.getString("languageChoice"));
+    }
+
+    public void bindGuiLanguage() {
+        observableResourse.setResources(ResourceBundle.getBundle
+                (BUNDLE, localeMap.get(languageChoice.getSelectionModel().getSelectedItem())));
+        collection.textProperty().bind(observableResourse.getStringBinding("collection"));
+        back.textProperty().bind(observableResourse.getStringBinding("back"));
+
+    }
+
+    public void initLang(ObservableResourse observableResourse) {
+        this.observableResourse = observableResourse;
+        for (String localName : localeMap.keySet()) {
+            if (localeMap.get(localName).equals(observableResourse.getResources().getLocale()))
+                languageChoice.getSelectionModel().select(localName);
+        }
+        if (languageChoice.getSelectionModel().getSelectedItem().isEmpty()) {
+            if (localeMap.containsValue(Locale.getDefault()))
+                languageChoice.getSelectionModel().select(MapUtils.getKeyByValue(localeMap, Locale.getDefault()));
+            else languageChoice.getSelectionModel().selectFirst();
+        }
+        languageChoice.setOnAction((event) -> {
+            Locale loc = localeMap.get(languageChoice.getValue());
+            observableResourse.setResources(ResourceBundle.getBundle(BUNDLE, loc));
+
+        });
+        bindGuiLanguage();
+    }
 
     /**
      * initialization of the scene
@@ -58,6 +106,14 @@ public class AnimationWindowController extends AbstractController implements Ini
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        languageChoice.setValue("Choose your language");
+        localeMap = new HashMap<>();
+        localeMap.put("Русский", new Locale("ru", "RU"));
+        localeMap.put("Slovenščina", new Locale("sl", "SL"));
+        localeMap.put("Український", new Locale("uk", "UK"));
+        localeMap.put("Español (República Dominicana)", new Locale("es", "ES"));
+        languageChoice.setItems(FXCollections.observableArrayList(localeMap.keySet()));
+
         username.setText("вы вошли как " + readerSender.user.getUsername());
         drawAxis();
         animate();

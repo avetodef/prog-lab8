@@ -5,6 +5,7 @@ import interaction.Response;
 import interaction.Status;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -16,6 +17,18 @@ import java.util.List;
 
 public class AddElementController extends AbstractController {
 
+    @Override
+    protected void localize() {
+    }
+
+    @FXML
+    private Button AddButton;
+
+    @FXML
+    private Button UpdateButton;
+
+    @FXML
+    Button DeleteButton;
     private boolean send;
 
     private void sendDataToServer(RouteInfo info) {
