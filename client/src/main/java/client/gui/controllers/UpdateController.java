@@ -7,10 +7,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import lombok.Setter;
 import utils.RouteInfo;
 
@@ -83,6 +85,7 @@ public class UpdateController extends AbstractController {
         if (send) {
             sendDataToServer(inf);
             processServerResponse();
+
         } else
             label.setText("Неверный ввод. Попробуй снова");
     }
@@ -117,6 +120,10 @@ public class UpdateController extends AbstractController {
         Parent root = loader.load();
         TableWindowController controller = loader.getController();
         controller.initializeTable();
+        Stage stage = new Stage();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
     /**

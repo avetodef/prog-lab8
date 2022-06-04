@@ -129,7 +129,7 @@ public class TableWindowController extends AbstractController implements Initial
 
         Response response = readerSender.read();
 
-        ArrayList<Route> routeArrayList = correctLocations(response.routeArrayList, response.animationRouteList);//TODO пусто выросла капуста
+        ArrayList<Route> routeArrayList = correctLocations(response.routeArrayList, response.animationRouteList);
 
         putDataInTheTable(routeArrayList);
     }
@@ -328,6 +328,7 @@ public class TableWindowController extends AbstractController implements Initial
             Request request = new Request();
             request.setArgs(List.of("remove_by_id", String.valueOf(table.getSelectionModel().getSelectedItem().getId())));
             readerSender.sendToServer(request);
+
         } else {
             System.out.println("user eblan");
             String msg = "нет прав на удаление элемента";
@@ -349,7 +350,11 @@ public class TableWindowController extends AbstractController implements Initial
 
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
-            stage.show();
+            stage.showAndWait();
+
+            panes.getScene().getWindow().hide();
+
+            initializeTable();
         } else {
             String msg = "нет прав на редактирование элемента";
             String title = "тебе букетик через интернетик";

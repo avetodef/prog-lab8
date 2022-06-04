@@ -36,9 +36,16 @@ public class UpdateById extends ACommands {
                 try {
 
                     if (Objects.equals(dbDAO.getUsernameByRouteId(idFromConsole), user.getUsername())) {
+
                         routeDAO.update(idFromConsole, info);
                         dbDAO.update(idFromConsole, info);
+
                         response.msg("элемент коллекции обновлен").status(Status.OK);
+
+                        response.setAnimationRouteList(dbDAO.getAnimationRoute());
+                        response.setCollection(dbDAO.getAll());
+                        response.setRouteArrayList(dbDAO.getArrayListOfRoutes());
+
                     } else response.msg("нет прав на обновление чужих элементов").status(Status.USER_EBLAN_ERROR);
 
                 } catch (IndexOutOfBoundsException e) {

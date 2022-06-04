@@ -133,7 +133,7 @@ public class DataBaseDAO implements DAO {
         //Connection connection = connect();
 
 
-        String statement1 = "UPDATE route SET  creationdate = ?,distance = ?, name =?"
+        String statement1 = "UPDATE route SET  name = ?, creation_date = ?, distance = ?"
                 + "WHERE id = ?";
         String statement2 = "UPDATE coordinates SET coord_x = ?, coord_y = ?" + "WHERE id = ?";
 
@@ -145,9 +145,9 @@ public class DataBaseDAO implements DAO {
 
         try {
             PreparedStatement pstmt1 = connection.prepareStatement(statement1);
-            pstmt1.setTimestamp(1, Timestamp.valueOf(ZonedDateTime.now().toLocalDateTime()));
-            pstmt1.setInt(2, routeInfo.distance);
-            pstmt1.setString(3, routeInfo.name);
+            pstmt1.setTimestamp(2, Timestamp.valueOf(ZonedDateTime.now().toLocalDateTime()));
+            pstmt1.setInt(3, routeInfo.distance);
+            pstmt1.setString(1, routeInfo.name);
             pstmt1.setInt(4, id);
 
 

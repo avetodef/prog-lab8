@@ -33,14 +33,15 @@ public class ReaderSender {
     public void sendToServer(Request request) {
         try {
             request.setUser(user);
-            socketChannel = SocketChannel.open(new InetSocketAddress("localhost", 6666));
+
+            socketChannel = SocketChannel.open(new InetSocketAddress("localhost", 666));
 
             socketChannel.write(StandardCharsets.UTF_8.encode(JsonConverter.ser(request)));
         }
         catch (NotYetConnectedException e) {
 
             try {
-                socketChannel.connect(new InetSocketAddress("localhost", 6666));
+                socketChannel.connect(new InetSocketAddress("localhost", 666));
                 if (socketChannel.isConnected())
                     System.out.println("connected and ready to send server messages!");
                 else
