@@ -1,6 +1,7 @@
 package client;
 
 import client.gui.StartingStage;
+import client.gui.tool.ObservableResourse;
 import interaction.Request;
 import interaction.Response;
 import interaction.User;
@@ -20,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 //TODO где то падает весь джавафкс. положить джаву может не каждый джуниор девелопер. но и я не промах
 public class ReaderSender {
 
+    public static ObservableResourse obs;
     public User user;
     public SocketChannel socketChannel;
 
@@ -135,5 +137,14 @@ public class ReaderSender {
             System.out.println("IO problems in reader sender line 97: " + e.getMessage());
         }
     }
+
+    public static boolean haveResource() {
+        return obs == null;
+    }
+
+    public static void setResourceFactory(ObservableResourse obs) {
+        ReaderSender.obs = obs;
+    }
+
 
 }

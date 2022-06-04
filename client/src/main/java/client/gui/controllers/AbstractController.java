@@ -30,7 +30,7 @@ public abstract class AbstractController {
     private Button ExitButton;
 
     public static SocketChannel socketChannel;
-    private static final int serverPort = 6666;
+    private static final int serverPort = 666;
 
     private static void connect(SocketChannel client) {
         if (client.isConnectionPending()) {
@@ -101,41 +101,41 @@ public abstract class AbstractController {
     private static ChoiceBox<String> languageChoice;
     @FXML
     private Label label;
-    @FXML
-    private Text username;
-    @FXML
-    private Text password;
-    @FXML
-    private TextField username_field;
-    @FXML
-    private PasswordField password_field;
-    @FXML
-    private Text username_warning_text;
-    @FXML
-    private Text password_warning_text;
-    @FXML
-    private Button submit_button;
-    @FXML
-    private Button InputButton;
-    @FXML
-    private Button RegistrationButton;
-    @FXML
-    private Label InputLabel;
-    @FXML
-    private Label RegistrationLabel;
+//    @FXML
+//    private Text username;
+//    @FXML
+//    private Text password;
+//    @FXML
+//    private TextField username_field;
+//    @FXML
+//    private PasswordField password_field;
+//    @FXML
+//    private Text username_warning_text;
+//    @FXML
+//    private Text password_warning_text;
+//    @FXML
+//    private Button submit_button;
+//    @FXML
+//    private Button InputButton;
+//    @FXML
+//    private Button RegistrationButton;
+//    @FXML
+//    private Label InputLabel;
+//    @FXML
+//    private Label RegistrationLabel;
 
 
     public void bindGuiLanguage() {
-        observableResourse.setResources(ResourceBundle.
-                getBundle(BUNDLE, localeMap.get(languageChoice.
-                        getSelectionModel().getSelectedItem())));
-        label.textProperty().bind(observableResourse.getStringBinding("label"));
-        username.textProperty().bind(observableResourse.getStringBinding("username"));
-        password.textProperty().bind(observableResourse.getStringBinding("password"));
-        password_field.textProperty().bind(observableResourse.getStringBinding("password_field"));
-        username_field.textProperty().bind(observableResourse.getStringBinding("username_field"));
-        InputButton.textProperty().bind(observableResourse.getStringBinding("InputButton"));
-        RegistrationButton.textProperty().bind(observableResourse.getStringBinding("RegistrationButton"));
+//        observableResourse.setResources(ResourceBundle.
+//                getBundle(BUNDLE,localeMap.get(languageChoice.
+//                        getSelectionModel().getSelectedItem())));
+//        label.textProperty().bind(observableResourse.getStringBinding("label"));
+//        username.textProperty().bind(observableResourse.getStringBinding("username"));
+//        password.textProperty().bind(observableResourse.getStringBinding("password"));
+//        password_field.textProperty().bind(observableResourse.getStringBinding("password_field"));
+//        username_field.textProperty().bind(observableResourse.getStringBinding("username_field"));
+//        InputButton.textProperty().bind(observableResourse.getStringBinding("InputButton"));
+//        RegistrationButton.textProperty().bind(observableResourse.getStringBinding("RegistrationButton"));
 
     }
 
@@ -167,13 +167,13 @@ public abstract class AbstractController {
 
         System.out.println("AbstractController.initLang");
         languageChoice.setOnAction((event) -> {
+            System.out.println("wewwqeeeqqewqwqweq");
             Locale loc = localeMap.get(languageChoice.getValue());
             observableResourse.setResources(ResourceBundle.getBundle(BUNDLE, loc));
             System.out.println("AbstractController.initLang");
 
         });
         bindGuiLanguage();
-
 
     }
 

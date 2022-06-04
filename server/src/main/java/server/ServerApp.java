@@ -21,7 +21,7 @@ public class ServerApp {
 
         try {
 
-            int port = 6666;
+            int port = 666;
             output.printPurple("Ожидаю подключение клиента");
 
             ServerSocket serverSocket = new ServerSocket(port);

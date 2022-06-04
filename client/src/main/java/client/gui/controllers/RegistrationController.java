@@ -6,6 +6,7 @@ import interaction.Request;
 import interaction.Response;
 import interaction.Status;
 import interaction.User;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,10 +17,12 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import lombok.SneakyThrows;
 import parsing.PasswordHandler;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -69,13 +72,25 @@ public class RegistrationController extends AbstractController implements Initia
         }
     }
 
+    @SneakyThrows
     private void processServerResponse(ActionEvent actionEvent) {
         Response response = readerSender.read();
         System.out.println(response.status + " [" + response.msg + "]");
 
         if (response.status.equals(Status.OK)) {
-            switchStages(actionEvent, "/client/actionChoice.fxml");
+            //switchStages(actionEvent, "/client/actionChoice.fxml");
             //System.out.println("AUTHENTICATION WENT SUCCESSFULLY");
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/actionChoice.fxml"));
+            Parent root = loader.load();
+            ActionChoiceController res = loader.getController();
+            res.initLang(observableResourse);
+
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            pane.getScene().getWindow().hide();
+            stage.show();
         } else {
             if (response.status.equals(Status.PASSWORD_ERROR)) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, response.msg, ButtonType.OK);
@@ -157,20 +172,15 @@ public class RegistrationController extends AbstractController implements Initia
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        observableResourse.setResources(ResourceBundle.getBundle
-                (BUNDLE, localeMap.get(languageChoice.getSelectionModel().getSelectedItem())));
+        languageChoice.setValue("Choose your language");
 
-        username.textProperty().bind(observableResourse.getStringBinding("username"));
-        password.textProperty().bind(observableResourse.getStringBinding("password"));
-        repeat_password.textProperty().bind(observableResourse.getStringBinding("repeat_password"));
-
-        password_field.promptTextProperty().bind(observableResourse.getStringBinding("password_field"));
-        username_field.promptTextProperty().bind(observableResourse.getStringBinding("username_field"));
-        repeat_password_field.promptTextProperty().bind(observableResourse.getStringBinding("repeat_password_field"));
-
-        back.textProperty().bind(observableResourse.getStringBinding("back"));
-        create.textProperty().bind(observableResourse.getStringBinding("create"));
-        submit.textProperty().bind(observableResourse.getStringBinding("submit"));
+        AbstractController.localeMap = new HashMap<>();
+        AbstractController.localeMap.put("Русский", new Locale("ru", "RU"));
+        AbstractController.localeMap.put("Slovenščina", new Locale("sl", "SL"));
+        AbstractController.localeMap.put("Український", new Locale("uk", "UK"));
+        AbstractController.localeMap.put("Español (República Dominicana)", new Locale("es", "ES"));
+        //languageChoice.setItems(FXCollections.observableArrayList(localeMap.keySet()));
+        languageChoice.setItems(FXCollections.observableArrayList(localeMap.keySet()));
 
     }
 
@@ -222,5 +232,24 @@ public class RegistrationController extends AbstractController implements Initia
 
         });
         bindGuiLanguage();
+    }
+
+    public void bindGuiLanguage() {
+        observableResourse.setResources(ResourceBundle.getBundle
+                (BUNDLE, localeMap.get(languageChoice.getSelectionModel().getSelectedItem())));
+
+        username.textProperty().bind(observableResourse.getStringBinding("username"));
+        password.textProperty().bind(observableResourse.getStringBinding("password"));
+        repeat_password.textProperty().bind(observableResourse.getStringBinding("repeat_password"));
+
+        password_field.promptTextProperty().bind(observableResourse.getStringBinding("password_field"));
+        username_field.promptTextProperty().bind(observableResourse.getStringBinding("username_field"));
+        repeat_password_field.promptTextProperty().bind(observableResourse.getStringBinding("repeat_password_field"));
+
+        back.textProperty().bind(observableResourse.getStringBinding("back"));
+        create.textProperty().bind(observableResourse.getStringBinding("create"));
+        submit.textProperty().bind(observableResourse.getStringBinding("submit"));
+
+
     }
 }

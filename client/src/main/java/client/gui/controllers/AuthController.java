@@ -59,7 +59,7 @@ public class AuthController extends AbstractController implements Initializable 
 
     public static final String BUNDLE = "bundle.gui";
 
-
+    private ObservableResourse observableResourse;
     @FXML
     private void sign_up(ActionEvent actionEvent) {
         //switchStages(actionEvent, "/client/registration.fxml");
@@ -69,8 +69,6 @@ public class AuthController extends AbstractController implements Initializable 
             e.printStackTrace();
         }
     }
-
-    private ObservableResourse observableResourse;
 
     @Override
     protected void localize() {
@@ -116,7 +114,18 @@ public class AuthController extends AbstractController implements Initializable 
                 System.out.println(response.status + " [" + response.msg + "]");
                 if (response.status.equals(Status.OK)) {
 
-                    switchStages(actionEvent, "/client/actionChoice.fxml");
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/actionChoice.fxml"));
+                    Parent root = loader.load();
+                    ActionChoiceController res = loader.getController();
+                    res.initLang(observableResourse);
+
+                    Stage stage = new Stage();
+                    Scene scene = new Scene(root);
+                    stage.setScene(scene);
+                    pane.getScene().getWindow().hide();
+                    stage.show();
+
+                    //switchStages(actionEvent, "/client/actionChoice.fxml");
                 } else {
                     if (response.status.equals(Status.PASSWORD_ERROR)) {
                         //password_warning_text.setText(response.msg);
@@ -135,7 +144,7 @@ public class AuthController extends AbstractController implements Initializable 
                 }
             } else
                 System.out.println("NULL SERVER RESPONSE ");
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -175,9 +184,6 @@ public class AuthController extends AbstractController implements Initializable 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-//        languageChoice.setValue("Choose your language");
-//        languageChoice.getItems().addAll(availableLanguages);
-
         languageChoice.setValue("Choose your language");
         localeMap = new HashMap<>();
         localeMap.put("Русский", new Locale("ru", "RU"));
@@ -185,10 +191,12 @@ public class AuthController extends AbstractController implements Initializable 
         localeMap.put("Український", new Locale("uk", "UK"));
         localeMap.put("Español (República Dominicana)", new Locale("es", "ES"));
         languageChoice.setItems(FXCollections.observableArrayList(localeMap.keySet()));
+        System.out.println("You choose " + FXCollections.observableArrayList(localeMap.keySet()));
 
     }
 
     public void bindGuiLanguage() {
+        System.out.println("AuthController.bindGuiLanguage");
         observableResourse.setResources(ResourceBundle.getBundle
                 (BUNDLE, localeMap.get(languageChoice.getSelectionModel().getSelectedItem())));
         label.textProperty().bind(observableResourse.getStringBinding("label"));
@@ -203,7 +211,7 @@ public class AuthController extends AbstractController implements Initializable 
 
 
     public void initLang(ObservableResourse observableResourse) {
-        //System.out.println("AbstractController.initLang");
+        System.out.println("AbstractController.initLang");
         this.observableResourse = observableResourse;
 
         for (String localName : localeMap.keySet()) {

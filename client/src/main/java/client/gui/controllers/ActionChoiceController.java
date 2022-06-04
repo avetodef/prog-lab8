@@ -167,6 +167,6 @@ public class ActionChoiceController extends AbstractController implements Initia
         localeMap.put("Український", new Locale("uk", "UK"));
         localeMap.put("Español (República Dominicana)", new Locale("es", "ES"));
         languageChoice.setItems(FXCollections.observableArrayList(localeMap.keySet()));
-        text.setText(observableResourse.getString("text") + readerSender.user.getUsername());
+        //text.setText(observableResourse.getString("text") + readerSender.user.getUsername());
     }
 }

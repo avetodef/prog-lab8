@@ -178,8 +178,8 @@ public class TableWindowController extends AbstractController implements Initial
         to_name.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTo().getName()));
 
         distance.setCellValueFactory(new PropertyValueFactory<>("distance"));
-        //date.setCellValueFactory(new PropertyValueFactory<>("creationDate"));
-        date.setCellValueFactory(c -> (ObservableValue<ZonedDateTime>) new SimpleDateFormat(c.getValue().getCreationDate()));
+        date.setCellValueFactory(new PropertyValueFactory<>("creationDate"));
+        //date.setCellValueFactory(c -> (ObservableValue<ZonedDateTime>) new SimpleDateFormat(c.getValue().getCreationDate()));
 
         user.setCellValueFactory(callback -> new SimpleStringProperty(callback.getValue().getUser().getUsername()));
 
