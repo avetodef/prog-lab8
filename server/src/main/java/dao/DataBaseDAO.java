@@ -202,6 +202,7 @@ public class DataBaseDAO implements DAO {
 
             PreparedStatement pstmt4 = connection.prepareStatement(SQL4);
             pstmt4.setInt(1, id);
+
             pstmt1.executeUpdate();
             pstmt2.executeUpdate();
             pstmt3.executeUpdate();

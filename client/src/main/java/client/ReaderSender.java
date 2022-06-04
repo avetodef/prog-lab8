@@ -1,6 +1,8 @@
 package client;
 
 import client.gui.StartingStage;
+import client.gui.controllers.DBDiedController;
+import client.gui.controllers.ServerDiedController;
 import client.gui.tool.ObservableResourse;
 import interaction.Request;
 import interaction.Response;
@@ -89,6 +91,9 @@ public class ReaderSender {
             FXMLLoader fxmlLoader = new FXMLLoader(StartingStage.class.getResource("/client/server_die.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
             Stage stage = new Stage();
+
+            ServerDiedController controller = fxmlLoader.getController();
+            //controller.initLang(obs);
             stage.setScene(scene);
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -128,6 +133,10 @@ public class ReaderSender {
             FXMLLoader fxmlLoader = new FXMLLoader(StartingStage.class.getResource("/client/database_sleep.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
             Stage stage = new Stage();
+            DBDiedController controller = fxmlLoader.getController();
+
+            //controller.initLang(obs);
+
             stage.setScene(scene);
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);

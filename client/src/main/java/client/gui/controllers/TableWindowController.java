@@ -107,7 +107,7 @@ public class TableWindowController extends AbstractController implements Initial
 
             while (true) {
                 try {
-                    Thread.sleep(10000);
+                    Thread.sleep(50000);
                 } catch (InterruptedException ex) {
                     System.out.println(ex.getMessage());
                 }
@@ -322,8 +322,8 @@ public class TableWindowController extends AbstractController implements Initial
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/add_element.fxml"));
         try {
             Parent root = loader.load();
-            AddElementController controller = loader.getController();
-            controller.initLang(observableResourse);
+//            AddElementController controller = loader.getController();
+//            controller.initLang(observableResourse);
 
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
@@ -335,13 +335,22 @@ public class TableWindowController extends AbstractController implements Initial
     }
 
     @FXML
-    private void delete_element() {
-        if (readerSender.user.getUsername().equals(table.getSelectionModel().getSelectedItem().getUser().getUsername())) {
-            table.getItems().removeAll(table.getSelectionModel().getSelectedItem());
-
+    private void delete_element(ActionEvent actionEvent) {
+        if (Objects.equals(readerSender.user.getUsername(), table.getSelectionModel().getSelectedItem().getUser().getUsername())) {
             Request request = new Request();
             request.setArgs(List.of("remove_by_id", String.valueOf(table.getSelectionModel().getSelectedItem().getId())));
             readerSender.sendToServer(request);
+
+            ObservableList<Route> elements = FXCollections.observableArrayList();
+            Route selected = table.getSelectionModel().getSelectedItem();
+            table.getItems().forEach(r -> {
+                if (r.getId() != selected.getId())
+                    elements.add(r);
+            });
+            table.setItems(elements);
+            table.refresh();
+            //table.getItems().remove(table.getSelectionModel().getSelectedItem());
+
 
         } else {
             System.out.println("user eblan");
