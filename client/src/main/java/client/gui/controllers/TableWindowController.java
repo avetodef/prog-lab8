@@ -286,6 +286,8 @@ public class TableWindowController extends AbstractController implements Initial
             ActionChoiceController auth = loader.getController();
             auth.initLang(observableResourse);
 
+            loader.setResources(ResourceBundle.getBundle(BUNDLE));
+
             Stage stage = new Stage();
             Scene scene = new Scene(root);
             stage.setScene(scene);

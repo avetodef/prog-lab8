@@ -9,10 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import utils.RouteInfo;
@@ -86,8 +83,10 @@ public class AddElementController extends AbstractController implements Initiali
         } else
         //label.setText("Неверный ввод");
         {
-            add.setText(observableResourse.getString("add"));
-            System.out.println("AddElementController.submit");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, observableResourse.getString("InputExc"), ButtonType.OK);
+            alert.show();
+//            add.setText(observableResourse.getString("add"));
+//            System.out.println("AddElementController.submit");
         }
     }
 
@@ -218,7 +217,7 @@ public class AddElementController extends AbstractController implements Initiali
 //            to_x_warning.textProperty().bind(observableResourse.getStringBinding("to_x_warning"));
 //            to_y_warning.textProperty().bind(observableResourse.getStringBinding("to_y_warning"));
 //            to_name_warning.textProperty().bind(observableResourse.getStringBinding("to_name_warning"));
-//            distance_warning.textProperty().bind(observableResourse.getStringBinding("distance_warning"));
+        distance_warning.textProperty().bind(observableResourse.getStringBinding("distance_warning"));
 //        }
 //        else
 //        {
@@ -288,26 +287,26 @@ public class AddElementController extends AbstractController implements Initiali
     @FXML
     private TextField distance_field;
 
-    //    @FXML
-//    private Text name_warning;
-//    @FXML
-//    private Text x_warning;
-//    @FXML
-//    private Text y_warning;
-//    @FXML
-//    private Text from_x_warning;
-//    @FXML
-//    private Text from_y_warning;
-//    @FXML
-//    private Text from_name_warning;
-//    @FXML
-//    private Text to_x_warning;
-//    @FXML
-//    private Text to_y_warning;
-//    @FXML
-//    private Text to_name_warning;
-//    @FXML
-//    private Text distance_warning;
+    @FXML
+    private Text name_warning;
+    @FXML
+    private Text x_warning;
+    @FXML
+    private Text y_warning;
+    @FXML
+    private Text from_x_warning;
+    @FXML
+    private Text from_y_warning;
+    @FXML
+    private Text from_name_warning;
+    @FXML
+    private Text to_x_warning;
+    @FXML
+    private Text to_y_warning;
+    @FXML
+    private Text to_name_warning;
+    @FXML
+    private Text distance_warning;
     @FXML
     private Label label;
     @FXML
@@ -325,7 +324,7 @@ public class AddElementController extends AbstractController implements Initiali
 //        to_x_warning.setText("");
 //        to_y_warning.setText("");
 //        to_name_warning.setText("");
-//        distance_warning.setText("");
+        //distance_warning.setText("");
 
         localeMap = new HashMap<>();
         localeMap.put("Русский", new Locale("ru", "RU"));
