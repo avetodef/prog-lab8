@@ -13,7 +13,7 @@ public class RouteDAO implements DAO {
 
     private  Deque<Route> collection = new ArrayDeque<>();
 
-    public String initDate = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy : HH.mm.ss"));
+    public String initDate = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 
     public int create(Route route) {
         collection.add(route);

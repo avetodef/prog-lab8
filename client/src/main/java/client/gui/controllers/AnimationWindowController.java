@@ -61,7 +61,21 @@ public class AnimationWindowController extends AbstractController implements Ini
 
     @FXML
     public void go_back(ActionEvent event) {
-        switchStages(event, "/client/actionChoice.fxml");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/actionChoice.fxml"));
+            Parent root = loader.load();
+            ActionChoiceController controller = loader.getController();
+
+            controller.initLang(observableResourse);
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            pane.getScene().getWindow().hide();
+            stage.show();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
     }
 
     @Override
@@ -190,6 +204,7 @@ public class AnimationWindowController extends AbstractController implements Ini
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/r.fxml"));
             Parent root = loader.load();
             InfoController controller = loader.getController();
+            controller.initLang(observableResourse);
             Route r = buildRoute();
 
             controller.id.setText(String.valueOf(r.getId()));

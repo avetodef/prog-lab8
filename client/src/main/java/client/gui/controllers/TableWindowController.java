@@ -268,7 +268,7 @@ public class TableWindowController extends AbstractController implements Initial
         to_y.setPrefWidth(100);
         to_name.setPrefWidth(100);
         distance.setPrefWidth(100);
-        date.setPrefWidth(150);
+        date.setPrefWidth(75);
         user.setPrefWidth(100);
     }
 
@@ -317,7 +317,19 @@ public class TableWindowController extends AbstractController implements Initial
 
     @FXML
     private void add_element() {
-        popUpWindow("/client/add_element.fxml");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/add_element.fxml"));
+        try {
+            Parent root = loader.load();
+            AddElementController controller = loader.getController();
+            controller.initLang(observableResourse);
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
     }
 
     @FXML
@@ -368,7 +380,7 @@ public class TableWindowController extends AbstractController implements Initial
     public void bindGuiLanguage() {
         observableResourse.setResources(ResourceBundle.getBundle
                 (BUNDLE, localeMap.get(languageChoice.getSelectionModel().getSelectedItem())));
-
+        labelTable.textProperty().bind(observableResourse.getStringBinding("labelTable"));
         logOut.textProperty().bind(observableResourse.getStringBinding("logOut"));
         back.textProperty().bind(observableResourse.getStringBinding("back"));
         search_by_id.promptTextProperty().bind(observableResourse.getStringBinding("search_by_id"));
@@ -397,11 +409,12 @@ public class TableWindowController extends AbstractController implements Initial
         bindGuiLanguage();
     }
 
+
     @Override
     protected void localize() {
         logOut.setText(observableResourse.getString("logOut"));
         back.setText(observableResourse.getString("back"));
-        labelTable.setText(observableResourse.getString("label"));
+        labelTable.setText(observableResourse.getString("labelTable"));
         search_by_id.setPromptText(observableResourse.getString("search_by_id"));
         search_by_name.setPromptText(observableResourse.getString("search_by_name"));
         search_by_username.setPromptText(observableResourse.getString("search_by_username"));

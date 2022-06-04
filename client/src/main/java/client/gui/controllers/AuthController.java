@@ -40,15 +40,9 @@ public class AuthController extends AbstractController implements Initializable 
     @FXML
     private Text password_warning_text;
     @FXML
-    private Button submit_button;
-    @FXML
     private Button inputButton;
     @FXML
     private Button registrButton;
-    @FXML
-    private Label inputLabel;
-    @FXML
-    private Label registrationLabel;
 
     private Map<String, Locale> localeMap;
 
@@ -62,7 +56,6 @@ public class AuthController extends AbstractController implements Initializable 
     private ObservableResourse observableResourse;
     @FXML
     private void sign_up(ActionEvent actionEvent) {
-        //switchStages(actionEvent, "/client/registration.fxml");
         try {
             goToRegistration();
         } catch (IOException e) {
@@ -163,23 +156,24 @@ public class AuthController extends AbstractController implements Initializable 
             processServerResponse(actionEvent);
 
             readerSender.setUser(user);
-
-        } else {
-            if (user.getUsername().isEmpty()) {
-                String title = "тебе букетик через интернетик";
-                String msg = "пустое имя";
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
-                alert.setTitle(title);
-                alert.show();
-            }
-            if (password_field.getText().isEmpty()) {
-                String title = "тебе букетик через интернетик";
-                String msg = "пустой пароль";
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
-                alert.setTitle(title);
-                alert.show();
-            }
         }
+
+//        } else {
+//            if (user.getUsername().isEmpty()) {
+//                String title = "тебе букетик через интернетик";
+//                String msg = "пустое имя";
+//                Alert alert = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
+//                alert.setTitle(title);
+//                alert.show();
+//            }
+//            if (password_field.getText().isEmpty()) {
+//                String title = "тебе букетик через интернетик";
+//                String msg = "пустой пароль";
+//                Alert alert = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
+//                alert.setTitle(title);
+//                alert.show();
+//            }
+//        }
     }
 
     @Override
