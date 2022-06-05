@@ -1,5 +1,8 @@
 package server;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import console.ConsoleOutputer;
 import interaction.Response;
 import interaction.Status;
@@ -8,6 +11,10 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
 
 
 public class ServerApp {
@@ -19,9 +26,10 @@ public class ServerApp {
         Response errorResponse = new Response();
         errorResponse.setStatus(Status.SERVER_ERROR);
 
+
         try {
 
-            int port = 6666;
+            int port = 666;
             output.printPurple("Ожидаю подключение клиента");
 
             ServerSocket serverSocket = new ServerSocket(port);

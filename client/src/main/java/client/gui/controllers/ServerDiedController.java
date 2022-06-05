@@ -16,21 +16,11 @@ public class ServerDiedController extends AbstractController {
 
     @FXML
     private void reconnect() {
-
         pane.getScene().getWindow().hide();
+    }
 
-//        try {
-//            readerSender.socketChannel.connect(new InetSocketAddress("localhost", 6666));
-//            if (readerSender.socketChannel.isConnected()) {
-//                System.out.println("connected! ура блять наконец тщ");
-//
-//            } else
-//                System.out.println("not yet connected...");
-//        } catch (IOException e) {
-//            System.out.println("cannot connect right now... try again later ... свеча роза");
-//            System.out.println(e + " " + e.getMessage());
-//            e.printStackTrace();
-//        }
+    @Override
+    protected void localize() {
 
     }
 }

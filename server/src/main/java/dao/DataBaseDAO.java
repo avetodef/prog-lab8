@@ -1,10 +1,10 @@
 package dao;
 
+import com.google.inject.Inject;
 import console.ConsoleOutputer;
 import interaction.Response;
 import interaction.Status;
 import interaction.User;
-import lombok.NoArgsConstructor;
 import server.ResponseSender;
 import utils.Route;
 import utils.RouteInfo;
@@ -19,18 +19,19 @@ import java.util.Deque;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@NoArgsConstructor
+
 public class DataBaseDAO implements DAO {
 
     static final String url = "jdbc:postgresql://localhost:5432/postgres";
     static final String username = "postgres";
     static final String password = "lterm54201";
+    @Inject
     private final static ConsoleOutputer o = new ConsoleOutputer();
-    private Connection connection = connect();
+    private final Connection connection = connect();
     private static DataOutputStream outputStream;
 
     public DataBaseDAO(DataOutputStream outputStream) {
-        this.outputStream = outputStream;
+        DataBaseDAO.outputStream = outputStream;
     }
 
     public static Connection connect() {
@@ -52,6 +53,7 @@ public class DataBaseDAO implements DAO {
 
         return conn;
     }
+
 
     @Override
     public int create(Route route) {
@@ -129,11 +131,11 @@ public class DataBaseDAO implements DAO {
     }
 
     @Override
-    public boolean update(int id, RouteInfo routeInfo) {
+    public void update(int id, RouteInfo routeInfo) {
         //Connection connection = connect();
 
 
-        String statement1 = "UPDATE route SET  creationdate = ?,distance = ?, name =?"
+        String statement1 = "UPDATE route SET  name = ?, creation_date = ?, distance = ?"
                 + "WHERE id = ?";
         String statement2 = "UPDATE coordinates SET coord_x = ?, coord_y = ?" + "WHERE id = ?";
 
@@ -145,9 +147,9 @@ public class DataBaseDAO implements DAO {
 
         try {
             PreparedStatement pstmt1 = connection.prepareStatement(statement1);
-            pstmt1.setTimestamp(1, Timestamp.valueOf(ZonedDateTime.now().toLocalDateTime()));
-            pstmt1.setInt(2, routeInfo.distance);
-            pstmt1.setString(3, routeInfo.name);
+            pstmt1.setTimestamp(2, Timestamp.valueOf(ZonedDateTime.now().toLocalDateTime()));
+            pstmt1.setInt(3, routeInfo.distance);
+            pstmt1.setString(1, routeInfo.name);
             pstmt1.setInt(4, id);
 
 
@@ -174,15 +176,13 @@ public class DataBaseDAO implements DAO {
             pstmt2.executeUpdate();
             pstmt3.executeUpdate();
             pstmt4.executeUpdate();
-            return true;
         } catch (SQLException w) {
             w.printStackTrace();
         }
-        return false;
     }
 
     @Override
-    public boolean delete(int id) {
+    public void delete(int id) {
         //Connection connection = connect();
         String SQL1 = "DELETE FROM route WHERE id = ? ";
         String SQL2 = "DELETE FROM coordinates WHERE id = ?";
@@ -202,15 +202,14 @@ public class DataBaseDAO implements DAO {
 
             PreparedStatement pstmt4 = connection.prepareStatement(SQL4);
             pstmt4.setInt(1, id);
+
             pstmt1.executeUpdate();
             pstmt2.executeUpdate();
             pstmt3.executeUpdate();
             pstmt4.executeUpdate();
-            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
     @Override
@@ -282,7 +281,6 @@ public class DataBaseDAO implements DAO {
             PreparedStatement pstmt4 = connection.prepareStatement(SQL4);
             ResultSet rs4 = pstmt4.executeQuery();
 //            rs4.next();
-
 
             while (rs1.next() && rs3.next() && rs4.next()) {
                 collection.add(new AnimationRoute
@@ -493,4 +491,7 @@ public class DataBaseDAO implements DAO {
         return ++id;
     }
 
+    @Inject
+    public DataBaseDAO() {
+    }
 }

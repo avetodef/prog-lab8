@@ -1,9 +1,12 @@
 package client.gui.controllers;
 
+import client.gui.tool.MapUtils;
+import client.gui.tool.ObservableResourse;
 import interaction.Request;
 import interaction.Response;
 import javafx.application.Platform;
 import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -12,17 +15,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import utils.Coordinates;
@@ -32,6 +29,7 @@ import utils.animation.AnimationRoute;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.util.*;
 
@@ -44,13 +42,23 @@ public class TableWindowController extends AbstractController implements Initial
     @FXML
     private TableView<Route> table;
     @FXML
-    private Label label;
+    private Label labelTable;
     @FXML
     private TextField search_by_id;
     @FXML
     private TextField search_by_name;
     @FXML
     private TextField search_by_username;
+    @FXML
+    private Button logOut;
+    @FXML
+    private Button back;
+    @FXML
+    private ChoiceBox<String> languageChoice;
+    @FXML
+    private AnchorPane panes;
+
+    private Map<String, Locale> localeMap;
 
     TableColumn<Route, Integer> id = new TableColumn<>("id");
     TableColumn<Route, String> name = new TableColumn<>("name");
@@ -83,15 +91,24 @@ public class TableWindowController extends AbstractController implements Initial
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         author.setText("ты зашел как " + readerSender.user.getUsername());
         putTableTogether();
         initializeTable();
+
+        localeMap = new HashMap<>();
+        localeMap.put("Русский", new Locale("ru", "RU"));
+        localeMap.put("Slovenščina", new Locale("sl", "SL"));
+        localeMap.put("Український", new Locale("uk", "UK"));
+        localeMap.put("Español (República Dominicana)", new Locale("es", "ES"));
+        languageChoice.setItems(FXCollections.observableArrayList(localeMap.keySet()));
+
         Thread thread = new Thread(() -> {
             Runnable updater = this::initializeTable;
 
             while (true) {
                 try {
-                    Thread.sleep(10000);
+                    Thread.sleep(20000);
                 } catch (InterruptedException ex) {
                     System.out.println(ex.getMessage());
                 }
@@ -113,7 +130,7 @@ public class TableWindowController extends AbstractController implements Initial
 
         Response response = readerSender.read();
 
-        ArrayList<Route> routeArrayList = correctLocations(response.routeArrayList, response.animationRouteList);//TODO пусто выросла капуста
+        ArrayList<Route> routeArrayList = correctLocations(response.routeArrayList, response.animationRouteList);
 
         putDataInTheTable(routeArrayList);
     }
@@ -142,7 +159,6 @@ public class TableWindowController extends AbstractController implements Initial
      * method that puts data collected from an ArrayList<Route> to the table
      *
      * @param routeArrayList - the ArrayList where data is taken from
-     * @return
      */
     private void putDataInTheTable(ArrayList<Route> routeArrayList) {
         System.out.println("putting data in the table...");
@@ -164,6 +180,7 @@ public class TableWindowController extends AbstractController implements Initial
 
         distance.setCellValueFactory(new PropertyValueFactory<>("distance"));
         date.setCellValueFactory(new PropertyValueFactory<>("creationDate"));
+        //date.setCellValueFactory(c -> (ObservableValue<ZonedDateTime>) new SimpleDateFormat(c.getValue().getCreationDate()));
 
         user.setCellValueFactory(callback -> new SimpleStringProperty(callback.getValue().getUser().getUsername()));
 
@@ -252,36 +269,98 @@ public class TableWindowController extends AbstractController implements Initial
         to_y.setPrefWidth(100);
         to_name.setPrefWidth(100);
         distance.setPrefWidth(100);
-        date.setPrefWidth(150);
+        date.setPrefWidth(75);
         user.setPrefWidth(100);
     }
 
     /**
      * methods for buttons clicked
      *
-     * @param actionEvent - click on back button
+     * @param actionEvent click on back button
      */
     @FXML
     public void go_back(ActionEvent actionEvent) {
-        switchStages(actionEvent, "/client/actionChoice.fxml");
+        //switchStages(actionEvent, "/client/actionChoice.fxml");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/actionChoice.fxml"));
+            Parent root = loader.load();
+            ActionChoiceController auth = loader.getController();
+            auth.initLang(observableResourse);
+
+            loader.setResources(ResourceBundle.getBundle(BUNDLE));
+
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            panes.getScene().getWindow().hide();
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     public void log_out(ActionEvent actionEvent) {
-        switchStages(actionEvent, "/client/auth.fxml");
+        //switchStages(actionEvent, "/client/auth.fxml");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/auth.fxml"));
+            Parent root = loader.load();
+            AuthController auth = loader.getController();
+            auth.initLang(observableResourse);
+
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            panes.getScene().getWindow().hide();
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     private void add_element() {
-        popUpWindow("/client/add_element.fxml");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/add_element.fxml"));
+        try {
+            Parent root = loader.load();
+//            AddElementController controller = loader.getController();
+//            controller.initLang(observableResourse);
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
     }
 
     @FXML
-    private void delete_element() {
-        if (readerSender.user == table.getSelectionModel().getSelectedItem().getUser())
-            table.getItems().removeAll(table.getSelectionModel().getSelectedItem());
-        else
-            label.setText("нет прав на удаление элемента");
+    private void delete_element(ActionEvent actionEvent) {
+        if (Objects.equals(readerSender.user.getUsername(), table.getSelectionModel().getSelectedItem().getUser().getUsername())) {
+            Request request = new Request();
+            request.setArgs(List.of("remove_by_id", String.valueOf(table.getSelectionModel().getSelectedItem().getId())));
+            readerSender.sendToServer(request);
+
+            ObservableList<Route> elements = FXCollections.observableArrayList();
+            Route selected = table.getSelectionModel().getSelectedItem();
+            table.getItems().forEach(r -> {
+                if (r.getId() != selected.getId())
+                    elements.add(r);
+            });
+            table.setItems(elements);
+            table.refresh();
+            //table.getItems().remove(table.getSelectionModel().getSelectedItem());
+
+
+        } else {
+            System.out.println("user eblan");
+            String msg = "нет прав на удаление элемента";
+            String title = "тебе букетик через интернетик";
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
+            alert.setTitle(title);
+            alert.show();
+        }
     }
 
     @FXML
@@ -295,55 +374,66 @@ public class TableWindowController extends AbstractController implements Initial
 
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
-            stage.show();
+            stage.showAndWait();
+
+            panes.getScene().getWindow().hide();
+
+            initializeTable();
         } else {
             String msg = "нет прав на редактирование элемента";
             String title = "тебе букетик через интернетик";
             Alert alert = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
             alert.setTitle(title);
-
+            alert.show();
         }
     }
 
-    private void createAlert() {
-//        Alert alert = new Alert(Alert.AlertType.ERROR);
-////        alert.setTitle("ты еблан?");
-//        ButtonType type = new ButtonType("ok", ButtonBar.ButtonData.OK_DONE);
-//        alert.setContentText("пустое имя");
-//        alert.getDialogPane().getButtonTypes().add(type);
 
-        //Creating a dialog
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        //Setting the title
-        alert.setTitle("Alert");
-        ButtonType type = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
-        //Setting the content of the dialog
-        alert.setContentText("This is a confirmmation alert");
-        //Adding buttons to the dialog pane
-        alert.getDialogPane().getButtonTypes().add(type);
-        //Setting the label
-        Text txt = new Text("Click the button to show the dialog");
-        Font font = Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 12);
-        txt.setFont(font);
-        //Creating a button
-        Button button = new Button("Show Dialog");
-        //Showing the dialog on clicking the button
-        button.setOnAction(e -> {
-            alert.showAndWait();
-        });
-        //Creating a vbox to hold the button and the label
-        HBox pane = new HBox(15);
-        //Setting the space between the nodes of a HBox pane
-        pane.setPadding(new Insets(50, 150, 50, 60));
-        pane.getChildren().addAll(txt, button);
-        //Creating a scene object
-        Stage stage = new Stage();
-        Scene scene = new Scene(new Group(pane), 595, 300, Color.BEIGE);
-        stage.setTitle("Alert");
-        stage.setScene(scene);
-        stage.show();
-
+    public void bindGuiLanguage() {
+        observableResourse.setResources(ResourceBundle.getBundle
+                (BUNDLE, localeMap.get(languageChoice.getSelectionModel().getSelectedItem())));
+        labelTable.textProperty().bind(observableResourse.getStringBinding("labelTable"));
+        logOut.textProperty().bind(observableResourse.getStringBinding("logOut"));
+        back.textProperty().bind(observableResourse.getStringBinding("back"));
+        search_by_id.promptTextProperty().bind(observableResourse.getStringBinding("search_by_id"));
+        search_by_name.promptTextProperty().bind(observableResourse.getStringBinding("search_by_name"));
+        search_by_username.promptTextProperty().bind(observableResourse.getStringBinding("search_by_username"));
 
     }
 
+    public void initLang(ObservableResourse observableResourse) {
+        this.observableResourse = observableResourse;
+        for (String localName : localeMap.keySet()) {
+            if (localeMap.get(localName).equals(observableResourse.getResources().getLocale()))
+                languageChoice.getSelectionModel().select(localName);
+        }
+        if (languageChoice.getSelectionModel().getSelectedItem().isEmpty()) {
+            if (localeMap.containsValue(Locale.getDefault()))
+                languageChoice.getSelectionModel().select(MapUtils.getKeyByValue(localeMap, Locale.getDefault()));
+            else languageChoice.getSelectionModel().selectFirst();
+        }
+        languageChoice.setOnAction((event) -> {
+            Locale loc = localeMap.get(languageChoice.getValue());
+            observableResourse.setResources(ResourceBundle.getBundle(BUNDLE, loc));
+            System.out.println("AbstractController.initLang");
+
+        });
+        bindGuiLanguage();
+    }
+
+
+    @Override
+    protected void localize() {
+        n.setText(readerSender.user.getUsername());
+        logOut.setText(observableResourse.getString("logOut"));
+        back.setText(observableResourse.getString("back"));
+        labelTable.setText(observableResourse.getString("labelTable"));
+        search_by_id.setPromptText(observableResourse.getString("search_by_id"));
+        search_by_name.setPromptText(observableResourse.getString("search_by_name"));
+        search_by_username.setPromptText(observableResourse.getString("search_by_username"));
+        languageChoice.setValue(observableResourse.getString("languageChoice"));
+    }
+
+    @FXML
+    private Label n;
 }

@@ -1,5 +1,6 @@
 package dao;
 
+import com.google.inject.Inject;
 import utils.Route;
 import utils.RouteInfo;
 
@@ -13,7 +14,8 @@ public class RouteDAO implements DAO {
 
     private  Deque<Route> collection = new ArrayDeque<>();
 
-    public String initDate = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy : HH.mm.ss"));
+    public String initDate = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+
 
     public int create(Route route) {
         collection.add(route);
@@ -27,18 +29,17 @@ public class RouteDAO implements DAO {
      * @param routeInfo - характеристики, свойственные элементы коллекции
      */
 
-    public boolean update(int id, RouteInfo routeInfo) {
+    public void update(int id, RouteInfo routeInfo) {
         for (Route r : collection) {
             if (r.getId() == id) {
                 r.update(routeInfo);
-                return true;
+                return;
             }
         }
-        return false;
     }
 
-    public boolean delete(int id) {
-        return collection.removeIf(r -> r.getId() == id);
+    public void delete(int id) {
+        collection.removeIf(r -> r.getId() == id);
     }
 
     public Route get(int id) {
@@ -121,6 +122,7 @@ public class RouteDAO implements DAO {
         this.collection = collection;
     }
 
+    @Inject
     public RouteDAO() {
     }
 

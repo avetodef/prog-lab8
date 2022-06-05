@@ -17,6 +17,7 @@ public class RemoveById extends ACommands {
     {
         isIdAsker = true;
     }
+
     public Response execute(RouteDAO routeDAO, DataBaseDAO dbDAO) {
         if (routeDAO.getAll().size() == 0) {
             response.setMsg("коллекция пустая. нечего удалять");
@@ -26,13 +27,14 @@ public class RemoveById extends ACommands {
                 int id = Integer.parseInt(args.get(1));
 
                 if(Objects.equals(dbDAO.getUsernameByRouteId(id), user.getUsername())) {
-
-                    if (!routeDAO.delete(id) && !dbDAO.delete(id))
-                        response.msg("нет элемента с таким id. введите команду заново с правильным id").
-                                status(Status.USER_EBLAN_ERROR);
-                    else {
-                        response.msg("ура удалилось").status(Status.OK);
-                    }
+                    routeDAO.delete(id);
+                    dbDAO.delete(id);
+//                    if (!routeDAO.delete(id) && !dbDAO.delete(id))
+//                        response.msg("нет элемента с таким id. введите команду заново с правильным id").
+//                                status(Status.USER_EBLAN_ERROR);
+//                    else {
+                    response.msg("ура удалилось").status(Status.OK);
+                    //}
                 }
                 else response.status(Status.USER_EBLAN_ERROR).msg("нет прав на удаление чужих элементов");
 

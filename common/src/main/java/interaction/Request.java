@@ -5,7 +5,7 @@ import utils.RouteInfo;
 import java.io.Serializable;
 import java.util.List;
 
-public class Request implements Serializable {
+public class Request {
     private List<String> args;
     private RouteInfo info;
     private User user;

@@ -1,6 +1,9 @@
 package client;
 
 import client.gui.StartingStage;
+import client.gui.controllers.DBDiedController;
+import client.gui.controllers.ServerDiedController;
+import client.gui.tool.ObservableResourse;
 import interaction.Request;
 import interaction.Response;
 import interaction.User;
@@ -20,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 //TODO где то падает весь джавафкс. положить джаву может не каждый джуниор девелопер. но и я не промах
 public class ReaderSender {
 
+    public static ObservableResourse obs;
     public User user;
     public SocketChannel socketChannel;
 
@@ -31,14 +35,15 @@ public class ReaderSender {
     public void sendToServer(Request request) {
         try {
             request.setUser(user);
-            socketChannel = SocketChannel.open(new InetSocketAddress("localhost", 6666));
+
+            socketChannel = SocketChannel.open(new InetSocketAddress("localhost", 666));
 
             socketChannel.write(StandardCharsets.UTF_8.encode(JsonConverter.ser(request)));
         }
         catch (NotYetConnectedException e) {
 
             try {
-                socketChannel.connect(new InetSocketAddress("localhost", 6666));
+                socketChannel.connect(new InetSocketAddress("localhost", 666));
                 if (socketChannel.isConnected())
                     System.out.println("connected and ready to send server messages!");
                 else
@@ -86,6 +91,9 @@ public class ReaderSender {
             FXMLLoader fxmlLoader = new FXMLLoader(StartingStage.class.getResource("/client/server_die.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
             Stage stage = new Stage();
+
+            ServerDiedController controller = fxmlLoader.getController();
+            //controller.initLang(obs);
             stage.setScene(scene);
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -125,6 +133,10 @@ public class ReaderSender {
             FXMLLoader fxmlLoader = new FXMLLoader(StartingStage.class.getResource("/client/database_sleep.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
             Stage stage = new Stage();
+            DBDiedController controller = fxmlLoader.getController();
+
+            //controller.initLang(obs);
+
             stage.setScene(scene);
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -135,5 +147,14 @@ public class ReaderSender {
             System.out.println("IO problems in reader sender line 97: " + e.getMessage());
         }
     }
+
+    public static boolean haveResource() {
+        return obs == null;
+    }
+
+    public static void setResourceFactory(ObservableResourse obs) {
+        ReaderSender.obs = obs;
+    }
+
 
 }

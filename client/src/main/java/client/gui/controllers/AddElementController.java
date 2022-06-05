@@ -29,7 +29,7 @@ public class AddElementController extends AbstractController {
     private void processServerResponse() {
         Response response = readerSender.read();
         System.out.println(response.status + " [" + response.msg + "]");
-        label.setText(response.msg);
+        add.setText(response.msg);
         if (response.status.equals(Status.OK)) {
             pane.getScene().getWindow().hide();
         }
@@ -45,7 +45,12 @@ public class AddElementController extends AbstractController {
             sendDataToServer(inf);
             processServerResponse();
         } else
-            label.setText("Неверный ввод. Попробуй снова");
+            add.setText("Неверный ввод. Попробуй снова");
+    }
+
+    @Override
+    protected void localize() {
+
     }
 
     private RouteInfo info() {
@@ -199,7 +204,7 @@ public class AddElementController extends AbstractController {
     @FXML
     private Text distance_warning;
     @FXML
-    private Label label;
+    private Label add;
 
 
 }
