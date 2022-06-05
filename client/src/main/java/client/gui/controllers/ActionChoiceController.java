@@ -30,6 +30,8 @@ public class ActionChoiceController extends AbstractController implements Initia
     @FXML
     private Label things;
     @FXML
+    private Text username;
+    @FXML
     private ChoiceBox<String> languageChoice;
     @FXML
     private Button logOut;
@@ -52,7 +54,7 @@ public class ActionChoiceController extends AbstractController implements Initia
         animation.setText(observableResourse.getString("animation"));
         checkTable.setText(observableResourse.getString("checkTable"));
         languageChoice.setValue(observableResourse.getString("languageChoice"));
-        text.setText(observableResourse.getString("text") + readerSender.user.getUsername());
+        text.setText(observableResourse.getString("text"));
 
     }
 
@@ -160,6 +162,7 @@ public class ActionChoiceController extends AbstractController implements Initia
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //username.setText("ты зашел как " + readerSender.user.getUsername());
+        username.setText(readerSender.user.getUsername());
         languageChoice.setValue("Choose your language");
         localeMap = new HashMap<>();
         localeMap.put("Русский", new Locale("ru", "RU"));

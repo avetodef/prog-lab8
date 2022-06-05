@@ -1,7 +1,10 @@
 package server;
 
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import commands.AutoUpdate;
-import commands.Show;
+import dao.DAO;
 import dao.DataBaseDAO;
 import dao.RouteDAO;
 import interaction.Response;
@@ -9,7 +12,7 @@ import interaction.Status;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ForkJoinPool;
@@ -41,8 +44,10 @@ public class ClientHandler implements Runnable {
             socketOutputStream = clientSocket.getOutputStream();
             dataOutputStream = new DataOutputStream(socketOutputStream);
 
-            DataBaseDAO dbDAO = new DataBaseDAO(dataOutputStream);
-            RouteDAO dao = dbDAO.getDAO();
+            Injector injector = Guice.createInjector(new DAO.DAOModule());
+            DataBaseDAO dbDAO = injector.getInstance(DataBaseDAO.class);
+
+            RouteDAO dao = injector.getInstance(RouteDAO.class);
 
             while (true) {
 

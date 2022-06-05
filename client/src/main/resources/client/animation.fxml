@@ -40,7 +40,7 @@
             <children>
                 <HBox prefHeight="100.0" prefWidth="200.0" spacing="100.0" GridPane.columnIndex="1">
                     <children>
-                        <GridPane>
+                        <GridPane prefHeight="63.0" prefWidth="295.0">
                             <columnConstraints>
                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.19998168945312" minWidth="10.0"
                                                    prefWidth="51.199981689453125"/>
@@ -64,10 +64,17 @@
                                         </ImageView>
                                     </children>
                                 </HBox>
-                                <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1">
+                                <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="182.0"
+                                      GridPane.columnIndex="1">
                                     <children>
                                         <Text fx:id="username" fill="#fffbf6" strokeType="OUTSIDE" strokeWidth="0.0"
-                                              wrappingWidth="180.53674697875977">
+                                              wrappingWidth="98.13675308227539">
+                                            <font>
+                                                <Font size="15.0"/>
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="n" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0"
+                                              wrappingWidth="50.93670463562012">
                                             <font>
                                                 <Font size="15.0"/>
                                             </font>
@@ -75,7 +82,7 @@
                                     </children>
                                 </HBox>
                                 <Rectangle fx:id="userColour" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE"
-                                           height="11.0" stroke="BLACK" strokeType="INSIDE" width="51.0"
+                                           height="11.0" stroke="BLACK" strokeType="INSIDE" width="93.0"
                                            GridPane.rowIndex="1"/>
                             </children>
                         </GridPane>

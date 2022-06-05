@@ -37,18 +37,23 @@
                                         text="назад"/>
                             </children>
                         </VBox>
-                        <VBox prefHeight="137.0" prefWidth="143.0">
+                        <VBox prefHeight="126.0" prefWidth="250.0">
                             <children>
-                                <HBox alignment="CENTER_LEFT" prefHeight="78.0" prefWidth="143.0">
+                                <HBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="223.0">
                                     <children>
-                                        <Label fx:id="author" prefHeight="18.0" prefWidth="150.0">
+                                        <Label fx:id="author" prefHeight="22.0" prefWidth="130.0">
+                                            <font>
+                                                <Font size="15.0"/>
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="n" prefHeight="18.0" prefWidth="96.0">
                                             <font>
                                                 <Font size="15.0"/>
                                             </font>
                                         </Label>
                                     </children>
                                 </HBox>
-                                <HBox prefHeight="74.0" prefWidth="100.0">
+                                <HBox prefHeight="62.0" prefWidth="178.0">
                                     <children>
                                         <Button fx:id="logOut" mnemonicParsing="false" onAction="#log_out"
                                                 prefHeight="27.0" prefWidth="100.0" text="выход"/>

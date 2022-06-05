@@ -20,6 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import utils.Coordinates;
 import utils.Location;
@@ -107,7 +108,7 @@ public class TableWindowController extends AbstractController implements Initial
 
             while (true) {
                 try {
-                    Thread.sleep(50000);
+                    Thread.sleep(20000);
                 } catch (InterruptedException ex) {
                     System.out.println(ex.getMessage());
                 }
@@ -423,6 +424,7 @@ public class TableWindowController extends AbstractController implements Initial
 
     @Override
     protected void localize() {
+        n.setText(readerSender.user.getUsername());
         logOut.setText(observableResourse.getString("logOut"));
         back.setText(observableResourse.getString("back"));
         labelTable.setText(observableResourse.getString("labelTable"));
@@ -431,4 +433,7 @@ public class TableWindowController extends AbstractController implements Initial
         search_by_username.setPromptText(observableResourse.getString("search_by_username"));
         languageChoice.setValue(observableResourse.getString("languageChoice"));
     }
+
+    @FXML
+    private Label n;
 }

@@ -4,7 +4,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class RouteInfo {
+public class RouteInfo implements RouteInformation {
     public int id;
     public String name;
     public double x;
@@ -56,5 +56,10 @@ public class RouteInfo {
                 ", nameTo='" + nameTo + '\'' +
                 ", distance=" + distance +
                 '}';
+    }
+
+    @Override
+    public RouteInfo info() {
+        return new RouteInfo();
     }
 }

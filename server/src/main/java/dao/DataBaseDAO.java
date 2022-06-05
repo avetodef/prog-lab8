@@ -1,10 +1,10 @@
 package dao;
 
+import com.google.inject.Inject;
 import console.ConsoleOutputer;
 import interaction.Response;
 import interaction.Status;
 import interaction.User;
-import lombok.NoArgsConstructor;
 import server.ResponseSender;
 import utils.Route;
 import utils.RouteInfo;
@@ -19,18 +19,19 @@ import java.util.Deque;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@NoArgsConstructor
+
 public class DataBaseDAO implements DAO {
 
     static final String url = "jdbc:postgresql://localhost:5432/postgres";
     static final String username = "postgres";
     static final String password = "lterm54201";
+    @Inject
     private final static ConsoleOutputer o = new ConsoleOutputer();
-    private Connection connection = connect();
+    private final Connection connection = connect();
     private static DataOutputStream outputStream;
 
     public DataBaseDAO(DataOutputStream outputStream) {
-        this.outputStream = outputStream;
+        DataBaseDAO.outputStream = outputStream;
     }
 
     public static Connection connect() {
@@ -52,6 +53,7 @@ public class DataBaseDAO implements DAO {
 
         return conn;
     }
+
 
     @Override
     public int create(Route route) {
@@ -129,7 +131,7 @@ public class DataBaseDAO implements DAO {
     }
 
     @Override
-    public boolean update(int id, RouteInfo routeInfo) {
+    public void update(int id, RouteInfo routeInfo) {
         //Connection connection = connect();
 
 
@@ -174,15 +176,13 @@ public class DataBaseDAO implements DAO {
             pstmt2.executeUpdate();
             pstmt3.executeUpdate();
             pstmt4.executeUpdate();
-            return true;
         } catch (SQLException w) {
             w.printStackTrace();
         }
-        return false;
     }
 
     @Override
-    public boolean delete(int id) {
+    public void delete(int id) {
         //Connection connection = connect();
         String SQL1 = "DELETE FROM route WHERE id = ? ";
         String SQL2 = "DELETE FROM coordinates WHERE id = ?";
@@ -207,11 +207,9 @@ public class DataBaseDAO implements DAO {
             pstmt2.executeUpdate();
             pstmt3.executeUpdate();
             pstmt4.executeUpdate();
-            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
     @Override
@@ -283,7 +281,6 @@ public class DataBaseDAO implements DAO {
             PreparedStatement pstmt4 = connection.prepareStatement(SQL4);
             ResultSet rs4 = pstmt4.executeQuery();
 //            rs4.next();
-
 
             while (rs1.next() && rs3.next() && rs4.next()) {
                 collection.add(new AnimationRoute
@@ -494,5 +491,7 @@ public class DataBaseDAO implements DAO {
         return ++id;
     }
 
-
+    @Inject
+    public DataBaseDAO() {
+    }
 }

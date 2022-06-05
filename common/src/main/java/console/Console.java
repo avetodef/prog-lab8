@@ -8,6 +8,7 @@ import utils.RouteInformation;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+
 public class Console implements RouteInformation {
 
     Scanner sc = new Scanner(System.in);

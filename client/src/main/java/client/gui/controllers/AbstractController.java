@@ -4,6 +4,9 @@ import client.ReaderSender;
 import client.gui.StartingStage;
 import client.gui.tool.MapUtils;
 import client.gui.tool.ObservableResourse;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,17 +14,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public abstract class AbstractController {
     @FXML
@@ -31,6 +30,8 @@ public abstract class AbstractController {
 
     public static SocketChannel socketChannel;
     private static final int serverPort = 666;
+
+    Injector injector = Guice.createInjector(new GUIModule());
 
     private static void connect(SocketChannel client) {
         if (client.isConnectionPending()) {
@@ -179,5 +180,13 @@ public abstract class AbstractController {
 
     protected abstract void localize();
 
+
+    private static class GUIModule extends AbstractModule {
+        @Override
+        protected void configure() {
+            bind(Deque.class).to(ArrayDeque.class);
+            bind(List.class).to(ArrayList.class);
+        }
+    }
 
 }

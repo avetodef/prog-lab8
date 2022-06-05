@@ -118,8 +118,13 @@ public class AnimationWindowController extends AbstractController implements Ini
      * @param url            - url
      * @param resourceBundle - resourse bundle
      */
+
+    @FXML
+    private Text n;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        n.setText(readerSender.user.getUsername());
         languageChoice.setValue("Choose your language");
         localeMap = new HashMap<>();
         localeMap.put("Русский", new Locale("ru", "RU"));
@@ -128,7 +133,7 @@ public class AnimationWindowController extends AbstractController implements Ini
         localeMap.put("Español (República Dominicana)", new Locale("es", "ES"));
         languageChoice.setItems(FXCollections.observableArrayList(localeMap.keySet()));
 
-        username.setText("вы вошли как " + readerSender.user.getUsername());
+        username.setText("вы вошли как ");
         drawAxis();
         animate();
         Thread thread = new Thread(() -> {
